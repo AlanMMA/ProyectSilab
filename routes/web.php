@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 
@@ -31,6 +31,10 @@ Route::middleware([
     Route::get('/Categoria', function(){
         return view('Categoria/index');
     })->name('categoria');
+
+    Route::get('/Area', function(){
+        return view('Area/index');
+    })->name('area');
 
 });
 

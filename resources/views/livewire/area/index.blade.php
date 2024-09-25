@@ -1,9 +1,4 @@
 <div>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-white leading-tight">
-            {{ __('Categoria') }}
-        </h2>
-    </x-slot>
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
         <div class="px-6 py-4 flex items-center gap-4">
             <div class="flex items-center gap-1">
@@ -20,7 +15,7 @@
             <x-input class="flex-1 mr-4" name="search" placeholder="¿Qué desea buscar?" wire:model.live="search"
                 type="text"></x-input>
 
-            @livewire('Categoria.Create')
+            @livewire('Area.Create')
         </div>
         @if ($datos->count())
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 ">
@@ -70,7 +65,7 @@
                 </thead>
                 <tbody>
                     @foreach ($datos as $dato)
-                        <tr wire:key="categoria-{{ $dato->id }}"
+                        <tr wire:key="area-{{ $dato->id }}"
                             class=" odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                             <th scope="row"
                                 class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -81,7 +76,7 @@
                             </td>
 
                             <td class="px-6 py-4 flex items-center bg-green-500">
-                                @livewire('Categoria.Edit', ['dato' => $dato], key('edit-' . $dato->id))
+                                @livewire('Area.Edit', ['dato' => $dato], key('edit-' . $dato->id))
 
                                 <a class="bg-red-600 hover:bg-red-500 pt-1 pb-2 px-2 rounded-md cursor-pointer"
                                     wire:click="$dispatch('destroy', { id: {{ $dato->id }}, nombre: '{{ $dato->nombre }}' })">
@@ -136,6 +131,4 @@
             });
         </script>
     @endpush
-
-
 </div>

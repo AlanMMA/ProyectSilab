@@ -15,7 +15,6 @@
             <div class="mt-10">
                 <x-label value="Nombre:"></x-label>
                 <x-input type="text" wire:model="dato.nombre" class="w-full mt-2"></x-input>
-                {{-- <input type="text" wire:model="dato.nombre" class="w-full mt-2"> --}}
                 <x-input-error for="dato.nombre"></x-input-error>
                 
             </div>
