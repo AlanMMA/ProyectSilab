@@ -29,13 +29,15 @@ Route::middleware([
     })->name('dashboard');
 
     Route::get('/Categoria', function(){
-        return view('Categoria/index');
+        return view('ViewUser/Categoria-index');
     })->name('categoria');
 
     Route::get('/Area', function(){
-        return view('Area/index');
+        return view('ViewUser/Area-index');
     })->name('area');
-
+    Route::get('/Rol', function (){
+        return view('ViewUser/Rol-index');
+    })->name('rol');
 });
 
 
