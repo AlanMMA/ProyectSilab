@@ -35,6 +35,7 @@ Route::middleware([
     Route::get('/Area', function(){
         return view('ViewUser/Area-index');
     })->name('area');
+
     Route::get('/Rol', function (){
         return view('ViewUser/Rol-index');
     })->name('rol');
