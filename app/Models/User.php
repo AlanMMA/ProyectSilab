@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -27,7 +28,17 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'id_rol',
+        'id_encargado'
     ];
+
+    public function rol():BelongsTo{
+        return $this->belongsTo(RolModel::class, 'id_rol');
+    }
+
+    public function encargado():BelongsTo{
+        return $this->belongsTo(EncargadoModel::class, 'id_encargado');
+    }
 
     /**
      * The attributes that should be hidden for serialization.

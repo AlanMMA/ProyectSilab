@@ -39,6 +39,10 @@ Route::middleware([
     Route::get('/Rol', function (){
         return view('ViewUser/Rol-index');
     })->name('rol');
+    
+    Route::get('/Users', function(){
+        return view ('ViewUser/Usuario-index');
+    })->name('user');
 });
 
 

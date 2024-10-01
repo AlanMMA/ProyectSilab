@@ -15,6 +15,9 @@
                     <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link href="{{ route('user') }}" :active="request()->routeIs('user')">
+                        {{ __('Usuarios') }}
+                    </x-nav-link>
                     <x-dropdown-nav align="left" width="48">
                         <x-slot name="trigger">
                             <x-nav-link-dropdown :active="request()->routeIs(['categoria', 'area', 'rol'])" class="cursor-pointer">
