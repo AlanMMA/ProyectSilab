@@ -65,7 +65,7 @@
                 </thead>
                 <tbody>
                     @foreach ($datos as $dato)
-                        <tr wire:key="categoria-{{ $dato->id }}"
+                        <tr wire:key="rol-{{ $dato->id }}"
                             class=" odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                             <th scope="row"
                                 class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">

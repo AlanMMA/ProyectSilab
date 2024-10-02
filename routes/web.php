@@ -43,6 +43,10 @@ Route::middleware([
     Route::get('/Users', function(){
         return view ('ViewUser/Usuario-index');
     })->name('user');
+
+    Route::get('/Solicitantes', function(){
+        return view('ViewUser/Solicitante-index');
+    })->name('solicitante');
 });
 
 

@@ -15,7 +15,7 @@
             <x-input class="flex-1 mr-4" name="search" placeholder="¿Qué desea buscar?" wire:model.live="search"
                 type="text"></x-input>
 
-            @livewire('Usuario.Create')
+            @livewire('Solicitante.Create')
         </div>
         @if ($datos->count())
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 ">
@@ -42,10 +42,10 @@
 
                             </div>
                         </th>
-                        <th scope="col" class=" px-6 py-3 cursor-pointer" wire:click="order('name')">
+                        <th scope="col" class=" px-6 py-3 cursor-pointer" wire:click="order('nombre')">
                             <div class="flex items-center w-full">
-                                Nombre
-                                @if ($sort == 'name')
+                                Nombres
+                                @if ($sort == 'nombre')
                                     @if ($direc == 'asc')
                                         <span class="material-symbols-outlined">vertical_align_bottom</span>
                                     @else
@@ -56,10 +56,10 @@
                                 @endif
                             </div>
                         </th>
-                        <th scope="col" class="px-6 py-3 cursor-pointer" wire:click="order('email')">
+                        <th scope="col" class=" px-6 py-3 cursor-pointer" wire:click="order('apellido_p')">
                             <div class="flex items-center w-full">
-                                Email
-                                @if ($sort == 'email')
+                                Apellidos
+                                @if ($sort == 'apellido_p')
                                     @if ($direc == 'asc')
                                         <span class="material-symbols-outlined">vertical_align_bottom</span>
                                     @else
@@ -70,9 +70,32 @@
                                 @endif
                             </div>
                         </th>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col" class=" px-6 py-3 cursor-pointer" wire:click="order('id_area')">
                             <div class="flex items-center w-full">
-                                Rol
+                                Area
+                                @if ($sort == 'id_area')
+                                    @if ($direc == 'asc')
+                                        <span class="material-symbols-outlined">vertical_align_bottom</span>
+                                    @else
+                                        <span class="material-symbols-outlined">vertical_align_top</span>
+                                    @endif
+                                @else
+                                    <span class="material-symbols-outlined">unfold_more</span>
+                                @endif
+                            </div>
+                        </th>
+                        <th scope="col" class=" px-6 py-3 cursor-pointer" wire:click="order('tipo')">
+                            <div class="flex items-center w-full">
+                                Rango
+                                @if ($sort == 'tipo')
+                                    @if ($direc == 'asc')
+                                        <span class="material-symbols-outlined">vertical_align_bottom</span>
+                                    @else
+                                        <span class="material-symbols-outlined">vertical_align_top</span>
+                                    @endif
+                                @else
+                                    <span class="material-symbols-outlined">unfold_more</span>
+                                @endif
                             </div>
                         </th>
                         <th scope="col" class="px-6 py-3 ">
@@ -84,27 +107,30 @@
                 </thead>
                 <tbody>
                     @foreach ($datos as $dato)
-                        <tr wire:key="user-{{ $dato->id }}"
+                        <tr wire:key="solicitante-{{ $dato->id }}"
                             class=" odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                             <th scope="row"
                                 class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 {{ $dato->id }}
                             </th>
                             <td class="px-6 py-4">
-                                {{ $dato->name }}
+                                {{ $dato->nombre }}
                             </td>
                             <td class="px-6 py-4">
-                                {{ $dato->email }}
+                                {{ $dato->apellido_p }} {{$dato->apellido_m}}
                             </td>
                             <td class="px-6 py-4">
-                                {{ $dato->rol->nombre }}
+                                {{ $dato->area->nombre }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ $dato->tipo }}
                             </td>
 
                             <td class="px-6 py-4 flex items-center bg-green-500">
-                                @livewire('Usuario.edit', ['dato' => $dato], key('edit-' . $dato->id))
+                                @livewire('Solicitante.Edit', ['dato' => $dato], key('edit-' . $dato->id))
 
                                 <a class="bg-red-600 hover:bg-red-500 pt-1 pb-2 px-2 rounded-md cursor-pointer"
-                                    wire:click="$dispatch('destroy', { id: {{ $dato->id }}, nombre: '{{ $dato->name }}' })">
+                                    wire:click="$dispatch('destroy', { id: {{ $dato->id }}, nombre: '{{ $dato->nombre }}' })">
                                     <span class="material-symbols-outlined text-white">
                                         delete
                                     </span>
@@ -119,6 +145,8 @@
         @else
             <div class="px-6 py-4 bg-white border-r-4">
                 No hay resultados
+                <br>
+                ¿Desea agregarlo?
             </div>
         @endif
 
@@ -154,6 +182,4 @@
             });
         </script>
     @endpush
-
-
 </div>

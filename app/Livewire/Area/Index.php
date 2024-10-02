@@ -44,13 +44,6 @@ class Index extends Component
             $this->sort = $sort;
             $this->direc = 'asc';
         }
-
-    //     if ($this->sort === $sort) {
-    //         $this->direc = $this->direc === 'desc' ? 'asc' : 'desc';
-    //     } else {
-    //         $this->sort = $sort;
-    //         $this->direc = 'asc';
-    //     }
         
     }
 
