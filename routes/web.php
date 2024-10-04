@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\CategoriaModel;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,12 +11,11 @@ use Illuminate\Support\Facades\Route;
 | routes are loaded by the RouteServiceProvider and all of them will
 | be assigned to the "web" middleware group. Make something great!
 |
-*/
+ */
 
 Route::get('/', function () {
     return view('auth/login');
 });
-
 
 Route::middleware([
     'auth:sanctum',
@@ -28,10 +26,12 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 
-    Route::get('/Categoria', function(){
+    Route::get('/Categoria', function () {
         return view('Categoria/index');
     })->name('categoria');
 
+    Route::get('/Laboratorio', function () {
+        return view('Laboratorio/index');
+    })->name('laboratorio');
+
 });
-
-
