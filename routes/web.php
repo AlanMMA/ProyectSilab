@@ -34,4 +34,8 @@ Route::middleware([
         return view('Laboratorio/index');
     })->name('laboratorio');
 
+    Route::get('/Marca', function () {
+        return view('marca/index');
+    })->name('marca');
+
 });
