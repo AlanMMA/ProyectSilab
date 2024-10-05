@@ -42,4 +42,8 @@ Route::middleware([
         return view('encargado/index');
     })->name('encargado');
 
+    Route::get('/Material', function () {
+        return view('material/index');
+    })->name('material');
+
 });
