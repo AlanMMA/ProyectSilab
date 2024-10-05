@@ -38,4 +38,8 @@ Route::middleware([
         return view('marca/index');
     })->name('marca');
 
+    Route::get('/Encargado', function () {
+        return view('encargado/index');
+    })->name('encargado');
+
 });
