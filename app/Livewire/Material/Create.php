@@ -6,6 +6,8 @@ use App\Models\CategoriaModel;
 use App\Models\EncargadoModel;
 use App\Models\MarcaModel;
 use App\Models\MaterialModel;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class Create extends Component
@@ -17,7 +19,7 @@ class Create extends Component
     protected function rules()
     {
         return [
-            'nombre' => 'required|max:20|regex:/^[\pL\s]+$/u',
+            'nombre' => 'required|max:20|regex:/^[\p{L}\p{N}\s]+$/u',
             'id_marca' => 'required|numeric',
             'modelo' => 'required|max:20|regex:/^[\pL0-9\s]+$/u',
             'id_categoria' => 'required|numeric',
@@ -60,10 +62,15 @@ class Create extends Component
 
     public function render()
     {
+        $user = User::with('encargado')->find(Auth::id());
+        $this->id_encargado = $user->id_encargado;
+        $nombreE = $user->encargado ? $user->encargado->nombre : 'No asignado';
+        $apellido_p = $user->encargado ? $user->encargado->apellido_p : '';
+        $apellido_m = $user->encargado ? $user->encargado->apellido_m : '';
         $marcas = MarcaModel::pluck('nombre', 'id');
         $categorias = CategoriaModel::pluck('nombre', 'id');
         $encargados = EncargadoModel::pluck('nombre', 'id');
-        return view('livewire.material.create', compact('marcas', 'categorias', 'encargados'));
+        return view('livewire.material.create', compact('marcas', 'categorias', 'nombreE', 'apellido_p', 'apellido_m'));
     }
 
 }

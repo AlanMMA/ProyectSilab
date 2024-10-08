@@ -17,7 +17,7 @@ class Edit extends Component
     protected function rules()
     {
         return [
-            'dato.nombre' => 'required|max:20|regex:/^[\pL\s]+$/u',
+            'dato.nombre' => 'required|max:20|regex:/^[\p{L}\p{N}\s]+$/u',
             'dato.id_marca' => 'required|numeric',
             'dato.modelo' => 'required|max:20|regex:/^[\pL0-9\s]+$/u',
             'dato.id_categoria' => 'required|numeric',
@@ -58,7 +58,14 @@ class Edit extends Component
     {
         $marcas = MarcaModel::pluck('nombre', 'id');
         $categorias = CategoriaModel::pluck('nombre', 'id');
-        $encargados = EncargadoModel::pluck('nombre', 'id');
-        return view('livewire.material.edit', compact('marcas', 'categorias', 'encargados'));
+        $nombres = EncargadoModel::pluck('nombre', 'id')->toArray();
+        $apellidos_p = EncargadoModel::pluck('apellido_p', 'id')->toArray();
+        $apellidos_m = EncargadoModel::pluck('apellido_m', 'id')->toArray();
+
+        $nombre_completo = [];
+        foreach ($nombres as $id => $nombre) {
+            $nombre_completo[$id] = "{$nombre} {$apellidos_p[$id]} {$apellidos_m[$id]}";
+        }
+        return view('livewire.material.edit', compact('marcas', 'categorias', 'nombre_completo'));
     }
 }

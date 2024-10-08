@@ -77,16 +77,9 @@
                 @enderror
             </div>
             <div class="mb-4">
-                <x-label value="Asignar un encargado:"></x-label>
-                <select name="id_encargado" id="id_encargado-{{ $dato['id'] ?? 'new' }}" wire:model="dato.id_encargado"
-                    class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
-                    @foreach ($encargados as $id => $nombre)
-                    <option value="{{ $id }}">{{ $id }} {{ $nombre }}</option>
-                    @endforeach
-                </select>
-                @error('dato.id_encargado')
-                <span class="text-red-500 text-sm">{{ $message }}</span>
-                @enderror
+                <x-label value="Encargado actual:"></x-label>
+                <x-input value="{{ $dato['id_encargado'] }} - {{ $nombre_completo[$dato['id_encargado']] }}" type="text"
+                    class="w-full" disabled />
             </div>
         </x-slot>
 
