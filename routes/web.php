@@ -27,23 +27,23 @@ Route::middleware([
     })->name('dashboard');
 
     Route::get('/Categoria', function () {
-        return view('Categoria/index');
+        return view('ViewUser/Categoria-index');
     })->name('categoria');
 
     Route::get('/Laboratorio', function () {
-        return view('Laboratorio/index');
+        return view('ViewUser/Laboratorio-index');
     })->name('laboratorio');
 
     Route::get('/Marca', function () {
-        return view('marca/index');
+        return view('ViewUser/Marca-index');
     })->name('marca');
 
     Route::get('/Encargado', function () {
-        return view('encargado/index');
+        return view('ViewUser/Encargado-index');
     })->name('encargado');
 
     Route::get('/Material', function () {
-        return view('material/index');
+        return view('ViewUser/Material-index');
     })->name('material');
 
 });
