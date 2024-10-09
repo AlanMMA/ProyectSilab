@@ -12,7 +12,7 @@ class Create extends Component
     public $nombre = '';
 
     protected $rules = [
-        'nombre' => 'required|max:10'
+        'nombre' => 'required|max:10|unique:area'
     ];
 
     public function update($propertyname){

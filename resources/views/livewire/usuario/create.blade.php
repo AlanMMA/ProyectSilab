@@ -49,7 +49,7 @@
                 <select name="id_rol" id="id_rol-{{ $dato['id'] ?? 'new' }}" wire:model="id_rol"
                     class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
                     @foreach ($roles as $id => $nombre)
-                        <option value="{{ $id }}">{{$id}} {{ $nombre }}</option>
+                        <option value="{{ $id }}">{{ $nombre }}</option>
                     @endforeach
                 </select>
                 @error('id_rol')
@@ -61,9 +61,9 @@
                 <x-label value="Encargado:"></x-label>
                 @auth
                     <x-input type="text" class="w-full"
-                        value="{{ $nombreE }} {{ $apellido_p }} {{ $apellido_m }} = {{ auth()->user()->name }}"
+                        value="{{ $nombreE }} {{ $apellido_p }} {{ $apellido_m }} = {{ auth()->user()->id_encargado }}"
                         disabled></x-input>
-                    <input type="hidden" wire:model="id_encargado" value="{{ $id_encargado }}">
+                    <input type="hidden" wire:model="id_encargado" value="{{ auth()->user()->id }}">
                 @endauth
             </div>
         </x-slot>

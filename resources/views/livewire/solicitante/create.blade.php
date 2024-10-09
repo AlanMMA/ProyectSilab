@@ -59,8 +59,8 @@
             @if ($tipo === 'alumno')
                 <div class="mb-4">
                     <x-label value="Número de control:"></x-label>
-                    <x-input wire:model="dato.numero_control" type="text" class="w-full"></x-input>
-                    @error('dato.numero_control')
+                    <x-input wire:model="numero_control" type="text" class="w-full"></x-input>
+                    @error('numero_control')
                         <span class="text-red-500 text-sm">{{ $message }}</span>
                     @enderror
                 </div>

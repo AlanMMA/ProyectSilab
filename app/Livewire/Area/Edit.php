@@ -12,7 +12,7 @@ class Edit extends Component
     public $dato;
 
     protected $rules = [
-        'dato.nombre' => 'required|max:10'
+        'dato.nombre' => 'required|max:10|unique:area,nombre'
     ];
     
 

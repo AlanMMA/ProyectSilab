@@ -59,7 +59,6 @@ class Create extends Component
         $apellido_p = $user->encargado ? $user->encargado->apellido_p : '';
         $apellido_m = $user->encargado ? $user->encargado->apellido_m : '';
 
-
         return view('livewire.usuario.create', compact('roles', 'nombreE', 'apellido_p', 'apellido_m'));
     }
 
