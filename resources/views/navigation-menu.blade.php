@@ -15,21 +15,29 @@
                     <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                    <x-nav-link href="{{ route('categoria') }}" :active="request()->routeIs('categoria')">
-                        {{ __('Categoria') }}
-                    </x-nav-link>
-                    <x-nav-link href="{{ route('laboratorio') }}" :active="request()->routeIs('laboratorio')">
-                        {{ __('Laboratorio') }}
-                    </x-nav-link>
-                    <x-nav-link href="{{ route('marca') }}" :active="request()->routeIs('marca')">
-                        {{ __('Marca') }}
-                    </x-nav-link>
+
+                    <x-dropdown-nav align="left" width="48">
+                        <x-slot name="trigger">
+                            <x-nav-link-dropdown
+                                :active="request()->routeIs(['categoria', 'area', 'laboratorio', 'marca'])"
+                                class="cursor-pointer">
+                                {{ __('Catalogo') }}
+                            </x-nav-link-dropdown>
+                        </x-slot>
+                        <x-slot name="content">
+                            <x-dropdown-link href="{{ route('categoria') }}">{{ __('Categoria') }}</x-dropdown-link>
+                            <x-dropdown-link href="{{ route('laboratorio')}}">{{ __('Laboratorio') }}</x-dropdown-link>
+                            <x-dropdown-link href="{{ route('marca')}}">{{ __('Marca') }}</x-dropdown-link>
+                        </x-slot>
+                    </x-dropdown-nav>
+
                     <x-nav-link href="{{ route('encargado') }}" :active="request()->routeIs('encargado')">
                         {{ __('Encargado') }}
                     </x-nav-link>
                     <x-nav-link href="{{ route('material') }}" :active="request()->routeIs('material')">
                         {{ __('Material') }}
                     </x-nav-link>
+
                 </div>
             </div>
 
@@ -151,10 +159,10 @@
                 <button @click="open = ! open"
                     class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex"
+                        <path :class="{ 'hidden': open, 'inline-flex': !open }" class="inline-flex"
                             stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round"
+                        <path :class="{ 'hidden': !open, 'inline-flex': open }" class="hidden" stroke-linecap="round"
                             stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
@@ -163,10 +171,47 @@
     </div>
 
     <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
+    <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
+            </x-responsive-nav-link>
+        </div>
+
+        <div x-data="{ open: false }" class="space-y-1 ">
+            <x-responsive-nav-link href="#" @click.prevent="open = !open" class="cursor-pointer">
+                {{ __('Catalogos') }}
+                <span class="float-right">
+                    <svg x-show="!open" class="h-4 w-4 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                    <svg x-show="open" class="h-4 w-4 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 15l-7-7-7 7" />
+                    </svg>
+                </span>
+            </x-responsive-nav-link>
+            <div x-show="open" class="pl-4 space-y-1 transition-all duration-300 ease-in-out overflow-hidden "
+                style="display: none;">
+                <x-responsive-nav-link href="{{route('categoria')}}" :active="request()->routeIs('categoria')">
+                    {{ __('Categoria') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link href="{{route('laboratorio')}}" :active="request()->routeIs('laboratorio')">
+                    {{ __('Laboratorio') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link href="{{route('marca')}}" :active="request()->routeIs('marca')">
+                    {{ __('Marca') }}
+                </x-responsive-nav-link>
+            </div>
+        </div>
+
+        <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link href="{{ route('encargado') }}" :active="request()->routeIs('encargado')">
+                {{ __('Encargado') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="{{ route('material') }}" :active="request()->routeIs('material')">
+                {{ __('Material') }}
             </x-responsive-nav-link>
         </div>
 
