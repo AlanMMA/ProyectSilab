@@ -11,6 +11,7 @@ class Edit extends Component
     public $open;
     public $dato;
     public $name, $email, $id_rol, $tipo;
+    public $initialDato;
 
     protected function rules()
     {
@@ -18,7 +19,7 @@ class Edit extends Component
             'dato.nombre' => 'required|min:4|max:15|regex:/^[\pL\s]+$/u',
             'dato.apellido_p' => 'required|min:4|max:15|regex:/^[\pL\s]+$/u',
             'dato.apellido_m' => 'required|min:4|max:15|regex:/^[\pL\s]+$/u',
-            'dato.id_area' => 'required|numeric',
+            'dato.id_area' => 'required|numeric|min:1',
             'dato.tipo' => 'required|in:docente,alumno',
             'dato.numero_control' => $this->dato['tipo'] === 'alumno' ? 'required|max:9' : 'nullable|max:9',
         ];
@@ -42,6 +43,21 @@ class Edit extends Component
     {
         $this->dato = $dato->toArray();
         $this->tipo = $this->dato['tipo'];
+        $this->initialDato = $dato->toArray();
+    }
+
+    public function loadData()
+    {
+        $this->dato = $this->initialDato; 
+        $this->resetErrorBag(); 
+        $this->open = true;
+    }
+
+    public function resetForm()
+    {
+        $this->dato = $this->initialDato;
+        $this->open = false;
+        $this->resetErrorBag();
     }
 
 

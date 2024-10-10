@@ -9,15 +9,15 @@ use Livewire\Component;
 class Create extends Component
 {
     public $open;
-    public $nombre, $apellido_p, $apellido_m, $id_area, $numero_control;
-    public $tipo = 'docente';
+    public $nombre, $apellido_p, $apellido_m, $id_area2, $numero_control;
+    public $tipo;
     protected function rules()
     {
         return [
             'nombre' => 'required|min:4|max:15|regex:/^[\pL\s]+$/u',
             'apellido_p' => 'required|min:4|max:15|regex:/^[\pL\s]+$/u',
             'apellido_m' => 'required|min:4|max:15|regex:/^[\pL\s]+$/u',
-            'id_area' => 'required|numeric',
+            'id_area2' => 'required|numeric|min:1',
             'tipo' => 'required|in:docente,alumno',
             'numero_control' => $this->tipo === 'alumno' ? 'required|max:8' : 'nullable|max:8',
         ];
@@ -45,7 +45,7 @@ class Create extends Component
             'nombre' => $this->nombre,
             'apellido_p' => $this->apellido_p,
             'apellido_m' => $this->apellido_m,
-            'id_area' => $this->id_area,
+            'id_area' => $this->id_area2,
             'tipo' => $this->tipo,
             'numero_control' => $this->numero_control
         ]);

@@ -134,7 +134,6 @@
 
                                 <td class="px-6 py-4 flex items-center bg-green-500">
                                     @livewire('Solicitante.Edit', ['dato' => $dato], key('edit-' . $dato->id))
-
                                     <a class="bg-red-600 hover:bg-red-500 pt-1 pb-2 px-2 rounded-md cursor-pointer"
                                         wire:click="$dispatch('destroy', { id: {{ $dato->id }}, nombre: '{{ $dato->nombre }}' })">
                                         <span class="material-symbols-outlined text-white">
@@ -160,4 +159,31 @@
             {{ $datos->onEachSide(1)->links() }}
         </div>
     </div>
+
+    @push('js')
+    <script>
+        Livewire.on('destroy', event => {
+            Swal.fire({
+                title: "¿Estás seguro de eliminar el registro?",
+                text: "Registro: " + event.nombre,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Aceptar"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Livewire.dispatch('destroyPost', {
+                        id: event.id
+                    });
+                    Swal.fire({
+                        title: "Operación exitosa",
+                        text: "Ha eliminado el registro: " + event.nombre,
+                        icon: "success"
+                    });
+                }
+            });
+        });
+    </script>
+@endpush
 </div>

@@ -35,13 +35,14 @@
             </div>
             <div class="mb-4">
                 <x-label value="Asignar un area:"></x-label>
-                <select name="id_area" id="id_area-{{ $dato['id'] ?? 'new' }}" wire:model="id_area"
+                <select wire:model.live="id_area2"
                     class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                    <option value="0">{{'Eliga un area'}}</option>
                     @foreach ($areas as $id => $nombre)
-                        <option value="{{ $id }}">{{ $id }} {{ $nombre }}</option>
-                    @endforeach
+                    <option value="{{ $id }}">{{ $id }} {{ $nombre }}</option>
+                @endforeach                    
                 </select>
-                @error('id_area')
+                @error('id_area2')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
             </div>
@@ -49,6 +50,7 @@
                 <x-label value="Tipo de solicitante:"></x-label>
                 <select wire:model.live="tipo"
                     class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                    <option value="0">Eliga una opción</option>
                     <option value="docente">Docente</option>
                     <option value="alumno">Alumno</option>
                 </select>
@@ -81,3 +83,18 @@
         </x-slot>
     </x-dialog-modal>
 </div>
+
+
+
+            {{-- <div class="mb-4">
+                <x-label value="Asignar un area:"></x-label>
+                <select name="id_area2" id="id_area2-{{ $dato['id'] ?? 'new' }}" wire:model="id_area2"
+                    class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                    @foreach ($areas as $id => $nombre)
+                        <option value="{{ $id }}">{{ $id }} {{ $nombre }}</option>
+                    @endforeach
+                </select>
+                @error('id_area2')
+                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                @enderror
+            </div> --}}
