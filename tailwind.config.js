@@ -16,6 +16,8 @@ export default {
         'bg-yellow',
     ],
 
+    darkMode : 'class',
+    
     theme: {
         extend: {
             fontFamily: {

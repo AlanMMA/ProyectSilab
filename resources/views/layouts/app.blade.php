@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}"
+    class="light">
 
 <head>
     <meta charset="utf-8">
@@ -24,7 +25,7 @@
     
 </head>
 
-<body class="font-sans antialiased overflow-hidden">
+<body class="font-sans antialiased">
     <x-banner />
 
     <div class="min-h-screen bg-gray-100 dark:bg-gray-900">

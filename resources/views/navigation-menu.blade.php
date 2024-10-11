@@ -9,7 +9,6 @@
                         <x-application-mark class="block h-9 w-auto" />
                     </a>
                 </div>
-
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
@@ -167,10 +166,15 @@
 
     <!-- Responsive Navigation Menu -->
     <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden">
-
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
+            </x-responsive-nav-link>
+        </div>
+
+        <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link href="{{ route('user') }}" :active="request()->routeIs('user')">
+                {{ __('Usuarios') }}
             </x-responsive-nav-link>
         </div>
 
@@ -180,13 +184,12 @@
             </x-responsive-nav-link>
         </div>
 
-        <div x-data="{ open: false }" class="space-y-1 ">
+        <div x-data="{ open: false }" class="pt-2 pb-3 space-y-1 dark:shadow-black">
             <x-responsive-nav-link href="#" @click.prevent="open = !open" class="cursor-pointer">
                 {{ __('Catalogos') }}
-
                 <span class="float-right">
-                    <svg x-show="!open" class="h-4 w-4 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor">
+                    <svg x-show="!open" class="h-4 w-4 inline-block" xmlns="http://www.w3.org/2000/svg"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                     </svg>
                     <svg x-show="open" class="h-4 w-4 inline-block" xmlns="http://www.w3.org/2000/svg"
@@ -196,24 +199,18 @@
                 </span>
             </x-responsive-nav-link>
 
-            <div x-show="open" class="pl-4 space-y-1 transition-all duration-300 ease-in-out overflow-hidden "
+            <div x-show="open" class="pl-4 space-y-1 transition-all duration-300 ease-in-out overflow-hidden dark:bg-gray-700"
                 style="display: none;">
-                <x-responsive-nav-link href="#" :active="request()->routeIs('categoria')">
+                <x-responsive-nav-link href="{{route('categoria')}}" :active="request()->routeIs('categoria')">
                     {{ __('Categoria') }}
                 </x-responsive-nav-link>
-                <x-responsive-nav-link href="#" :active="request()->routeIs('roles')">
+                <x-responsive-nav-link href="{{route('rol')}}" :active="request()->routeIs('roles')">
                     {{ __('Roles') }}
                 </x-responsive-nav-link>
-                <x-responsive-nav-link href="{{route('area')}}" :active="request()->routeIs('area')">
+                <x-responsive-nav-link href="{{ route('area') }}" :active="request()->routeIs('area')">
                     {{ __('Áreas') }}
                 </x-responsive-nav-link>
             </div>
-        </div>
-
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link href="{{ route('categoria') }}" :active="request()->routeIs('categoria')">
-                {{ __('categoria') }}
-            </x-responsive-nav-link>
         </div>
 
         <!-- Responsive Settings Options -->
