@@ -2,7 +2,7 @@
     <div class="relative shadow-md max-h-screen">
         <div class="py-4 px-6 block items-center gap-4 w-full sm:flex">
             <div class="flex items-center justify-center gap-1 mb-4 sm:mb-0">
-                <span class="text-white">Mostrar</span>
+                <span class="text-gray-900 dark:text-white">Mostrar</span>
                 <select wire:model.live="cant"
                     class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
                     <option value="10">10</option>
@@ -10,7 +10,7 @@
                     <option value="50">50</option>
                     <option value="100">100</option>
                 </select>
-                <span class="text-white">Entrada</span>
+                <span class="text-gray-900 dark:text-white">Entrada</span>
                 <div class="w-auto flex justify-center sm:hidden items-center ml-4">
                     @livewire('Solicitante.Create')
                 </div>
@@ -24,7 +24,7 @@
         
         
         @if ($datos->count())
-            <div class="px-6 overflow-y-auto max-h-[60vh]">
+            <div class="px-6 overflow-y-auto max-h-[60vh] sm:max-h-full">
                 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 w-full">
                         <tr>
@@ -119,22 +119,22 @@
                                     class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     {{ $dato->id }}
                                 </th>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     {{ $dato->nombre }}
                                 </td>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     {{ $dato->apellido_p }} {{$dato->apellido_m}}
                                 </td>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     {{ $dato->area->nombre }}
                                 </td>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     {{ $dato->tipo }}
                                 </td>
 
-                                <td class="px-6 py-4 flex items-center bg-green-500">
+                                <td class="px-6 py-4 flex items-center gap-2">
                                     @livewire('Solicitante.Edit', ['dato' => $dato], key('edit-' . $dato->id))
-                                    <a class="bg-red-600 hover:bg-red-500 pt-1 pb-2 px-2 rounded-md cursor-pointer"
+                                    <a class="bg-red-600 hover:bg-red-500 pt-2 pb-1 px-2 rounded-md cursor-pointer"
                                         wire:click="$dispatch('destroy', { id: {{ $dato->id }}, nombre: '{{ $dato->nombre }}' })">
                                         <span class="material-symbols-outlined text-white">
                                             delete

@@ -27,8 +27,8 @@
                             </x-nav-link-dropdown>
                         </x-slot>
                         <x-slot name="content">
-                            <x-dropdown-link href="{{ route('categoria') }}">{{ __('Categoria') }}</x-dropdown-link>
                             <x-dropdown-link href="{{ route('area') }}">{{ __('Area') }}</x-dropdown-link>
+                            <x-dropdown-link href="{{ route('categoria') }}">{{ __('Categoria') }}</x-dropdown-link>
                             <x-dropdown-link href="{{ route('rol') }}">{{ __('Rol') }}</x-dropdown-link>
                         </x-slot>
                     </x-dropdown-nav>
@@ -133,6 +133,13 @@
                                 </x-dropdown-link>
                             @endif
 
+                            <div class="block px-4 py-2 text-xs text-gray-400" @click.stop>
+                                <div class="flex w-full justify-between items-center text-gray-900 dark:text-white">
+                                    {{ __('Cambiar tema: ') }}
+                                    <x-toggle-button-dl></x-toggle-button-dl>
+                                </div>
+                            </div>
+
                             <div class="border-t border-gray-200 dark:border-gray-600"></div>
 
                             <!-- Authentication -->
@@ -184,7 +191,7 @@
             </x-responsive-nav-link>
         </div>
 
-        <div x-data="{ open: false }" class="pt-2 pb-3 space-y-1 dark:shadow-black">
+        <div x-data="{ open: false }" class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link href="#" @click.prevent="open = !open" class="cursor-pointer">
                 {{ __('Catalogos') }}
                 <span class="float-right">
@@ -199,23 +206,28 @@
                 </span>
             </x-responsive-nav-link>
 
-            <div x-show="open" class="pl-4 space-y-1 transition-all duration-300 ease-in-out overflow-hidden dark:bg-gray-700"
+            <div x-show="open"
+                class="ml-4 space-y-1 transition-all duration-300 ease-in-out overflow-hidden dark:bg-gray-950"
                 style="display: none;">
-                <x-responsive-nav-link href="{{route('categoria')}}" :active="request()->routeIs('categoria')">
-                    {{ __('Categoria') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link href="{{route('rol')}}" :active="request()->routeIs('roles')">
-                    {{ __('Roles') }}
-                </x-responsive-nav-link>
                 <x-responsive-nav-link href="{{ route('area') }}" :active="request()->routeIs('area')">
                     {{ __('Áreas') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link href="{{ route('categoria') }}" :active="request()->routeIs('categoria')">
+                    {{ __('Categoria') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link href="{{ route('rol') }}" :active="request()->routeIs('roles')">
+                    {{ __('Roles') }}
                 </x-responsive-nav-link>
             </div>
         </div>
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
-            <div class="flex items-center px-4">
+            <div class="flex items-center justify-center px-4 space-y-1 gap-4 text-gray-800 dark:text-gray-200">
+                {{ __('Cambiar tema: ') }}
+                <x-toggle-button-dl-responsive></x-toggle-button-dl-responsive>
+            </div>
+            <div class="flex items-center px-4 mt-3">
                 @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
                     <div class="shrink-0 me-3">
                         <img class="h-10 w-10 rounded-full object-cover" src="{{ Auth::user()->profile_photo_url }}"
@@ -229,6 +241,8 @@
                 </div>
             </div>
 
+
+
             <div class="mt-3 space-y-1">
                 <!-- Account Management -->
                 <x-responsive-nav-link href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')">
@@ -240,7 +254,7 @@
                         {{ __('API Tokens') }}
                     </x-responsive-nav-link>
                 @endif
-
+                <toggle-button-dl></toggle-button-dl>
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}" x-data>
                     @csrf

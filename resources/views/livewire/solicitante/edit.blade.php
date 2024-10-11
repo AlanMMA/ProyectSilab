@@ -1,5 +1,5 @@
 <div>
-    <a wire:click="loadData" class="material-symbols-outlined  font-bold text-white py-2 px-4 rounded cursor-pointer bg-green-500">
+    <a wire:click="loadData" class="material-symbols-outlined  font-bold text-white py-2 px-2 rounded cursor-pointer bg-yellow-500">
         <span class="material-symbols-outlined">
             edit
         </span>
