@@ -29,14 +29,16 @@ class User extends Authenticatable
         'email',
         'password',
         'id_rol',
-        'id_encargado'
+        'id_encargado',
     ];
 
-    public function rol():BelongsTo{
+    public function rol(): BelongsTo
+    {
         return $this->belongsTo(RolModel::class, 'id_rol');
     }
 
-    public function encargado():BelongsTo{
+    public function encargado(): BelongsTo
+    {
         return $this->belongsTo(EncargadoModel::class, 'id_encargado');
     }
 
