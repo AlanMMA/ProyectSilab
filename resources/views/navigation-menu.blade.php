@@ -11,19 +11,10 @@
                 </div>
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                    <x-nav-link href="{{ route('user') }}" :active="request()->routeIs('user')">
-                        {{ __('Usuarios') }}
-                    </x-nav-link>
-                    <x-nav-link href="{{ route('solicitante') }}" :active="request()->routeIs('solicitante')">
-                        {{ __('Solicitantes') }}
-                    </x-nav-link>
+
                     <x-dropdown-nav align="left" width="48">
                         <x-slot name="trigger">
-                            <x-nav-link-dropdown
-                                :active="request()->routeIs(['categoria', 'area', 'rol', 'laboratorio', 'marca'])"
+                            <x-nav-link-dropdown :active="request()->routeIs(['categoria', 'area', 'rol'])"
                                 class="cursor-pointer">
                                 {{ __('Catalogo') }}
                             </x-nav-link-dropdown>
@@ -37,9 +28,31 @@
                         </x-slot>
                     </x-dropdown-nav>
 
-                    <x-nav-link href="{{ route('encargado') }}" :active="request()->routeIs('encargado')">
-                        {{ __('Encargado') }}
-                    </x-nav-link>
+                    <x-dropdown-nav align="left" width="48">
+                        <x-slot name="trigger">
+                            <x-nav-link-dropdown :active="request()->routeIs(['categoria', 'area', 'rol'])"
+                                class="cursor-pointer">
+                                {{ __('Personal') }}
+                            </x-nav-link-dropdown>
+                        </x-slot>
+                        <x-slot name="content">
+                            <x-dropdown-link href="{{ route('user') }}">{{ __('Usuario') }}</x-dropdown-link>
+                            <x-dropdown-link href="{{ route('encargado') }}">{{ __('Encargado') }}</x-dropdown-link>
+                        </x-slot>
+                    </x-dropdown-nav>
+
+                    <x-dropdown-nav align="left" width="48">
+                        <x-slot name="trigger">
+                            <x-nav-link-dropdown :active="request()->routeIs(['categoria', 'area', 'rol'])"
+                                class="cursor-pointer">
+                                {{ __('Prestamos') }}
+                            </x-nav-link-dropdown>
+                        </x-slot>
+                        <x-slot name="content">
+                            <x-dropdown-link href="{{ route('solicitante') }}">{{ __('Solicitante') }}</x-dropdown-link>
+                        </x-slot>
+                    </x-dropdown-nav>
+
                     <x-nav-link href="{{ route('material') }}" :active="request()->routeIs('material')">
                         {{ __('Material') }}
                     </x-nav-link>
@@ -190,18 +203,6 @@
             </x-responsive-nav-link>
         </div>
 
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link href="{{ route('user') }}" :active="request()->routeIs('user')">
-                {{ __('Usuarios') }}
-            </x-responsive-nav-link>
-        </div>
-
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link href="{{ route('solicitante') }}" :active="request()->routeIs('solicitante')">
-                {{ __('Solicitante') }}
-            </x-responsive-nav-link>
-        </div>
-
         <div x-data="{ open: false }" class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link href="#" @click.prevent="open = !open" class="cursor-pointer">
                 {{ __('Catalogos') }}
@@ -238,10 +239,58 @@
             </div>
         </div>
 
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link href="{{ route('encargado') }}" :active="request()->routeIs('encargado')">
-                {{ __('Encargado') }}
+        <div x-data="{ open: false }" class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link href="#" @click.prevent="open = !open" class="cursor-pointer">
+                {{ __('Personal') }}
+                <span class="float-right">
+                    <svg x-show="!open" class="h-4 w-4 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                    <svg x-show="open" class="h-4 w-4 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 15l-7-7-7 7" />
+                    </svg>
+                </span>
             </x-responsive-nav-link>
+
+            <div x-show="open"
+                class="ml-4 space-y-1 transition-all duration-300 ease-in-out overflow-hidden dark:bg-gray-950"
+                style="display: none;">
+                <x-responsive-nav-link href="{{ route('user') }}" :active="request()->routeIs('user')">
+                    {{ __('Usuarios') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link href="{{ route('encargado') }}" :active="request()->routeIs('encargado')">
+                    {{ __('Encargado') }}
+                </x-responsive-nav-link>
+            </div>
+        </div>
+
+        <div x-data="{ open: false }" class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link href="#" @click.prevent="open = !open" class="cursor-pointer">
+                {{ __('Prestamos') }}
+                <span class="float-right">
+                    <svg x-show="!open" class="h-4 w-4 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                    <svg x-show="open" class="h-4 w-4 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 15l-7-7-7 7" />
+                    </svg>
+                </span>
+            </x-responsive-nav-link>
+
+            <div x-show="open"
+                class="ml-4 space-y-1 transition-all duration-300 ease-in-out overflow-hidden dark:bg-gray-950"
+                style="display: none;">
+                <x-responsive-nav-link href="{{ route('solicitante') }}" :active="request()->routeIs('solicitante')">
+                    {{ __('Solicitante') }}
+                </x-responsive-nav-link>
+            </div>
+        </div>
+
+        <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link href="{{ route('material') }}" :active="request()->routeIs('material')">
                 {{ __('Material') }}
             </x-responsive-nav-link>
