@@ -1,7 +1,7 @@
 <div>
-    <x-danger-button wire:click="$set('open', 'true')">
+    <x-confirm-button wire:click="$set('open', 'true')">
         Agregar
-    </x-danger-button>
+    </x-confirm-button>
     <x-dialog-modal wire:model.live="open">
         <x-slot name="title">
             Agregar material
@@ -83,9 +83,9 @@
                 <x-secondary-button class="h-full" wire:click="$set('open',false)">
                     Cancel
                 </x-secondary-button>
-                <x-danger-button wire:click="save" wire:loading.remove wire:target="save">
+                <x-confirm-button wire:click="save" wire:loading.remove wire:target="save">
                     Agregar
-                </x-danger-button>
+                </x-confirm-button>
                 <span wire:loading wire:target="save">Cargando ...</span>
             </div>
         </x-slot>

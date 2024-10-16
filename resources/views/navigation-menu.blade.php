@@ -30,7 +30,7 @@
 
                     <x-dropdown-nav align="left" width="48">
                         <x-slot name="trigger">
-                            <x-nav-link-dropdown :active="request()->routeIs(['categoria', 'area', 'rol'])"
+                            <x-nav-link-dropdown :active="request()->routeIs(['user', 'encargado'])"
                                 class="cursor-pointer">
                                 {{ __('Personal') }}
                             </x-nav-link-dropdown>
@@ -43,12 +43,13 @@
 
                     <x-dropdown-nav align="left" width="48">
                         <x-slot name="trigger">
-                            <x-nav-link-dropdown :active="request()->routeIs(['categoria', 'area', 'rol'])"
+                            <x-nav-link-dropdown
                                 class="cursor-pointer">
                                 {{ __('Prestamos') }}
                             </x-nav-link-dropdown>
                         </x-slot>
                         <x-slot name="content">
+                            <x-dropdown-link href="{{ route('prestamo') }}">{{ __('Consultar prestamos') }}</x-dropdown-link>
                             <x-dropdown-link href="{{ route('solicitante') }}">{{ __('Solicitante') }}</x-dropdown-link>
                         </x-slot>
                     </x-dropdown-nav>

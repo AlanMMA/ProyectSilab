@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\Prestamo\Show;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -50,4 +51,9 @@ Route::middleware([
     Route::get('/Material', function () {
         return view('ViewUser/Material-index');
     })->name('material');
+
+    Route::get('/Prestamos', function(){
+        return view('ViewUser/Prestamo-index');
+    })->name('prestamo');
+
 });
