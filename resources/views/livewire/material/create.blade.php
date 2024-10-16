@@ -1,15 +1,7 @@
 <div>
-<<<<<<< HEAD
-    <x-confirm-button wire:click="$set('open', 'true')">
+    <x-danger-button wire:click="$set('open', 'true')">
         Agregar
-    </x-confirm-button>
-=======
-
-    <x-confirm-button wire:click="$set('open', 'true')">
-        Agregar
-    </x-confirm-button>
-
->>>>>>> e690989cfa22198064767d330e771a5175501afb
+    </x-danger-button>
     <x-dialog-modal wire:model.live="open">
         <x-slot name="title">
             Agregar material
