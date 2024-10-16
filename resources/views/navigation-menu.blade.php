@@ -14,7 +14,8 @@
 
                     <x-dropdown-nav align="left" width="48">
                         <x-slot name="trigger">
-                            <x-nav-link-dropdown :active="request()->routeIs(['categoria', 'area', 'rol'])"
+                            <x-nav-link-dropdown
+                                :active="request()->routeIs(['area', 'categoria', 'rol', 'laboratorio', 'marca'])"
                                 class="cursor-pointer">
                                 {{ __('Catalogo') }}
                             </x-nav-link-dropdown>
@@ -30,7 +31,7 @@
 
                     <x-dropdown-nav align="left" width="48">
                         <x-slot name="trigger">
-                            <x-nav-link-dropdown :active="request()->routeIs(['categoria', 'area', 'rol'])"
+                            <x-nav-link-dropdown :active="request()->routeIs(['user', 'encargado'])"
                                 class="cursor-pointer">
                                 {{ __('Personal') }}
                             </x-nav-link-dropdown>
@@ -43,8 +44,7 @@
 
                     <x-dropdown-nav align="left" width="48">
                         <x-slot name="trigger">
-                            <x-nav-link-dropdown :active="request()->routeIs(['categoria', 'area', 'rol'])"
-                                class="cursor-pointer">
+                            <x-nav-link-dropdown :active="request()->routeIs(['solicitante'])" class="cursor-pointer">
                                 {{ __('Prestamos') }}
                             </x-nav-link-dropdown>
                         </x-slot>
