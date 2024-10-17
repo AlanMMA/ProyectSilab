@@ -1,5 +1,6 @@
 <div>
-    <a wire:click="loadData" class="material-symbols-outlined  font-bold text-white py-2 px-2 rounded cursor-pointer bg-yellow-500">
+    <a wire:click="loadData"
+        class="material-symbols-outlined  font-bold text-white py-2 px-2 rounded cursor-pointer bg-yellow-500">
         <span class="material-symbols-outlined">
             edit
         </span>
@@ -13,35 +14,36 @@
         <x-slot name="content">
             <div class="mb-4">
                 <x-label value="Nombre:"></x-label>
-                <x-input wire:model="dato.nombre" wire:keyup="update('dato.nombre')" type="text" class="w-full"></x-input>
+                <x-input wire:model="dato.nombre" wire:keyup="update('dato.nombre')" type="text"
+                    class="w-full"></x-input>
                 @error('dato.nombre')
-                    <span class="text-red-500 text-sm">{{$message}}</span>
+                    <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
             </div>
             <div class="mb-4">
                 <x-label value="Apellido paterno:"></x-label>
                 <x-input wire:model="dato.apellido_p" wire:keyup="update('dato.apellido_p')" type="text"
                     class="w-full"></x-input>
-                    @error('dato.apellido_p')
-                    <span class="text-red-500 text-sm">{{$message}}</span>
+                @error('dato.apellido_p')
+                    <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
             </div>
             <div class="mb-4">
                 <x-label value="Apellido materno:"></x-label>
                 <x-input wire:model="dato.apellido_m" wire:keyup="update('dato.apellido_m')" type="text"
                     class="w-full"></x-input>
-                    @error('dato.apellido_m')
-                    <span class="text-red-500 text-sm">{{$message}}</span>
+                @error('dato.apellido_m')
+                    <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
             </div>
             <div class="mb-4">
                 <x-label value="Asignar un area:"></x-label>
                 <select wire:model.live="dato.id_area"
                     class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
-                    <option value="0">{{'Eliga un area'}}</option>
+                    <option value="0">{{ 'Eliga un area' }}</option>
                     @foreach ($areas as $id => $nombre)
-                    <option value="{{ $id }}"> {{ $nombre }}</option>
-                @endforeach                    
+                        <option value="{{ $id }}"> {{ $nombre }}</option>
+                    @endforeach
                 </select>
                 @error('dato.id_area')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
@@ -74,7 +76,7 @@
                 <x-secondary-button class="h-full" wire:click="resetForm">
                     Cancel
                 </x-secondary-button>
-                
+
                 <x-danger-button wire:click="save" wire:loading.remove wire:target="save">
                     Editar
                 </x-danger-button>
@@ -86,7 +88,7 @@
 
 
 
-            {{-- <div class="mb-4">
+{{-- <div class="mb-4">
                 <x-label value="Asignar un area:"></x-label>
                 <select name="id_area" id="id_area-{{ $dato['id'] ?? 'new' }}" wire:model="dato.id_area"
                     class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">

@@ -84,7 +84,10 @@
                         <x-input type="text" class="w-full"
                             value="{{ $nombreE }} {{ $apellido_p }} {{ $apellido_m }} = {{ auth()->user()->id_encargado }}"
                             disabled></x-input>
-                        <input type="hidden" wire:model="id_encargado" value="{{ auth()->user()->id }}">
+                        <input type="hidden" wire:model="id_encargado">
+                        @error('id_encargado')
+                        <span class="text-red-500 text-sm">{{ $message }}</span>
+                    @enderror
                     @endauth
                 </div>
             @endif

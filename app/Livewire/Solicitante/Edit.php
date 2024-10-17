@@ -42,13 +42,13 @@ class Edit extends Component
     public function mount(SolicitanteModel $dato)
     {
         $this->dato = $dato->toArray();
-        $this->tipo = $this->dato['tipo'];
         $this->initialDato = $dato->toArray();
     }
 
     public function loadData()
     {
-        $this->dato = $this->initialDato; 
+        $solicitante = SolicitanteModel::find($this->dato['id']);
+        $this->dato = $solicitante->toArray();
         $this->resetErrorBag(); 
         $this->open = true;
     }
@@ -60,17 +60,20 @@ class Edit extends Component
         $this->resetErrorBag();
     }
 
-
     public function save()
     {
 
         $this->validate();
-        $categoria = SolicitanteModel::find($this->dato['id']);
-        $categoria->fill($this->dato);
-        $categoria->save();
+        $solicitante = SolicitanteModel::find($this->dato['id']);
+        if($this->dato['tipo'] === 'docente'){
+            $this->dato['numero_control'] = null;
+        }
+        $solicitante->fill($this->dato);
+        $solicitante->save();
         $this->reset(['open']);
         $this->dispatch('render');
-        $this->dispatch('alert', 'La categoria se ha modificado con exito.');
+        $this->dispatch('alert', 'La solicitante se ha modificado con exito.');
+        $this->dato = $solicitante->toArray();
     }
     public function render()
     {

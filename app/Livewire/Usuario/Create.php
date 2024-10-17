@@ -56,7 +56,6 @@ class Create extends Component
     {
 
         $this->loadUserData();
-        $this->id_encargado = 0;
     }
 
     public function updRol($value)
@@ -73,7 +72,6 @@ class Create extends Component
     {
 
         $user = User::with('encargado')->find(Auth::id());
-        
         $this->id_encargado = $user->id_encargado;
         $this->nombreE = $user->encargado ? $user->encargado->nombre : 'No asignado';
         $this->apellido_p = $user->encargado ? $user->encargado->apellido_p : '';

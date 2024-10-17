@@ -11,7 +11,6 @@
                 </div>
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-
                     <x-dropdown-nav align="left" width="48">
                         <x-slot name="trigger">
                             <x-nav-link-dropdown
