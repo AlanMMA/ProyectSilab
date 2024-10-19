@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SolicitanteModel;
 use Illuminate\Http\Request;
 
-class DetalleP extends Controller
+class PrestamosController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-       
+        $solicitantes = SolicitanteModel::all();
+       return view('ViewUser/createPrestamo', compact('solicitantes'));
     }
 
     /**
