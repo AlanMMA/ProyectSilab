@@ -40,7 +40,8 @@
             </div>
             <div class="mb-4">
                 <x-label value="Asignar una categoria:"></x-label>
-                <select name="id_categoria" id="id_categoria-{{ $dato['id'] ?? 'new' }}" wire:model.live="dato.id_categoria"
+                <select name="id_categoria" id="id_categoria-{{ $dato['id'] ?? 'new' }}"
+                    wire:model.live="dato.id_categoria"
                     class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
                     @foreach ($categorias as $id => $nombre)
                     <option value="{{ $id }}">{{ $id }} {{ $nombre }}</option>
@@ -89,9 +90,9 @@
                     Cancel
                 </x-secondary-button>
 
-                <x-danger-button wire:click="save" wire:loading.remove wire:target="save">
+                <x-confirm-button wire:click="save" wire:loading.remove wire:target="save">
                     Editar
-                </x-danger-button>
+                </x-confirm-button>
                 <span wire:loading wire:target="save">Cargando ...</span>
             </div>
         </x-slot>

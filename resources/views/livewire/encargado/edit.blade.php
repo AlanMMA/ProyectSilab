@@ -55,9 +55,9 @@
                     Cancel
                 </x-secondary-button>
 
-                <x-danger-button wire:click="save" wire:loading.remove wire:target="save">
+                <x-confirm-button wire:click="save" wire:loading.remove wire:target="save">
                     Editar
-                </x-danger-button>
+                </x-confirm-button>
                 <span wire:loading wire:target="save">Cargando ...</span>
             </div>
         </x-slot>
