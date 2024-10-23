@@ -11,24 +11,24 @@ class Edit extends Component
     public $dato;
 
     protected $rules = [
-        'dato.nombre' => 'required|max:10'
+        'dato.nombre' => 'required|max:20',
     ];
-    
 
-    public function mount(RolModel $dato){
+    public function mount(RolModel $dato)
+    {
         $this->dato = $dato->toArray();
-    }   
+    }
 
+    public function save()
+    {
 
-    public function save(){
-        
-        $this->validate(); 
+        $this->validate();
         $categoria = RolModel::find($this->dato['id']);
         $categoria->fill($this->dato);
         $categoria->save();
         $this->reset(['open']);
         $this->dispatch('render');
-        $this->dispatch('alert', 'La categoria se ha modificado con exito.');
+        $this->dispatch('alert', 'El rol se ha modificado con exito.');
 
     }
 
