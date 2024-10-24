@@ -123,7 +123,6 @@
                     confirmButtonText: "Aceptar"
                 }).then((result) => {
                     if (result.isConfirmed) {
-
                         Livewire.dispatch('destroyPost', {
                             id: event.id
                         });

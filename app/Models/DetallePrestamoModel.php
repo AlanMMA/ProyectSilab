@@ -16,7 +16,8 @@ class DetallePrestamoModel extends Model
         'fecha_prestamo',
         'fecha_devolucion',
         'id_material',
-        'cantidad'
+        'cantidad',
+        'observacion'
     ];
 
     public $timestamps = false;

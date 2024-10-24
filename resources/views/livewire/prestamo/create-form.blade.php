@@ -1,57 +1,74 @@
 <div class="h-auto w-auto">
     <div class="mx-4">
         <x-label value="Tipo de solicitante:"></x-label>
-        <select wire:model.live="cant"  @if(!$solicitanteSeleccionado2) disabled @endif
+        <select wire:model.live="cant" @if (!$solicitanteSeleccionado2) disabled @endif
             class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
             <option value="0">Seleccione el tipo de solicitante</option>
             <option value="alumno">Alumno</option>
             <option value="docente">Docente</option>
         </select>
     </div>
-    <div class="mt-6 mx-4 flex gap-4 justify-center items-center">
-        <div>
-            <x-label value="Tipo de solicitante:"></x-label>
-            <select wire:model="cant"  @if(!$solicitanteSeleccionado2) disabled @endif
-                class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
-                <option value="0">Seleccione al solicitante</option>
-                @foreach ($solicitantes as $solicitante)
-                    <option value="{{ $solicitante->id }}">{{ $solicitante->tipo }} {{ $solicitante->nombre }}
-                        {{ $solicitante->apellido_p }}</option>
-                @endforeach
-            </select>
-        </div>
-        <button class="bg-green-600 hover:bg-green-500 pt-2 pb-1 px-2 rounded-md cursor-pointer"
-    wire:click="confirmarSeleccion"
-    @if(!$solicitanteSeleccionado2) disabled @endif>
-    <span class="material-symbols-outlined text-white">
-        check
-    </span>
-</button>
 
+    <div class="mt-6 mx-4 flex gap-4 justify-center items-center">
+        <div class="relative w-full">
+            <x-label value="Solicitante:"></x-label>
+            <input @if (!$solicitanteSeleccionado2) disabled @endif type="text" wire:model.live="search"
+                placeholder="Escriba para buscar solicitante..."
+                class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                autocomplete="off" />
+            @if (strlen($search) > 0 && !$selectedSolicitante)
+                @if (count($solicitantes) > 0)
+                    <ul
+                        class="absolute z-10 mt-2 border rounded-md max-h-60 overflow-y-auto bg-blue-tec text-white dark:bg-white dark:text-blue-tec">
+                        @foreach ($solicitantes as $solicitante)
+                            <li class="px-4 py-2 hover:bg-gray-100 hover:text-blue-tec dark:hover:bg-blue-tec dark:hover:text-white cursor-pointer"
+                                wire:click="selectSolicitante({{ $solicitante->id }})">
+                                {{ $solicitante->tipo }}: {{ $solicitante->nombre }} {{ $solicitante->apellido_p }}
+                            </li>
+                        @endforeach
+                    </ul>
+                @else
+                    <div
+                        class="absolute z-10 mt-2 border rounded-md bg-blue-tec text-white dark:bg-white dark:text-blue-tec p-2">
+                        <p>No encuentras el usuario? Agregalo:</p>
+                        <a href="{{ route('solicitante') }}"
+                            class="mt-2 bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded">Agregar</a>
+                    </div>
+                @endif
+            @endif
+        </div>
+    
+        <button class="bg-green-600 hover:bg-green-500 pt-2 pb-1 px-2 rounded-md cursor-pointer"
+            wire:click="confirmarSeleccion" @if (!$solicitanteSeleccionado2) disabled @endif>
+            <span class="material-symbols-outlined text-white">
+                check
+            </span>
+        </button>
     </div>
 
     <div class="mt-6 mx-4">
         <x-label value="Fecha de prestamo:"></x-label>
-        <x-input class="w-min" type="text" value="{{ now()->format(' d / m / y ') }}" disabled></x-input>
+        <x-input wire:model="fechaPrestamo" class="w-min" type="text" disabled></x-input>
     </div>
     <div class="mt-6 mx-4">
         <x-label value="Seleccione el material:"></x-label>
-        <select
+        <select wire:model.live = "selectMat"
             class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-            @if(!$solicitanteSeleccionado) disabled @endif>
+            @if (!$solicitanteSeleccionado) disabled @endif>
             <option value="0">Seleccione un material</option>
-            <option value="1">ejemplo1</option>
-            <option value="2">ejemplo2</option>
+            @foreach ($materiales as $material)
+                <option value="{{ $material->id }}">{{ $material->nombre }}</option>
+            @endforeach
         </select>
     </div>
     <div class="mt-6 mx-4">
         <x-label value="Cantidad:"></x-label>
-        <x-input class="w-full" type="number" min="1" placeholder="" :disabled="!$solicitanteSeleccionado" ></x-input>
+        <x-input wire:model="Cantidad" class="w-full" type="number" min="1" placeholder="Ingrese cifra"
+            :disabled="!$solicitanteSeleccionado"></x-input>
     </div>
     <div class="mt-6 pb-6 flex justify-center">
-        <x-confirm-button :disabled="!$solicitanteSeleccionado">Agregar</x-confirm-button>
+        <x-confirm-button wire:click="addMaterial" :disabled="!$solicitanteSeleccionado">Agregar</x-confirm-button>
     </div>
-
     @push('js')
         <script>
             Livewire.on('confirmarSeleccion', event => {
@@ -77,7 +94,8 @@
                                 id: solicitanteData.id,
                                 solicitante: solicitanteData.solicitante,
                             }]);
-                            
+                            Livewire.dispatch('BlockDat');
+
                             Swal.fire({
                                 title: "Confirmado",
                                 text: "El solicitante ha sido seleccionado.",
@@ -113,5 +131,18 @@
         </script>
     @endpush
 
+    @push('js')
+        <script>
+                Livewire.on('mostrarErrorFecha', (mensaje) => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: mensaje,
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'Aceptar'
+                    });
+                });
+        </script>
+    @endpush
 
 </div>

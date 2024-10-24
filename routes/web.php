@@ -61,4 +61,5 @@ Route::middleware([
     Route::get('/Prestamos/Form', function(){
         return view('ViewUser/createPrestamo');
     })->name('prestamosc');
+
 });

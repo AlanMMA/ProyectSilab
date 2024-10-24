@@ -30,6 +30,8 @@
                         @auth
                             <p class="text-red-600">Bienvenido usuario {{ auth()->user()->name }}</p>
                         @endauth
+
+                        
                     </div>
                 </div>
             </div>

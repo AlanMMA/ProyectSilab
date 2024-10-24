@@ -23,6 +23,7 @@ export default {
             colors: {
                 "blue-tec": "#1B396A",
                 "custom-green": "#00ff00",
+            
             },
         },
     },
