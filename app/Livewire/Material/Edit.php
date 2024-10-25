@@ -28,6 +28,8 @@ class Edit extends Component
         ];
     }
 
+    protected $listeners = ['saveConfirmed' => 'save'];
+
     protected $messages = [
         'dato.nombre.regex' => 'El nombre solo puede contener letras y espacios.',
         'dato.modelo.regex' => 'El modelo solo puede contener letras y numeros.',

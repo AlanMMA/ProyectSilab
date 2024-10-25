@@ -51,11 +51,7 @@
                 }
             });
         }
-
-        Livewire.on('saveConfirmed', () => {
-            @this.call('save');
-        });
     </script>
     @endpush
-    
+
 </div>

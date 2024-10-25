@@ -11,24 +11,26 @@ class Create extends Component
     public $nombre;
 
     protected $rules = [
-        'nombre' => 'required|max:10'
+        'nombre' => 'required|max:20',
     ];
 
-    public function update($propertyname){
+    public function update($propertyname)
+    {
         $this->validateOnly($propertyname);
     }
-    public function save(){
+    public function save()
+    {
 
         $this->validate();
 
         RolModel::create([
-             'nombre' => $this->nombre
-            ]);
+            'nombre' => $this->nombre,
+        ]);
 
         $this->reset(['open', 'nombre']);
         $this->dispatch('render');
         $this->dispatch('alert', 'La categoria se ha guardado con exito.');
-        }
+    }
 
     public function render()
     {

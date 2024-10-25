@@ -21,28 +21,30 @@ class Edit extends Component
         'dato.email' => 'required|email|max:255',
         'dato.id_rol' => 'required|numeric',
     ];
-    
 
-    public function mount(User $dato){
+    protected $listeners = ['saveConfirmed' => 'save'];
+
+    public function mount(User $dato)
+    {
         $this->loadUserData();
         $this->dato = $dato->toArray();
-    }   
+    }
 
     public function loadUserData()
     {
 
         $user = User::with('encargado')->find(Auth::id());
-        
+
         $this->id_encargado = $user->id_encargado;
         $this->nombreE = $user->encargado ? $user->encargado->nombre : 'No asignado';
         $this->apellido_p = $user->encargado ? $user->encargado->apellido_p : '';
         $this->apellido_m = $user->encargado ? $user->encargado->apellido_m : '';
     }
 
+    public function save()
+    {
 
-    public function save(){
-        
-        $this->validate(); 
+        $this->validate();
         $categoria = User::find($this->dato['id']);
         $categoria->fill($this->dato);
         $categoria->save();

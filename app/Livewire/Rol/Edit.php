@@ -14,6 +14,8 @@ class Edit extends Component
         'dato.nombre' => 'required|max:20',
     ];
 
+    protected $listeners = ['saveConfirmed' => 'save'];
+
     public function mount(RolModel $dato)
     {
         $this->dato = $dato->toArray();

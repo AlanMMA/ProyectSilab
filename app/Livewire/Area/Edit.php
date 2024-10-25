@@ -15,6 +15,8 @@ class Edit extends Component
         'dato.nombre' => 'required|max:10|unique:area,nombre',
     ];
 
+    protected $listeners = ['saveConfirmed' => 'save'];
+
     public function mount(AreaModel $dato)
     {
         $this->dato = $dato->toArray();
@@ -37,4 +39,5 @@ class Edit extends Component
     {
         return view('livewire.area.edit');
     }
+
 }

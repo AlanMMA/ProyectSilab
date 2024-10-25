@@ -84,10 +84,10 @@
 
     @push('js')
     <script>
-        function confirmSave(name) {
+        function confirmSave(nombre) {
             Swal.fire({
                 title: "¿Estás seguro de editar el registro?",
-                text: "Registro: " + name,
+                text: "Registro: " + nombre,
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
@@ -100,10 +100,6 @@
                 }
             });
         }
-
-        Livewire.on('saveConfirmed', () => {
-            @this.call('save');
-        });
     </script>
     @endpush
 

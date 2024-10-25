@@ -15,6 +15,8 @@ class Edit extends Component
         'dato.nombre' => 'required|max:25|unique:laboratorio,nombre|regex:/^[\pL\s]+$/u',
     ];
 
+    protected $listeners = ['saveConfirmed' => 'save'];
+
     public function mount(LaboratorioModel $dato)
     {
         $this->dato = $dato->toArray();

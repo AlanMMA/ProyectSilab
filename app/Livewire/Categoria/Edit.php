@@ -11,18 +11,20 @@ class Edit extends Component
     public $dato;
 
     protected $rules = [
-        'dato.nombre' => 'required|max:10'
+        'dato.nombre' => 'required|max:10',
     ];
-    
 
-    public function mount(CategoriaModel $dato){
+    protected $listeners = ['saveConfirmed' => 'save'];
+
+    public function mount(CategoriaModel $dato)
+    {
         $this->dato = $dato->toArray();
-    }   
+    }
 
+    public function save()
+    {
 
-    public function save(){
-        
-        $this->validate(); 
+        $this->validate();
         $categoria = CategoriaModel::find($this->dato['id']);
         $categoria->fill($this->dato);
         $categoria->save();

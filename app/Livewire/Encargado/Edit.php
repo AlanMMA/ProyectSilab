@@ -22,6 +22,8 @@ class Edit extends Component
         ];
     }
 
+    protected $listeners = ['saveConfirmed' => 'save'];
+
     protected $messages = [
         'nombre.regex' => 'El nombre solo puede contener letras y espacios.',
         'apellido_p.regex' => 'El apellido paterno solo puede contener letras y espacios.',

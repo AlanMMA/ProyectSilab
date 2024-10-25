@@ -25,6 +25,8 @@ class Edit extends Component
         ];
     }
 
+    protected $listeners = ['saveConfirmed' => 'save'];
+
     protected $messages = [
         'nombre.regex' => 'El nombre solo puede contener letras y espacios.',
         'apellido_p.regex' => 'El apellido paterno solo puede contener letras y espacios.',
@@ -38,7 +40,6 @@ class Edit extends Component
         $this->validateOnly($propertyname);
     }
 
-
     public function mount(SolicitanteModel $dato)
     {
         $this->dato = $dato->toArray();
@@ -49,7 +50,7 @@ class Edit extends Component
     {
         $solicitante = SolicitanteModel::find($this->dato['id']);
         $this->dato = $solicitante->toArray();
-        $this->resetErrorBag(); 
+        $this->resetErrorBag();
         $this->open = true;
     }
 
@@ -65,7 +66,7 @@ class Edit extends Component
 
         $this->validate();
         $solicitante = SolicitanteModel::find($this->dato['id']);
-        if($this->dato['tipo'] === 'docente'){
+        if ($this->dato['tipo'] === 'docente') {
             $this->dato['numero_control'] = null;
         }
         $solicitante->fill($this->dato);
