@@ -8,27 +8,41 @@ use Livewire\Component;
 class Create extends Component
 {
     public $open;
-    public $nombre;
+    public $nombre = '';
 
     protected $rules = [
-        'nombre' => 'required|max:10'
+        'nombre' => 'required|max:10|unique:categoria',
     ];
 
-    public function update($propertyname){
+    protected $listeners = ['saveConfirmed2' => 'save'];
+
+    public function update($propertyname)
+    {
         $this->validateOnly($propertyname);
     }
-    public function save(){
+
+    public function confirmSave2()
+    {
+        // Realiza la validación
+        $this->validate();
+
+        // Si la validación es exitosa, dispara el evento para mostrar SweetAlert
+        $this->dispatch('showConfirmation2', $this->nombre);
+    }
+
+    public function save()
+    {
 
         $this->validate();
 
         CategoriaModel::create([
-             'nombre' => $this->nombre
-            ]);
+            'nombre' => $this->nombre,
+        ]);
 
         $this->reset(['open', 'nombre']);
         $this->dispatch('render');
         $this->dispatch('alert', 'La categoria se ha guardado con exito.');
-        }
+    }
 
     public function render()
     {

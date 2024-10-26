@@ -7,9 +7,9 @@ use Livewire\Component;
 
 class Edit extends Component
 {
-
-    public $open;
+    public $open = false;
     public $dato;
+    public $oldDato; // Almacena el valor original del dato
 
     protected $rules = [
         'dato.nombre' => 'required|max:10|unique:area,nombre',
@@ -20,24 +20,36 @@ class Edit extends Component
     public function mount(AreaModel $dato)
     {
         $this->dato = $dato->toArray();
+        $this->oldDato = $dato->nombre; // Almacena el nombre original
+    }
+
+    public function confirmSave()
+    {
+        // Realiza la validación
+        $this->validate();
+
+        // Despacha el evento de SweetAlert con el nombre original (oldDato)
+        $this->dispatch('showConfirmation', $this->oldDato, $this->dato['nombre']);
     }
 
     public function save()
     {
-
-        $this->validate();
+        // Encuentra el área a editar en la base de datos
         $categoria = AreaModel::find($this->dato['id']);
         $categoria->fill($this->dato);
         $categoria->save();
+
+        // Actualiza el valor de oldDato con el nombre nuevo guardado
+        $this->oldDato = $categoria->nombre;
+
+        // Cierra el modal y despacha eventos necesarios
         $this->reset(['open']);
         $this->dispatch('render');
-        $this->dispatch('alert', 'El área se ha modificado con exito.');
-
+        $this->dispatch('alert', 'El área se ha modificado con éxito.');
     }
 
     public function render()
     {
         return view('livewire.area.edit');
     }
-
 }
