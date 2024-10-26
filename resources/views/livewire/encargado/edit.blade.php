@@ -55,7 +55,7 @@
                     Cancel
                 </x-secondary-button>
 
-                <x-confirm-button onclick="confirmSave('{{ $dato['nombre'] }}')" wire:loading.remove wire:target="save">
+                <x-confirm-button wire:click="confirmSave" wire:loading.remove wire:target="confirmSave">
                     Editar
                 </x-confirm-button>
                 <span wire:loading wire:target="save">Cargando ...</span>
@@ -65,10 +65,25 @@
 
     @push('js')
     <script>
-        function confirmSave(nombre) {
+        Livewire.on('showConfirmation', (dato) => {
+            const oldDate = dato[0];
+            const oldName = oldDate.oldDatos.nombre;
+            const oldLast_p = oldDate.oldDatos.apellido_p;
+            const oldLast_m = oldDate.oldDatos.apellido_m;
+            //const oldLaboratory = oldDate.oldDatos.laboratorio.nombre;
+            const newDate = dato[0];
+            const newName = newDate.newDatos.nombre;
+            const newLast_p = newDate.newDatos.apellido_p;
+            const newLast_m = newDate.newDatos.apellido_m;
+            //const newLaboratory = newDate.newDatos.laboratorio.nombre;
+
+            const oldRegister = `${oldName} ${oldLast_p} ${oldLast_m}`;
+            const newRegister = `${newName} ${newLast_p} ${newLast_m}`;
+
             Swal.fire({
                 title: "¿Estás seguro de editar el registro?",
-                text: "Registro: " + nombre,
+                html: `<p><strong>Nombre Actual:</strong> ${oldRegister}</p>
+                       <p><strong>Nombre Nuevo:</strong> ${newRegister}</p>`,
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
@@ -80,7 +95,7 @@
                     Livewire.dispatch('saveConfirmed');
                 }
             });
-        }
+        });
     </script>
     @endpush
 

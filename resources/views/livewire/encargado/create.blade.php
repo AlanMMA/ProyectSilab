@@ -48,11 +48,45 @@
                 <x-secondary-button class="h-full" wire:click="$set('open',false)">
                     Cancel
                 </x-secondary-button>
-                <x-confirm-button wire:click="save" wire:loading.remove wire:target="save">
+                <x-confirm-button wire:click="confirmSave2" wire:loading.remove wire:target="confirmSave2">
                     Agregar
                 </x-confirm-button>
                 <span wire:loading wire:target="save">Cargando ...</span>
             </div>
         </x-slot>
     </x-dialog-modal>
+
+    @push('js')
+    <script>
+        Livewire.on('showConfirmation2', (dato) => {
+            const datos = dato[0];
+            const name = datos.newDatos.nombre;
+            const last_p = datos.newDatos.apellido_p;
+            const last_m = datos.newDatos.apellido_m;
+        // Prepara el contenido HTML para la alerta
+        let htmlContent = `
+            <p><strong>Nombre:</strong> ${name}</p>
+            <p><strong>Apellido Paterno:</strong> ${last_p}</p>
+            <p><strong>Apellido Materno:</strong> ${last_m}</p>
+        `;
+
+        // Muestra la alerta de SweetAlert
+        Swal.fire({
+            title: "¿Estás seguro de agregar este registro?",
+            html: htmlContent,
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Aceptar",
+            cancelButtonText: "Cancelar"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Livewire.dispatch('saveConfirmed2'); // Llama al método save para guardar el nuevo encargado
+            }
+        });
+    });
+    </script>
+    @endpush
+
 </div>

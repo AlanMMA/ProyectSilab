@@ -16,12 +16,14 @@ class Create extends Component
     protected function rules()
     {
         return [
-            'nombre' => 'required|min:4|max:20|regex:/^[\pL\s]+$/u',
-            'apellido_p' => 'required|min:4|max:20|regex:/^[\pL\s]+$/u',
-            'apellido_m' => 'required|min:4|max:20|regex:/^[\pL\s]+$/u',
+            'nombre' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
+            'apellido_p' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
+            'apellido_m' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
             'id_laboratorio' => 'required|numeric',
         ];
     }
+
+    protected $listeners = ['saveConfirmed2' => 'save'];
 
     protected $messages = [
         'nombre.regex' => 'El nombre solo puede contener letras y espacios.',
@@ -34,9 +36,25 @@ class Create extends Component
         $this->validateOnly($propertyname);
     }
 
+    public function confirmSave2()
+    {
+        // Realiza la validación
+        $this->validate();
+
+        // Si la validación es exitosa, dispara el evento para mostrar SweetAlert
+        $this->dispatch('showConfirmation2', [
+            'newDatos' => [
+                'nombre' => $this->nombre,
+                'apellido_p' => $this->apellido_p,
+                'apellido_m' => $this->apellido_m,
+            ],
+        ]);
+    }
+
     public function save()
     {
         $this->validate();
+
         EncargadoModel::create([
             'nombre' => $this->nombre,
             'apellido_p' => $this->apellido_p,
