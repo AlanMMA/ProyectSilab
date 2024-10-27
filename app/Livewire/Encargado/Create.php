@@ -11,6 +11,7 @@ class Create extends Component
 
     public $open;
     public $nombre, $apellido_p, $apellido_m, $id_laboratorio;
+    public $laboratorios;
     //public $tipo = 'docente';
 
     protected function rules()
@@ -41,13 +42,18 @@ class Create extends Component
         // Realiza la validación
         $this->validate();
 
+        // Obtiene el nombre del laboratorio a partir del ID seleccionado
+        $laboratorioNombre = $this->laboratorios[$this->id_laboratorio] ?? 'No asignado';
+
         // Si la validación es exitosa, dispara el evento para mostrar SweetAlert
         $this->dispatch('showConfirmation2', [
             'newDatos' => [
                 'nombre' => $this->nombre,
                 'apellido_p' => $this->apellido_p,
                 'apellido_m' => $this->apellido_m,
+                'id_laboratorio' => $this->id_laboratorio,
             ],
+            'laboratorio_nombre' => $laboratorioNombre, // Enviar el nombre del laboratorio
         ]);
     }
 
@@ -69,7 +75,9 @@ class Create extends Component
 
     public function render()
     {
-        $laboratorios = LaboratorioModel::pluck('nombre', 'id');
-        return view('livewire.encargado.create', compact('laboratorios'));
+        $this->laboratorios = LaboratorioModel::pluck('nombre', 'id');
+        return view('livewire.encargado.create', [
+            'laboratorios' => $this->laboratorios,
+        ]);
     }
 }

@@ -63,11 +63,15 @@
             const name = datos.newDatos.nombre;
             const last_p = datos.newDatos.apellido_p;
             const last_m = datos.newDatos.apellido_m;
+            const lab = datos.laboratorio_nombre;
         // Prepara el contenido HTML para la alerta
         let htmlContent = `
-            <p><strong>Nombre:</strong> ${name}</p>
-            <p><strong>Apellido Paterno:</strong> ${last_p}</p>
-            <p><strong>Apellido Materno:</strong> ${last_m}</p>
+            <table style="width: 100%; text-align: left;">
+                <tr><td><strong>Nombre: </strong>${name}</td></tr>
+                <tr><td><strong>Apellido Paterno: </strong>${last_p}</td></tr>
+                <tr><td><strong>Apellido Materno: </strong>${last_m}</td></tr>
+                <tr><td><strong>Laboratorio: </strong>${lab}</td></tr>
+            </table>
         `;
 
         // Muestra la alerta de SweetAlert

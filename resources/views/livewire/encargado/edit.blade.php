@@ -65,25 +65,10 @@
 
     @push('js')
     <script>
-        Livewire.on('showConfirmation', (dato) => {
-            const oldDate = dato[0];
-            const oldName = oldDate.oldDatos.nombre;
-            const oldLast_p = oldDate.oldDatos.apellido_p;
-            const oldLast_m = oldDate.oldDatos.apellido_m;
-            //const oldLaboratory = oldDate.oldDatos.laboratorio.nombre;
-            const newDate = dato[0];
-            const newName = newDate.newDatos.nombre;
-            const newLast_p = newDate.newDatos.apellido_p;
-            const newLast_m = newDate.newDatos.apellido_m;
-            //const newLaboratory = newDate.newDatos.laboratorio.nombre;
-
-            const oldRegister = `${oldName} ${oldLast_p} ${oldLast_m}`;
-            const newRegister = `${newName} ${newLast_p} ${newLast_m}`;
-
+        Livewire.on('showConfirmation', (mensaje) => {
             Swal.fire({
                 title: "¿Estás seguro de editar el registro?",
-                html: `<p><strong>Nombre Actual:</strong> ${oldRegister}</p>
-                       <p><strong>Nombre Nuevo:</strong> ${newRegister}</p>`,
+                html: mensaje,
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
