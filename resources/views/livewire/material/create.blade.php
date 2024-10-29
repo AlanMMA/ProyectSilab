@@ -18,8 +18,8 @@
                 <x-label value="Elegir marca:"></x-label>
                 <select name="id_marca" id="id_marca-{{ $dato['id'] ?? 'new' }}" wire:model.live="id_marca"
                     class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
-                    @foreach ($marcas as $id => $nombre)
                     <option value="0">Elija la marca del producto</option>
+                    @foreach ($marcas as $id => $nombre)
                     <option value="{{ $id }}">{{ $id }} {{ $nombre }}</option>
                     @endforeach
                 </select>
@@ -85,11 +85,32 @@
                 <x-secondary-button class="h-full" wire:click="$set('open',false)">
                     Cancel
                 </x-secondary-button>
-                <x-confirm-button wire:click="save" wire:loading.remove wire:target="save">
+                <x-confirm-button wire:click="confirmSave2" wire:loading.remove wire:target="confirmSave2">
                     Agregar
                 </x-confirm-button>
                 <span wire:loading wire:target="save">Cargando ...</span>
             </div>
         </x-slot>
     </x-dialog-modal>
+
+    @push('js')
+    <script>
+        Livewire.on('showConfirmation2', () => {
+            Swal.fire({
+                title: "¿Estás seguro de agregar este registro?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Aceptar",
+                cancelButtonText: "Cancelar"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Livewire.dispatch('saveConfirmed2');
+                }
+            });
+        });
+    </script>
+    @endpush
+
 </div>

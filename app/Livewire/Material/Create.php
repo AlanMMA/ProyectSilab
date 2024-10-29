@@ -41,6 +41,17 @@ class Create extends Component
         $this->validateOnly($propertyname);
     }
 
+    protected $listeners = ['saveConfirmed2' => 'save'];
+
+    public function confirmSave2()
+    {
+        // Realiza la validación
+        $this->validate();
+
+        // Si la validación es exitosa, dispara el evento para mostrar SweetAlert
+        $this->dispatch('showConfirmation2');
+    }
+
     public function save()
     {
         $this->validate();

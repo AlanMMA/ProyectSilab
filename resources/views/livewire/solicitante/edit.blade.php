@@ -77,7 +77,7 @@
                     Cancel
                 </x-secondary-button>
 
-                <x-confirm-button onclick="confirmSave('{{ $dato['nombre'] }}')" wire:loading.remove wire:target="save">
+                <x-confirm-button wire:click="confirmSave" wire:loading.remove wire:target="confirmSave">
                     Editar
                 </x-confirm-button>
                 <span wire:loading wire:target="save">Cargando ...</span>
@@ -87,10 +87,9 @@
 
     @push('js')
     <script>
-        function confirmSave(nombre) {
+        Livewire.on('showConfirmation', () => {
             Swal.fire({
                 title: "¿Estás seguro de editar el registro?",
-                text: "Registro: " + nombre,
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
@@ -102,7 +101,7 @@
                     Livewire.dispatch('saveConfirmed');
                 }
             });
-        }
+        });
     </script>
     @endpush
 

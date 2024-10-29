@@ -15,6 +15,7 @@ class Edit extends Component
     public $name, $email, $id_rol;
     public $id_encargado;
     public $nombreE, $apellido_p, $apellido_m;
+    public $oldDato;
 
     protected $rules = [
         'dato.name' => 'required|string|min:3|max:50|regex:/^[a-zA-Z\s]+$/',
@@ -28,6 +29,7 @@ class Edit extends Component
     {
         $this->loadUserData();
         $this->dato = $dato->toArray();
+        $this->oldDato = $dato->toArray();
     }
 
     public function loadUserData()
@@ -41,16 +43,38 @@ class Edit extends Component
         $this->apellido_m = $user->encargado ? $user->encargado->apellido_m : '';
     }
 
+    public function confirmSave()
+    {
+        // Realiza la validación
+        $this->validate();
+
+        // Verifica si los tres campos de nombre han cambiado
+        $nombreModificado = $this->dato['name'] !== $this->oldDato['name'];
+        $emailModificado = $this->dato['email'] !== $this->oldDato['email'];
+        $rollModificado = $this->dato['id_rol'] !== $this->oldDato['id_rol'];
+
+        // Si hay algún cambio, muestra mensaje de confirmación
+        if ($nombreModificado || $emailModificado || $rollModificado) {
+            $this->dispatch('showConfirmation');
+        } else {
+            // Si no hubo cambios, muestra mensaje de que no se realizaron cambios
+            $this->reset(['open']);
+            $this->dispatch('alert', 'No se realizaron cambios.');
+        }
+    }
+
     public function save()
     {
 
-        $this->validate();
         $categoria = User::find($this->dato['id']);
         $categoria->fill($this->dato);
         $categoria->save();
+
+        $this->oldDato = $categoria->toArray();
+
         $this->reset(['open', 'name', 'email', 'id_rol']);
         $this->dispatch('render');
-        $this->dispatch('alert', 'La categoria se ha modificado con exito.');
+        $this->dispatch('alert', 'El usuario se ha modificado con exito.');
 
     }
 
