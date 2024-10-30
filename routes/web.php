@@ -1,8 +1,5 @@
 <?php
 
-use App\Http\Controllers\PrestamosController;
-use App\Livewire\Prestamo\Show;
-use App\Models\PrestamoModel;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -54,11 +51,16 @@ Route::middleware([
         return view('ViewUser/Material-index');
     })->name('material');
 
-    Route::get('/Prestamos', function(){
+    Route::get('/Prestamos', function () {
         return view('ViewUser/Prestamo-index');
     })->name('prestamo');
 
-    Route::get('/Prestamos/Form', function(){
+    Route::get('/Prestamos/Form', function () {
         return view('ViewUser/createPrestamo');
     })->name('prestamosc');
+
+    Route::get('/Prestamos/{id}', function ($id) {
+        return view('ViewUser/detallePrestamo-index', compact('id'));
+    })->name('prestamos.detalle');
+
 });

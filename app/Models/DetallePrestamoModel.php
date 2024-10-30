@@ -16,16 +16,18 @@ class DetallePrestamoModel extends Model
         'fecha_prestamo',
         'fecha_devolucion',
         'id_material',
-        'cantidad'
+        'cantidad',
     ];
 
     public $timestamps = false;
 
-    public function prestamos(): BelongsTo{
+    public function prestamo(): BelongsTo
+    {
         return $this->belongsTo(PrestamoModel::class, 'id_prestamo');
     }
 
-    public function materialDP(): BelongsTo{
+    public function material(): BelongsTo
+    {
         return $this->belongsTo(MaterialModel::class, 'id_material');
     }
     use HasFactory;

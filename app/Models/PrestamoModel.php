@@ -14,17 +14,19 @@ class PrestamoModel extends Model
         'id',
         'fecha',
         'id_encargado',
-        'id_solicitante'
+        'id_solicitante',
     ];
 
     public $timestamps = false;
-    
-    public function encargadoP(): BelongsTo{
+
+    public function encargadoP(): BelongsTo
+    {
         return $this->belongsTo(EncargadoModel::class, 'id_encargado');
     }
 
-    public function solicitanteP(): BelongsTo{
-        return $this->belongsTo(SolicitanteModel::class, 'id_soliciante');
+    public function solicitante(): BelongsTo
+    {
+        return $this->belongsTo(SolicitanteModel::class, 'id_solicitante');
     }
 
     use HasFactory;
