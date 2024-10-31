@@ -28,6 +28,8 @@ class Index extends Component
 
     public function render()
     {
+        $idEncargado = auth()->user()->id_encargado; // Obtén el id_encargado del usuario autenticado
+
         $datos = PrestamoModel::join('solicitante', 'prestamo.id_solicitante', '=', 'solicitante.id')
             ->join('encargado', 'prestamo.id_encargado', '=', 'encargado.id')
             ->select(
@@ -41,14 +43,15 @@ class Index extends Component
                 'encargado.apellido_p AS encargado_apellido_p',
                 'encargado.apellido_m AS encargado_apellido_m'
             )
+            ->where('prestamo.id_encargado', $idEncargado) // Filtro por el id_encargado del usuario autenticado
             ->where(function ($query) {
                 $query->where('solicitante.nombre', 'like', '%' . $this->search . '%')
                     ->orWhere('solicitante.apellido_p', 'like', '%' . $this->search . '%')
                     ->orWhere('solicitante.apellido_m', 'like', '%' . $this->search . '%')
                     ->orWhere('solicitante.tipo', 'like', '%' . $this->search . '%')
-                    ->orWhere('encargado.nombre', 'like', '%' . $this->search . '%')
-                    ->orWhere('encargado.apellido_p', 'like', '%' . $this->search . '%')
-                    ->orWhere('encargado.apellido_m', 'like', '%' . $this->search . '%')
+                /*->orWhere('encargado.nombre', 'like', '%' . $this->search . '%')
+            ->orWhere('encargado.apellido_p', 'like', '%' . $this->search . '%')
+            ->orWhere('encargado.apellido_m', 'like', '%' . $this->search . '%')*/
                     ->orWhere('prestamo.fecha', 'like', '%' . $this->search . '%');
             })
             ->orderBy($this->sort, $this->direc)
