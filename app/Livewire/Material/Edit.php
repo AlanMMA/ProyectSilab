@@ -21,7 +21,6 @@ class Edit extends Component
             'dato.id_marca' => 'required|numeric',
             'dato.modelo' => 'required|max:20|regex:/^[\pL0-9\s]+$/u',
             'dato.id_categoria' => 'required|numeric',
-            'dato.stock' => 'required|numeric',
             'dato.descripcion' => 'required|max:200',
             'dato.localizacion' => 'required|max:50|regex:/^[\pL0-9\s]+$/u',
             'dato.id_encargado' => 'required|numeric',

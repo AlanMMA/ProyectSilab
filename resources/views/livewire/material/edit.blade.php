@@ -52,7 +52,7 @@
             </div>
             <div class="mb-4">
                 <x-label value="Stock:"></x-label>
-                <x-input wire:model="dato.stock" wire:keyup="update('dato.stock')" type="text" class="w-full">
+                <x-input wire:model="dato.stock" disabled wire:keyup="update('dato.stock')" type="text" class="w-full">
                 </x-input>
                 @error('dato.stock')
                 <span class="text-red-500 text-sm">{{$message}}</span>

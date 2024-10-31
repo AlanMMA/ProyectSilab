@@ -18,8 +18,8 @@ class Edit extends Component
 
     protected $rules = [
         'dato.name' => 'required|string|min:3|max:50|regex:/^[a-zA-Z\s]+$/',
-        'dato.email' => 'required|email|max:255',
-        'dato.id_rol' => 'required|numeric',
+        // 'dato.email' => 'required|email|max:255',
+        // 'dato.id_rol' => 'required|numeric',
     ];
     
 
@@ -46,7 +46,7 @@ class Edit extends Component
         $categoria = User::find($this->dato['id']);
         $categoria->fill($this->dato);
         $categoria->save();
-        $this->reset(['open', 'name', 'email', 'id_rol']);
+        $this->reset(['open', 'name']);
         $this->dispatch('render');
         $this->dispatch('alert', 'La categoria se ha modificado con exito.');
 

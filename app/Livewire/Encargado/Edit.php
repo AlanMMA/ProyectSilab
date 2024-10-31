@@ -10,7 +10,7 @@ class Edit extends Component
 {
 
     public $open;
-    public $dato;
+    public $dato, $id_laboratorio, $laboratorios;
 
     protected function rules()
     {
@@ -35,6 +35,7 @@ class Edit extends Component
     public function mount(EncargadoModel $dato)
     {
         $this->dato = $dato->toArray();
+        $this->laboratorios = LaboratorioModel::pluck('nombre', 'id')->toArray();
     }
 
     public function save()
@@ -47,6 +48,25 @@ class Edit extends Component
         $this->dispatch('render');
         $this->dispatch('alert', 'El encargado se ha modificado con exito.');
     }
+
+    public function verificarLaboratorio()
+    {
+        if ($this->dato['id_laboratorio'] == EncargadoModel::find($this->dato['id'])->id_laboratorio) {
+            return;
+        }
+
+        $ocupado = EncargadoModel::where('id_laboratorio', $this->dato['id_laboratorio'])
+            ->where('id', '!=', $this->dato['id'])
+            ->exists();
+
+        if ($ocupado) {
+            $this->dispatch('alert2', 'Este laboratorio ya está asignado a otro encargado.');
+
+            $this->dato['id_laboratorio'] = EncargadoModel::find($this->dato['id'])->id_laboratorio;
+        }
+    }
+
+
 
     public function render()
     {

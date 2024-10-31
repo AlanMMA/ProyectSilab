@@ -34,7 +34,7 @@
                 <span class="text-red-500 text-sm">{{$message}}</span>
                 @enderror
             </div>
-            <div class="mb-4">
+            {{-- <div class="mb-4">
                 <x-label value="Asignar un encargado:"></x-label>
                 <select name="id_laboratorio" id="id_laboratorio-{{ $dato['id'] ?? 'new' }}"
                     wire:model="dato.id_laboratorio"
@@ -46,7 +46,24 @@
                 @error('dato.id_laboratorio')
                 <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
+            </div> --}}
+            <div class="mb-4">
+                <x-label value="Asignar un laboratorio:" />
+                <select name="id_laboratorio" id="id_laboratorio-{{ $dato['id'] ?? 'new' }}" 
+                    wire:model="dato.id_laboratorio"
+                    wire:change="verificarLaboratorio"
+                    class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                    <option value="0">Seleccione un laboratorio</option>
+                    @foreach ($laboratorios as $id => $nombre)
+                        <option value="{{ $id }}">{{ $nombre }}</option>
+                    @endforeach
+                </select>
+            
+                @error('id_laboratorio')
+                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                @enderror
             </div>
+            
         </x-slot>
 
         <x-slot name="footer">
@@ -62,4 +79,33 @@
             </div>
         </x-slot>
     </x-dialog-modal>
+
+    @push('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Livewire.on('alert', message => {
+                setTimeout(() => {
+                    Swal.fire({
+                        title: 'Éxito',
+                        text: message,
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+                }, 0);
+            });
+
+            Livewire.on('alert2', message => {
+                setTimeout(() => {
+                    Swal.fire({
+                        title: 'Alerta',
+                        text: message,
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    });
+                }, 0);
+            });
+        });
+    </script>
+@endpush
+
 </div>

@@ -11,7 +11,7 @@ class Create extends Component
     public $nombre;
 
     protected $rules = [
-        'nombre' => 'required|max:10'
+        'nombre' => 'required|max:25'
     ];
 
     public function update($propertyname){

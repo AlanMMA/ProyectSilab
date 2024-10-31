@@ -22,7 +22,7 @@
                 <x-input type="text" wire:model="dato.email" class="w-full mt-2"></x-input>
                 <x-input-error for="dato.email"></x-input-error>
             </div>
-            <div class="mb-4">
+            {{-- <div class="mb-4">
                 <x-label value="Asignar un rol:"></x-label>
                 <select name="id_rol" wire:model.live="dato.id_rol"
                     class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
@@ -63,7 +63,7 @@
                         <input type="hidden" wire:model="dato.id_encargado" value="{{ auth()->user()->id }}">
                     @endauth
                 </div>
-            @endif
+            @endif --}}
             
         </x-slot>
         

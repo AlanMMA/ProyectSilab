@@ -1,5 +1,21 @@
 <div class="h-full overflow-y-auto">
     <div class="relative shadow-md">
+        <div class="py-4 px-6 flex flex-col w-full justify-end items-center gap-4 sm:flex-row">
+            @php
+                $Gerente = auth()->user()->id_rol;
+            @endphp
+            @if ($Gerente == 7)
+            <p class="text-lg font-bold">Materiales del encargado:</p>
+            <select name="" wire:model.live = "SelectEncargado"
+            class="w-min border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                <option value="0">Elija un encargado</option>
+                @foreach ($encargados as $encargado)
+                    <option value="{{$encargado->id}}">{{$encargado->id}} {{$encargado->nombre}} {{$encargado->apellido_p}} {{$encargado->apellido_m}}</option>
+                @endforeach
+            </select>
+            @endif
+            
+        </div>
         <div class="py-4 px-6 block items-center gap-4 w-full sm:flex">
             <div class="flex items-center justify-center gap-1 mb-4 sm:mb-0">
                 <span class="text-gray-900 dark:text-white">Mostrar</span>
@@ -159,11 +175,13 @@
                                 @endif
                             </div>
                         </th>
+                        @if ($Gerente != 7)
                         <th scope="col" class="px-6 py-3 ">
                             <div class="flex items-center">
                                 Acciones
                             </div>
                         </th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody>
@@ -197,9 +215,11 @@
                         <td class="px-6 py-4">
                             {{ $dato->encargado->nombre }}
                         </td>
+                        @if ($Gerente != 7)
                         <td class="px-6 py-4 flex justify-center items-center gap-2">
+                                
                             @livewire('Material.Edit', ['dato' => $dato], key('edit-' . $dato->id))
-
+                            
                             <a class="bg-red-600 hover:bg-red-500 pt-2 pb-1 px-2 rounded-md cursor-pointer"
                                 wire:click="$dispatch('destroy', { id: {{ $dato->id }}, nombre: '{{ $dato->nombre }}' })">
                                 <span class="material-symbols-outlined text-white">
@@ -207,17 +227,24 @@
                                 </span>
                             </a>
                         </td>
+                        @endif
                     </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
         @else
-        <div class="px-6 py-4 bg-white border-r-4">
-            No hay resultados
-            <br>
-            ¿Desea agregarlo?
+        @if ($Gerente == 7)
+        <div class="py-4 px-6 bg-white flex justify-around gap-6">
+            Seleccione a un encargado para poder ver los datos 
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000"><path d="M440-160v-487L216-423l-56-57 320-320 320 320-56 57-224-224v487h-80Z"/></svg>
         </div>
+        @else
+        <div class="py-4 px-6 bg-white">
+            No hay resultados con esos caracteres
+        </div>
+        @endif
+        
         @endif
         <div class="px-6 py-3">
             {{ $datos->onEachSide(1)->links() }}

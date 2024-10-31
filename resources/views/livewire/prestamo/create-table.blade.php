@@ -1,4 +1,4 @@
-<div class="h-full w-full flex flex-col gap-6 pr-6">
+<div class="h-full w-min flex flex-col gap-6 pr-6">
     <div class="flex flex-col items-center gap-4">
         <div class="w-full flex justify-end gap-6 items-center">
             <button class="bg-red-600 hover:bg-red-500 pt-2 pb-1 px-2 rounded-md cursor-pointer"
@@ -6,12 +6,10 @@
                 <span class="material-symbols-outlined text-white">
                     close
                 </span>
-            </button>
+            </button>   
             <x-input type="text" wire:model="solicitanteInfo" readonly></x-input>
-            <x-input wire:model.live="fechaDev" type="date" />
             <p class="text-black dark:text-white">Prestamo No.{{ $idPrest }}</p>
         </div>
-
     </div>
     <div class="w-full flex flex-col justify-center gap-12">
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 ">
@@ -59,17 +57,17 @@
                     class=" odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                         <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                             {{ $index + 1 }}</th>
-                        <td class="px-6 py-3 text-center dark:text-white">{{ $material['nombre'] }}</td>
-                        <td class="px-6 py-3 content-center" contenteditable="true">
+                        <td class="px-6 py-3 text-center text-black dark:text-white">{{ $material['nombre'] }}</td>
+                        <td class="px-6 py-3 content-center text-black dark:text-white" contenteditable="true">
                             <input type="number" min="1"
                                 wire:model.live="selectedMaterials.{{ $index }}.cantidad"
-                                class="w-full border-none text-end bg-transparent dark:text-white">
+                                class="w-full border-none text-end bg-transparent text-black dark:text-white">
                         </td>
-                        <td class="px-6 py-3 text-center dark:text-white">{{ $material['fechaPrestamo'] }}</td>
-                        <td class="px-6 py-3 text-center dark:text-white">{{ $material['fechaDev'] }}</td>
+                        <td class="px-6 py-3 text-center text-black dark:text-white">{{ $material['fechaPrestamo'] }}</td>
+                        <td class="px-6 py-3 text-center text-black dark:text-white">{{ $material['fechaDev'] }}</td>
                         <td class="px-6 py-3 text-center" contenteditable="true">
                             <textarea wire:model.live="selectedMaterials.{{ $index }}.observacion" type="text" placeholder="Escriba aquí"
-                                class="w-full text-xs bg-transparent text-white"></textarea>
+                                class="w-full text-xs bg-transparent text-black dark:text-white"></textarea>
                         </td>
                         <td class="px-6 py-3 text-center">
                             <button class="bg-red-600 hover:bg-red-500 pt-2 pb-1 px-2 rounded-md cursor-pointer"

@@ -6,7 +6,7 @@
 
     <x-dialog-modal wire:model.live="open">
         <x-slot name="title">
-            Agregar un nuevo usuario
+            Agregar un nuevo alumno de servicio social
         </x-slot>
 
         <x-slot name="content">
@@ -47,20 +47,19 @@
             </div>
 
             <div class="mb-4">
-                <x-label value="Asignar un rol:"></x-label>
-                <select name="id_rol" wire:model.live="id_rol"
-                    class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
-                    <option value="0">Seleccione un rol</option>
-                    @foreach ($roles as $id => $nombre)
-                        <option value="{{ $id }}">{{ $nombre }}</option>
-                    @endforeach
-                </select>
-                @error('id_rol')
-                    <span class="text-red-500 text-sm">{{ $message }}</span>
-                @enderror
+                <x-label value="Encargado:"></x-label>
+                @auth
+                    <x-input type="text" class="w-full"
+                        value="{{ $nombreE }} {{ $apellido_p }} {{ $apellido_m }} = {{ auth()->user()->id_encargado }}"
+                        disabled></x-input>
+                    <input type="hidden" wire:model="id_encargado">
+                    @error('id_encargado')
+                        <span class="text-red-500 text-sm">{{ $message }}</span>
+                    @enderror
+                @endauth
             </div>
 
-            @if ($id_rol == 0)
+            {{-- @if ($id_rol == 0)
 
             @elseif ($id_rol == 1)
                 <div class="mb-4">
@@ -90,7 +89,7 @@
                     @enderror
                     @endauth
                 </div>
-            @endif
+            @endif --}}
         </x-slot>
 
         <x-slot name="footer">

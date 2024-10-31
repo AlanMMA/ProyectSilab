@@ -29,7 +29,7 @@
             </div>
             <div class="mb-4">
                 <x-label value="Modelo:"></x-label>
-                <x-input wire:model="modelo" wire:keyup="update('modelo')" type="text" class="w-full"></x-input>
+                <x-input wire:model="modelo" wire:keyup="update('modelo')" type="text" class="w-full"></x-input>    
                 @error('modelo')
                 <span class="text-red-500 text-sm">{{$message}}</span>
                 @enderror

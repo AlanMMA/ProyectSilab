@@ -36,7 +36,7 @@ class Create extends Component
 
     public function save()
     {
-
+        $this->id_rol = 2;
         $this->validate();
         User::create([
             'name' => $this->name,

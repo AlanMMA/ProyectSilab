@@ -37,7 +37,8 @@
                 @endif
             @endif
         </div>
-    
+        
+
         <button class="bg-green-600 hover:bg-green-500 pt-2 pb-1 px-2 rounded-md cursor-pointer"
             wire:click="confirmarSeleccion" @if (!$solicitanteSeleccionado2) disabled @endif>
             <span class="material-symbols-outlined text-white">
@@ -48,7 +49,11 @@
 
     <div class="mt-6 mx-4">
         <x-label value="Fecha de prestamo:"></x-label>
-        <x-input wire:model="fechaPrestamo" class="w-min" type="text" disabled></x-input>
+        <x-input wire:model="fechaPrestamo" class="w-full" type="text" disabled></x-input>
+    </div>
+    <div class="mt-6 mx-4">
+        <x-label value="Fecha de devolución:"></x-label>
+        <x-input wire:model="fechaDev" class="w-full" type="date"></x-input>
     </div>
     <div class="mt-6 mx-4">
         <x-label value="Seleccione el material:"></x-label>
@@ -133,15 +138,15 @@
 
     @push('js')
         <script>
-                Livewire.on('mostrarErrorFecha', (mensaje) => {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: mensaje,
-                        confirmButtonColor: '#d33',
-                        confirmButtonText: 'Aceptar'
-                    });
+            Livewire.on('mostrarErrorFecha', (mensaje) => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: mensaje,
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: 'Aceptar'
                 });
+            });
         </script>
     @endpush
 

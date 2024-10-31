@@ -27,6 +27,7 @@ class CreateForm extends Component
     public function updatedCant($value)
     {
         $this->search = '';
+        
         if ($value == 'alumno') {
             $this->solicitantes = SolicitanteModel::where('tipo', 'alumno')->get();
         } elseif ($value == 'docente') {
@@ -40,6 +41,7 @@ class CreateForm extends Component
     {
         if (empty($this->search)) {
             $this->resetSelectedSolicitante();
+            $this->solicitantes = SolicitanteModel::all();
         }
 
         if ($this->cant == '0') {
@@ -95,10 +97,21 @@ class CreateForm extends Component
     public function selectSolicitante($id)
     {
         $this->selectedSolicitante = SolicitanteModel::find($id);
-        $this->search = $this->selectedSolicitante->nombre . ' ' . $this->selectedSolicitante->apellido_p;
-        $this->solicitantes = [];
-        $this->cantid = $id;
+        if ($this->selectedSolicitante) {
+            $this->search = $this->selectedSolicitante->nombre . ' ' . $this->selectedSolicitante->apellido_p;
+        }
+        $this->solicitantes = []; 
+        $this->cantid = $id; 
+        $this->solicitanteSeleccionado2 = true;
     }
+
+    public function clearSelection()
+{
+    $this->selectedSolicitante = null; 
+    $this->search = '';
+    $this->solicitantes = SolicitanteModel::all(); 
+    $this->solicitanteSeleccionado2 = false;
+}
 
     public function confirmarSeleccion()
     {
@@ -142,6 +155,7 @@ class CreateForm extends Component
         $this->btnConfirm = false;
         $this->solicitantes = [];
         $this->solicitanteSeleccionado2 = true;
+        $this->fechaDev = null;
     }
 
     public function addMaterial()
@@ -170,13 +184,15 @@ class CreateForm extends Component
                     'id' => $material->id,
                     'nombre' => $material->nombre,
                     'cantidad' => $this->Cantidad,
-                    'fechaPrestamo' => $this->fechaPrestamo
+                    'fechaPrestamo' => $this->fechaPrestamo,
+                    'fechaDev' => $this->fechaDev
                 ];
                 $this->dispatch('materialAgregado', [
                     'id' => $material->id,
                     'nombre' => $material->nombre,
                     'cantidad' => $this->Cantidad,
-                    'fechaPrestamo' => $this->fechaPrestamo
+                    'fechaPrestamo' => $this->fechaPrestamo,
+                    'fechaDev' => $this->fechaDev
                 ]);
                 $this->selectMat = null;
                 $this->Cantidad = 1;

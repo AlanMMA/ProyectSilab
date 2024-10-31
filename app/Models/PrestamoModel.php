@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PrestamoModel extends Model
 {
@@ -18,13 +19,20 @@ class PrestamoModel extends Model
     ];
 
     public $timestamps = false;
-    
-    public function encargadoP(): BelongsTo{
+
+    public function encargadoP(): BelongsTo
+    {
         return $this->belongsTo(EncargadoModel::class, 'id_encargado');
     }
 
-    public function solicitanteP(): BelongsTo{
+    public function solicitanteP(): BelongsTo
+    {
         return $this->belongsTo(SolicitanteModel::class, 'id_soliciante');
+    }
+
+    public function detalles(): HasMany
+    {
+        return $this->hasMany(DetallePrestamoModel::class, 'id_prestamo');
     }
 
     use HasFactory;

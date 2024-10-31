@@ -62,4 +62,11 @@ Route::middleware([
         return view('ViewUser/createPrestamo');
     })->name('prestamosc');
 
+    Route::get('/Prestamos/Update', function(){
+        return view('ViewUser/UpPrestamo');
+    })->name('upprestamo');
+
+    Route::get('Material/Entradas', function(){
+        return view('ViewUser/MaterialUpStock');
+    })->name('materialEntradas');
 });

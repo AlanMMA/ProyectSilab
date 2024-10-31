@@ -72,7 +72,6 @@ class CreateTable extends Component
         $this->solicitanteInfo = '';
         $this->solicitanteSeleccionadoT = false;
         $this->selectedMaterials = [];
-        $this->fechaDev = '';
         $this->buttonTable = false;
         $this->dispatch('resetearMateriales', ['ids' => $materialesEliminados]);
         $this->dispatch('resetearFormulario');
@@ -85,7 +84,7 @@ class CreateTable extends Component
             'nombre' => $data['nombre'],
             'cantidad' => $data['cantidad'],
             'fechaPrestamo' => $data['fechaPrestamo'],
-            'fechaDev' => $this->fechaDev
+            'fechaDev' => $data['fechaDev']
         ];
     }
 
@@ -98,10 +97,11 @@ class CreateTable extends Component
         $this->dispatch('materialEliminado', ['id' => $materialEliminado['id']]);
     }
 
-    public function updatedFechaDev($value)
-    {
-        $this->dispatch('fechaDevUpdated', ['fechaDev' => $value]);
-    }
+    // public function updatedFechaDev($value)
+    // {
+    //     $this->dispatch('fechaDevUpdated', ['fechaDev' => $value]);
+    // }
+    
     public function updated($propertyName)
     {
         if (Str::startsWith($propertyName, 'selectedMaterials.') && Str::endsWith($propertyName, '.observacion')) {
@@ -118,8 +118,9 @@ class CreateTable extends Component
         }
     }
 
-    public function confirmarPrestamo(){
-        
+    public function confirmarPrestamo()
+    {
+
         $this->dispatch('confirmarPrestamo');
     }
 
@@ -132,7 +133,7 @@ class CreateTable extends Component
             }
         }
         foreach ($this->selectedMaterials as $material) {
-            $materialData = MaterialModel::find($material['id']);    
+            $materialData = MaterialModel::find($material['id']);
             if (!$materialData) {
                 $this->dispatch('ErrorPrestamo', 'El material seleccionado no existe.');
                 return;
@@ -140,41 +141,43 @@ class CreateTable extends Component
             if ($materialData->stock < $material['cantidad']) {
                 $this->dispatch('ErrorPrestamo', 'No hay suficiente stock para el material: ' . $material['nombre'] . '. Stock disponible: ' . $materialData->stock);
                 return;
-            } 
+            }
             if ($material['cantidad'] < 1) {
                 $this->dispatch('ErrorPrestamo', 'La cantidad debe ser al menos 1 para el material: ' . $material['nombre']);
                 return;
             }
         }
-    
+
         DB::beginTransaction();
-    
+
         try {
             if (count($this->selectedMaterials) > 0) {
                 $primerMaterial = $this->selectedMaterials[0];
-    
+
                 $prestamo = PrestamoModel::create([
                     'fecha' => $primerMaterial['fechaPrestamo'],
-                    'id_encargado' => auth()->user()->id_encargado, 
+                    'id_encargado' => auth()->user()->id_encargado,
                     'id_solicitante' => $this->solicitanteId
                 ]);
-    
+
                 $prestamoId = $prestamo->id;
-    
+                $estadoPrest = 'pendiente';
                 foreach ($this->selectedMaterials as $material) {
+
                     DetallePrestamoModel::create([
                         'id_prestamo' => $prestamoId,
                         'fecha_prestamo' => $material['fechaPrestamo'],
                         'fecha_devolucion' => $material['fechaDev'],
                         'id_material' => $material['id'],
                         'cantidad' => $material['cantidad'],
+                        'EstadoPrestamo' => $estadoPrest,
                         'observacion' => $material['observacion']
                     ]);
                     $materialData = MaterialModel::find($material['id']);
                     $materialData->stock -= $material['cantidad'];
                     $materialData->save();
                 }
-    
+
                 DB::commit();
                 $this->dispatch('alert', 'El préstamo se ha guardado con éxito.');
                 $this->resetDatos();
@@ -185,11 +188,11 @@ class CreateTable extends Component
             }
         } catch (\Exception $e) {
             DB::rollBack();
-    
+
             $this->dispatch('errorGuardado', 'Hubo un error al guardar el préstamo: ' . $e->getMessage());
         }
     }
-    
+
 
 
 
@@ -197,13 +200,13 @@ class CreateTable extends Component
     // {
     //     if (count($this->selectedMaterials) > 0) {
     //         $primerMaterial = $this->selectedMaterials[0];
-    
+
     //         $this->datosPrestamo = [
     //             'fecha' => $primerMaterial['fechaPrestamo'],  
     //             'id_encargado' => auth()->user()->id_encargado,
     //             'id_solicitante' => $this->solicitanteId,
     //         ];
-    
+
     //         $this->datosDetallePrestamo = [];
     //         foreach ($this->selectedMaterials as $material) {
     //             $this->datosDetallePrestamo[] = [
@@ -222,7 +225,7 @@ class CreateTable extends Component
     //         session()->flash('error', 'No hay materiales seleccionados.');
     //     }
     // }
-    
+
 
     public function render()
     {

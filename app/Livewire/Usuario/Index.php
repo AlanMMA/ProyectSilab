@@ -12,6 +12,7 @@ class Index extends Component
     public $sort = 'id';
     public $direc = 'asc';
     public $cant = '10';
+    public $UserId;
     protected $listeners = ['render' => 'render', 'destroyPost'];
     use WithPagination;
 
@@ -28,14 +29,18 @@ class Index extends Component
 
     public function render()
     {
-        $datos = User::where('name', 'like', '%' . $this->search . '%')
-            ->orWhere('email', 'like', '%' . $this->search . '%')
-            ->orWhereHas('rol', function ($query) {
-                $query->where('nombre', 'like', '%' . $this->search . '%');
-            })
-            ->orderBy($this->sort, $this->direc)
-            ->paginate($this->cant)
-            ->withQueryString();
+        $this->UserId = auth()->user()->id_encargado;
+        $datos = User::where('id_encargado', $this->UserId)
+        ->where(function ($query) {
+            $query->where('name', 'like', '%' . $this->search . '%')
+                  ->orWhere('email', 'like', '%' . $this->search . '%')
+                  ->orWhereHas('rol', function ($query) {
+                      $query->where('nombre', 'like', '%' . $this->search . '%');
+                  });
+        })
+        ->orderBy($this->sort, $this->direc)
+        ->paginate($this->cant)
+        ->withQueryString();
         return view('livewire.usuario.index', compact('datos'));
     }
     public function order($sort)
