@@ -164,7 +164,7 @@
             class="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50 backdrop-blur-sm">
 
             <!-- Modal Content -->
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-10/12 overflow-y-auto p-4">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-11/12 overflow-y-auto p-4">
                 <!-- Close Button -->
                 <div class="flex justify-end p-4">
                     <button wire:click="cerrarModal" @click="open = false"
