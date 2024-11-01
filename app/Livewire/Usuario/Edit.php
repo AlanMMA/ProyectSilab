@@ -19,7 +19,7 @@ class Edit extends Component
 
     protected $rules = [
         'dato.name' => 'required|string|min:3|max:50|regex:/^[a-zA-Z\s]+$/',
-        'dato.email' => 'required|email|max:255',
+        'dato.email' => 'required|email|max:255|unique:users,email',
         'dato.id_rol' => 'required|numeric',
     ];
 
@@ -45,8 +45,6 @@ class Edit extends Component
 
     public function confirmSave()
     {
-        // Realiza la validación
-        $this->validate();
 
         // Verifica si los tres campos de nombre han cambiado
         $nombreModificado = $this->dato['name'] !== $this->oldDato['name'];
@@ -55,6 +53,11 @@ class Edit extends Component
 
         // Si hay algún cambio, muestra mensaje de confirmación
         if ($nombreModificado || $emailModificado || $rollModificado) {
+
+            // Realiza la validación
+            $this->validate();
+
+            //Despacha el evento sweetalert
             $this->dispatch('showConfirmation');
         } else {
             // Si no hubo cambios, muestra mensaje de que no se realizaron cambios

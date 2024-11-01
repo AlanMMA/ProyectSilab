@@ -11,7 +11,7 @@ class Create extends Component
     public $nombre = '';
 
     protected $rules = [
-        'nombre' => 'required|max:10|unique:area',
+        'nombre' => 'required|max:15|unique:area',
     ];
 
     protected $listeners = ['saveConfirmed2' => 'save'];
