@@ -13,6 +13,7 @@ class Edit extends Component
 
     public $open;
     public $dato;
+    public $oldDato;
 
     protected function rules()
     {
@@ -26,6 +27,8 @@ class Edit extends Component
             'dato.id_encargado' => 'required|numeric',
         ];
     }
+
+    protected $listeners = ['saveConfirmed' => 'save'];
 
     protected $messages = [
         'dato.nombre.regex' => 'El nombre solo puede contener letras y espacios.',
@@ -41,14 +44,42 @@ class Edit extends Component
     public function mount(MaterialModel $dato)
     {
         $this->dato = $dato->toArray();
+        $this->oldDato = $dato->toArray();
+    }
+
+    public function confirmSave()
+    {
+        // Realiza la validación
+        $this->validate();
+
+        // Verifica si los tres campos de nombre han cambiado
+        $newNombre = $this->dato['nombre'] !== $this->oldDato['nombre'];
+        $newMarca = $this->dato['id_marca'] !== $this->oldDato['id_marca'];
+        $newModelo = $this->dato['modelo'] !== $this->oldDato['modelo'];
+        $newCategoria = $this->dato['id_categoria'] !== $this->oldDato['id_categoria'];
+        $newStock = $this->dato['stock'] !== $this->oldDato['stock'];
+        $newDescripcion = $this->dato['descripcion'] !== $this->oldDato['descripcion'];
+        $newLocalizcion = $this->dato['localizacion'] !== $this->oldDato['localizacion'];
+        $newEncargado = $this->dato['id_encargado'] !== $this->oldDato['id_encargado'];
+
+        // Si hay algún cambio, muestra mensaje de confirmación
+        if ($newNombre || $newMarca || $newModelo || $newCategoria || $newStock || $newDescripcion || $newLocalizcion || $newEncargado) {
+            $this->dispatch('showConfirmation');
+        } else {
+            // Si no hubo cambios, muestra mensaje de que no se realizaron cambios
+            $this->reset(['open']);
+            $this->dispatch('alert', 'No se realizaron cambios.');
+        }
     }
 
     public function save()
     {
-        $this->validate();
         $material = MaterialModel::find($this->dato['id']);
         $material->fill($this->dato);
         $material->save();
+
+        $this->oldDato = $material->toArray();
+
         $this->reset(['open']);
         $this->dispatch('render');
         $this->dispatch('alert', 'El material se ha modificado con exito.');

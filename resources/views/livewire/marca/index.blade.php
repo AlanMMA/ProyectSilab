@@ -25,10 +25,10 @@
         @if ($datos->count())
         <div class="px-6 overflow-y-auto max-h-[60vh] sm:max-h-full">
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 ">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 w-full">
+                <thead class="text-xs text-white uppercase bg-blue-tec dark:bg-gray-700 dark:text-gray-400 w-full">
                     <tr>
-                        <th scope="col" class="cursor-pointer px-6 py-3 " wire:click="order('id')">
-                            <div class="flex items-center w-full ">
+                        <th scope="col" class="cursor-pointer px-6 py-3 text-center" wire:click="order('id')">
+                            <div class="flex items-center justify-center">
                                 ID
                                 @if ($sort == 'id')
                                 @if ($direc == 'asc')
@@ -48,8 +48,8 @@
 
                             </div>
                         </th>
-                        <th scope="col" class=" px-6 py-3 cursor-pointer" wire:click="order('nombre')">
-                            <div class="flex items-center w-full">
+                        <th scope="col" class="cursor-pointer px-6 py-3 text-center" wire:click="order('nombre')">
+                            <div class="flex items-center justify-center">
                                 Nombre
                                 @if ($sort == 'nombre')
                                 @if ($direc == 'asc')
@@ -62,8 +62,8 @@
                                 @endif
                             </div>
                         </th>
-                        <th scope="col" class="px-6 py-3 ">
-                            <div class="flex items-center">
+                        <th scope="col" class="px-6 py-3 text-center">
+                            <div class="flex items-center justify-center">
                                 Acciones
                             </div>
                         </th>
@@ -72,15 +72,15 @@
                 <tbody>
                     @foreach ($datos as $dato)
                     <tr wire:key="marca-{{ $dato->id }}"
-                        class=" odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        class=" odd:bg-white odd:dark:bg-gray-900 even:bg-[#D2D9D3] even:text-blue-tec odd: text-black even:dark:bg-gray-800 border-b dark:border-gray-700">
+                        <th scope="row" class="px-6 py-2 text-center font-medium  whitespace-nowrap dark:text-white">
                             {{ $dato->id }}
                         </th>
-                        <td class="px-6 py-4">
+                        <td class="px-6 py-2 text-center font-medium  whitespace-nowrap dark:text-white">
                             {{ $dato->nombre }}
                         </td>
 
-                        <td class="px-6 py-4 flex justify-center items-center gap-2">
+                        <td class="px-6 py-2 flex justify-center items-center gap-2">
                             @livewire('Marca.Edit', ['dato' => $dato], key('edit-' . $dato->id))
 
                             <a class="bg-red-600 hover:bg-red-500 pt-2 pb-1 px-2 rounded-md cursor-pointer"

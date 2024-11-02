@@ -6,7 +6,6 @@ use App\Models\EncargadoModel;
 use App\Models\LaboratorioModel;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class Create extends Component
@@ -23,9 +22,9 @@ class Create extends Component
     protected function rules()
     {
         return [
-            'nombre' => 'required|min:4|max:20|regex:/^[\pL\s]+$/u',
-            'apellido_p' => 'required|min:4|max:20|regex:/^[\pL\s]+$/u',
-            'apellido_m' => 'required|min:4|max:20|regex:/^[\pL\s]+$/u',
+            'nombre' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
+            'apellido_p' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
+            'apellido_m' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
             'id_laboratorio' => 'required|numeric',
             'name' => 'required|string|min:3|max:50|regex:/^[a-zA-Z\s]+$/',
             'email' => 'required|email|min:18|max:255|unique:users,email',
@@ -33,6 +32,8 @@ class Create extends Component
             'id_rol' => 'required|numeric|min:1',
         ];
     }
+
+    protected $listeners = ['saveConfirmed2' => 'save'];
 
     protected $messages = [
         'nombre.regex' => 'El nombre solo puede contener letras y espacios.',
@@ -45,16 +46,35 @@ class Create extends Component
         $this->validateOnly($propertyname);
     }
 
-
-
-    public function save()
+    public function confirmSave2()
     {
         $this->id_rol = 1;
         DB::beginTransaction();
+
+        // Realiza la validación
+        $this->validate();
+
+        // Obtiene el nombre del laboratorio a partir del ID seleccionado
+        $laboratorioNombre = $this->laboratorios[$this->id_laboratorio] ?? 'No asignado';
+
+        // Si la validación es exitosa, dispara el evento para mostrar SweetAlert
+        $this->dispatch('showConfirmation2', [
+            'newDatos' => [
+                'nombre' => $this->nombre,
+                'apellido_p' => $this->apellido_p,
+                'apellido_m' => $this->apellido_m,
+                'id_laboratorio' => $this->id_laboratorio,
+            ],
+            'laboratorio_nombre' => $laboratorioNombre, // Enviar el nombre del laboratorio
+        ]);
+    }
+
+    public function save()
+    {
+        /*$this->id_rol = 1;
+        DB::beginTransaction();*/
         $this->validate();
         try {
-
-
 
             $encargado = EncargadoModel::create([
                 'nombre' => $this->nombre,
@@ -76,7 +96,6 @@ class Create extends Component
                 ]);
 
                 DB::commit();
-
 
                 $this->reset(['open', 'nombre', 'apellido_p', 'apellido_m', 'name', 'email', 'password']);
                 $this->dispatch('render');
@@ -102,23 +121,22 @@ class Create extends Component
         $ocupado = EncargadoModel::where('id_laboratorio', $this->id_laboratorio)->exists();
 
         if ($ocupado) {
-            $this->dispatch('alert', 'Este laboratorio ya está asignado a otro encargado.');
+            $this->dispatch('alert1', 'Este laboratorio ya está asignado a otro encargado.');
 
             $this->id_laboratorio = 0;
         }
     }
-
 
     public function mount()
     {
         $this->laboratorios = LaboratorioModel::pluck('nombre', 'id')->toArray();
     }
 
-
-
     public function render()
     {
-        $laboratorios = LaboratorioModel::pluck('nombre', 'id');
-        return view('livewire.encargado.create', compact('laboratorios'));
+        $this->laboratorios = LaboratorioModel::pluck('nombre', 'id');
+        return view('livewire.encargado.create', [
+            'laboratorios' => $this->laboratorios,
+        ]);
     }
 }

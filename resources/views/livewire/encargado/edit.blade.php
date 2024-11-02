@@ -49,21 +49,20 @@
             </div> --}}
             <div class="mb-4">
                 <x-label value="Asignar un laboratorio:" />
-                <select name="id_laboratorio" id="id_laboratorio-{{ $dato['id'] ?? 'new' }}" 
-                    wire:model="dato.id_laboratorio"
-                    wire:change="verificarLaboratorio"
+                <select name="id_laboratorio" id="id_laboratorio-{{ $dato['id'] ?? 'new' }}"
+                    wire:model="dato.id_laboratorio" wire:change="verificarLaboratorio"
                     class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
                     <option value="0">Seleccione un laboratorio</option>
                     @foreach ($laboratorios as $id => $nombre)
-                        <option value="{{ $id }}">{{ $nombre }}</option>
+                    <option value="{{ $id }}">{{ $nombre }}</option>
                     @endforeach
                 </select>
-            
+
                 @error('id_laboratorio')
-                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
             </div>
-            
+
         </x-slot>
 
         <x-slot name="footer">
@@ -72,9 +71,9 @@
                     Cancel
                 </x-secondary-button>
 
-                <x-danger-button wire:click="save" wire:loading.remove wire:target="save">
+                <x-confirm-button wire:click="confirmSave" wire:loading.remove wire:target="confirmSave">
                     Editar
-                </x-danger-button>
+                </x-confirm-button>
                 <span wire:loading wire:target="save">Cargando ...</span>
             </div>
         </x-slot>
@@ -83,12 +82,12 @@
     @push('js')
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            Livewire.on('alert', message => {
+            Livewire.on('alert1', message => {
                 setTimeout(() => {
                     Swal.fire({
-                        title: 'Éxito',
+                        title: 'Alerta',
                         text: message,
-                        icon: 'success',
+                        icon: 'warning',
                         confirmButtonText: 'OK'
                     });
                 }, 0);
@@ -106,6 +105,27 @@
             });
         });
     </script>
-@endpush
+    @endpush
+
+    @push('js')
+    <script>
+        Livewire.on('showConfirmation', (mensaje) => {
+            Swal.fire({
+                title: "¿Estás seguro de editar el registro?",
+                html: mensaje,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Aceptar",
+                cancelButtonText: "Cancelar"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Livewire.dispatch('saveConfirmed');
+                }
+            });
+        });
+    </script>
+    @endpush
 
 </div>

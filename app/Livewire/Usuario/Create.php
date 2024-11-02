@@ -19,14 +19,12 @@ class Create extends Component
     public $showPassword = false;
     public $nombreE, $apellido_p, $apellido_m;
 
-
-
     protected $rules = [
         'name' => 'required|string|min:3|max:50|regex:/^[a-zA-Z\s]+$/',
         'email' => 'required|email|min:18|max:255|unique:users,email',
         'password' => 'required|string|min:9|max:255|regex:/^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{9,}$/',
         'id_rol' => 'required|numeric|min:1',
-        'id_encargado' => 'required|numeric|min:1'
+        'id_encargado' => 'required|numeric|min:1',
     ];
 
     public function update($propertyname)
@@ -34,9 +32,23 @@ class Create extends Component
         $this->validateOnly($propertyname);
     }
 
+    protected $listeners = ['saveConfirmed2' => 'save'];
+
+    public function confirmSave2()
+    {
+
+        $this->id_rol = 2;
+
+        // Realiza la validación
+        $this->validate();
+
+        // Si la validación es exitosa, dispara el evento para mostrar SweetAlert
+        $this->dispatch('showConfirmation2');
+    }
+
     public function save()
     {
-        $this->id_rol = 2;
+        //$this->id_rol = 2;
         $this->validate();
         User::create([
             'name' => $this->name,
@@ -44,12 +56,12 @@ class Create extends Component
             'password' => bcrypt($this->password),
             'id_rol' => $this->id_rol,
             // 'id_encargado' => User::with('encargado')->find(Auth::id())
-            'id_encargado' => $this->id_encargado
+            'id_encargado' => $this->id_encargado,
         ]);
 
         $this->reset(['open', 'name', 'email', 'password', 'id_rol']);
         $this->dispatch('render');
-        $this->dispatch('alert', 'La categoria se ha guardado con exito.');
+        $this->dispatch('alert', 'El usuario se ha guardado con exito.');
     }
 
     public function mount()
@@ -60,11 +72,11 @@ class Create extends Component
 
     public function updRol($value)
     {
-        
+
         if ($value == 1) {
-            $this->id_encargado = 0; 
+            $this->id_encargado = 0;
         } else {
-            $this->id_encargado = 0; 
+            $this->id_encargado = 0;
         }
     }
 

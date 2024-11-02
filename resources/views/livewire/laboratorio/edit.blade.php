@@ -6,7 +6,6 @@
         </span>
     </a>
 
-
     <x-dialog-modal wire:model="open">
         <x-slot name="title">
             Editar el registro
@@ -15,9 +14,8 @@
         <x-slot name="content">
             <div class="mt-10">
                 <x-label value="Nombre:"></x-label>
-                <input type="text" wire:model="dato.nombre" class="w-full mt-2">
+                <x-input type="text" wire:model="dato.nombre" class="w-full mt-2"></x-input>
                 <x-input-error for="dato.nombre"></x-input-error>
-
             </div>
         </x-slot>
 
@@ -27,11 +25,35 @@
                     Cancel
                 </x-secondary-button>
 
-                <x-danger-button wire:click="save" wire:loading.remove wire:target="save">
+                <x-confirm-button wire:click="confirmSave" wire:loading.remove wire:target="confirmSave">
                     Editar
-                </x-danger-button>
+                </x-confirm-button>
                 <span wire:loading wire:target="save">Cargando ...</span>
             </div>
         </x-slot>
     </x-dialog-modal>
+
+    @push('js')
+    <script>
+        Livewire.on('showConfirmation', (dato) => {
+            const oldDate = dato[0];
+            const newDate = dato[1];
+            Swal.fire({
+                title: "¿Estás seguro de editar el registro?",
+                html: `<p>Actual: ${oldDate}</p><p>Nuevo: ${newDate}</p>`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Aceptar",
+                cancelButtonText: "Cancelar"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Livewire.dispatch('saveConfirmed');
+                }
+            });
+        });
+    </script>
+    @endpush
+
 </div>

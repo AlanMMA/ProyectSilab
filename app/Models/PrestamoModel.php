@@ -15,7 +15,7 @@ class PrestamoModel extends Model
         'id',
         'fecha',
         'id_encargado',
-        'id_solicitante'
+        'id_solicitante',
     ];
 
     public $timestamps = false;
@@ -27,7 +27,13 @@ class PrestamoModel extends Model
 
     public function solicitanteP(): BelongsTo
     {
-        return $this->belongsTo(SolicitanteModel::class, 'id_soliciante');
+        return $this->belongsTo(SolicitanteModel::class, 'id_solicitante');
+    }
+
+    //MODIFICAR A 'solicitanteP' en caso de error, o eliminar si genera conflicto
+    public function solicitante(): BelongsTo
+    {
+        return $this->belongsTo(SolicitanteModel::class, 'id_solicitante');
     }
 
     public function detalles(): HasMany

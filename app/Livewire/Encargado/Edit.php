@@ -9,18 +9,21 @@ use Livewire\Component;
 class Edit extends Component
 {
 
-    public $open;
     public $dato, $id_laboratorio, $laboratorios;
+    public $open = false;
+    public $oldDato; // Almacena el valor original del dato
 
     protected function rules()
     {
         return [
-            'dato.nombre' => 'required|min:4|max:20|regex:/^[\pL\s]+$/u',
-            'dato.apellido_p' => 'required|min:4|max:20|regex:/^[\pL\s]+$/u',
-            'dato.apellido_m' => 'required|min:4|max:20|regex:/^[\pL\s]+$/u',
+            'dato.nombre' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
+            'dato.apellido_p' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
+            'dato.apellido_m' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
             'dato.id_laboratorio' => 'required|numeric',
         ];
     }
+
+    protected $listeners = ['saveConfirmed' => 'save'];
 
     protected $messages = [
         'nombre.regex' => 'El nombre solo puede contener letras y espacios.',
@@ -34,16 +37,95 @@ class Edit extends Component
     }
     public function mount(EncargadoModel $dato)
     {
+        // Convierte el modelo en un arreglo para acceder a todas sus propiedades
         $this->dato = $dato->toArray();
+
+        // Almacena los datos originales para la comparación
+        $this->oldDato = $dato->toArray();
+
+        // Cargar nombres de laboratorios
         $this->laboratorios = LaboratorioModel::pluck('nombre', 'id')->toArray();
+    }
+
+    public function confirmSave()
+    {
+        $this->validate();
+
+        // Construimos el arreglo de cambios
+        $cambios = [];
+
+        // Verifica si los tres campos de nombre han cambiado
+        $nombreModificado = $this->dato['nombre'] !== $this->oldDato['nombre'];
+        $apellidoPModificado = $this->dato['apellido_p'] !== $this->oldDato['apellido_p'];
+        $apellidoMModificado = $this->dato['apellido_m'] !== $this->oldDato['apellido_m'];
+
+        // Si los tres campos de nombre fueron modificados, concatenarlos en una sola línea
+        if ($nombreModificado && $apellidoPModificado && $apellidoMModificado) {
+            $cambios[] = "<tr><td><strong>Nombre completo</strong></td></tr>
+                  <tr><td>Actual: {$this->oldDato['nombre']} {$this->oldDato['apellido_p']} {$this->oldDato['apellido_m']}</td></tr>
+                  <tr><td>Nuevo: {$this->dato['nombre']} {$this->dato['apellido_p']} {$this->dato['apellido_m']}</td></tr>
+                  <tr><td>&nbsp;</td></tr>";
+        } else if ($apellidoPModificado && $apellidoMModificado) {
+            $cambios[] = "<tr><td><strong>Apellidos</strong></td></tr>
+                  <tr><td>Actual: {$this->oldDato['apellido_p']} {$this->oldDato['apellido_m']}</td></tr>
+                  <tr><td>Nuevo: {$this->dato['apellido_p']} {$this->dato['apellido_m']}</td></tr>
+                  <tr><td>&nbsp;</td></tr>";
+        } else {
+            // Solo el nombre fue modificado
+            if ($nombreModificado) {
+                $cambios[] = "<tr><td><strong>Nombre</strong></td></tr>
+                      <tr><td>Actual: {$this->oldDato['nombre']}</td></tr>
+                      <tr><td>Nuevo: {$this->dato['nombre']}</td></tr>
+                      <tr><td>&nbsp;</td></tr>";
+            }
+
+            // Solo el apellido paterno fue modificado
+            if ($apellidoPModificado) {
+                $cambios[] = "<tr><td><strong>Apellido Paterno</strong></td></tr>
+                      <tr><td>Actual: {$this->oldDato['apellido_p']}</td></tr>
+                      <tr><td>Nuevo: {$this->dato['apellido_p']}</td></tr>
+                      <tr><td>&nbsp;</td></tr>";
+            }
+
+            // Solo el apellido materno fue modificado
+            if ($apellidoMModificado) {
+                $cambios[] = "<tr><td><strong>Apellido Materno</strong></td></tr>
+                      <tr><td>Actual: {$this->oldDato['apellido_m']}</td></tr>
+                      <tr><td>Nuevo: {$this->dato['apellido_m']}</td></tr>
+                      <tr><td>&nbsp;</td></tr>";
+            }
+        }
+
+        // Verifica el cambio en laboratorio
+        if ($this->dato['id_laboratorio'] !== $this->oldDato['id_laboratorio']) {
+            $oldLab = $this->laboratorios[$this->oldDato['id_laboratorio']] ?? 'No asignado';
+            $newLab = $this->laboratorios[$this->dato['id_laboratorio']] ?? 'No asignado';
+            $cambios[] = "<tr><td><strong>Laboratorio asignado</strong></td></tr>
+                  <tr><td>Actual: {$oldLab}</td></tr>
+                  <tr><td>Nuevo: {$newLab}</td></tr>
+                  <tr><td>&nbsp;</td></tr>";
+        }
+
+        // Enviar cambios solo si hay modificaciones
+        if (!empty($cambios)) {
+            // Enviar los cambios como un mensaje HTML en forma de tabla
+            $mensaje = "<table style='width: 100%; text-align: left;'>" . implode("", $cambios) . "</table>";
+            $this->dispatch('showConfirmation', $mensaje);
+        } else {
+            $this->reset(['open']);
+            $this->dispatch('alert', 'No se realizaron cambios.');
+        }
     }
 
     public function save()
     {
-        $this->validate();
-        $categoria = EncargadoModel::find($this->dato['id']);
-        $categoria->fill($this->dato);
-        $categoria->save();
+        $encargado = EncargadoModel::find($this->dato['id']);
+        $encargado->fill($this->dato);
+        $encargado->save();
+
+        // Actualiza el valor de oldDato con el nombre nuevo guardado
+        $this->oldDato = $encargado->toArray();
+
         $this->reset(['open']);
         $this->dispatch('render');
         $this->dispatch('alert', 'El encargado se ha modificado con exito.');
@@ -65,8 +147,6 @@ class Edit extends Component
             $this->dato['id_laboratorio'] = EncargadoModel::find($this->dato['id'])->id_laboratorio;
         }
     }
-
-
 
     public function render()
     {

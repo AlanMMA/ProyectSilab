@@ -11,6 +11,7 @@ class Create extends Component
     public $open;
     public $nombre, $apellido_p, $apellido_m, $id_area2, $numero_control;
     public $tipo;
+    
     protected function rules()
     {
         return [
@@ -30,12 +31,23 @@ class Create extends Component
         'tipo.in' => 'El tipo debe ser "docente" o "alumno".',
         'numero_control.required' => 'El número de control es requerido cuando el tipo es "alumno".',
     ];
-    
 
     public function update($propertyname)
     {
         $this->validateOnly($propertyname);
     }
+
+    protected $listeners = ['saveConfirmed2' => 'save'];
+
+    public function confirmSave2()
+    {
+        // Realiza la validación
+        $this->validate();
+
+        // Si la validación es exitosa, dispara el evento para mostrar SweetAlert
+        $this->dispatch('showConfirmation2');
+    }
+
     public function save()
     {
 
@@ -47,12 +59,12 @@ class Create extends Component
             'apellido_m' => $this->apellido_m,
             'id_area' => $this->id_area2,
             'tipo' => $this->tipo,
-            'numero_control' => $this->numero_control
+            'numero_control' => $this->numero_control,
         ]);
 
-        $this->reset(['open', 'nombre', 'apellido_p','apellido_m', 'numero_control']);
+        $this->reset(['open', 'nombre', 'apellido_p', 'apellido_m', 'numero_control']);
         $this->dispatch('render');
-        $this->dispatch('alert', 'La categoria se ha guardado con exito.');
+        $this->dispatch('alert', 'El solicitante se ha guardado con exito.');
     }
 
     public function render()

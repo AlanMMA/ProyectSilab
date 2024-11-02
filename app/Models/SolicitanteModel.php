@@ -17,12 +17,19 @@ class SolicitanteModel extends Model
         'apellido_m',
         'id_area',
         'tipo',
-        'numero_control'
+        'numero_control',
     ];
 
     public $timestamps = false;
 
-    public function area():BelongsTo{
+    // Definir un atributo para el nombre completo
+    public function getNombreCompletoAttribute()
+    {
+        return "{$this->nombre} {$this->apellido_p} {$this->apellido_m}";
+    }
+
+    public function area(): BelongsTo
+    {
         return $this->BelongsTo(AreaModel::class, 'id_area');
     }
     use HasFactory;

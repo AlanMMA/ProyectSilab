@@ -12,6 +12,7 @@ class Edit extends Component
     public $dato;
     public $name, $email, $id_rol, $tipo;
     public $initialDato;
+    public $oldDato;
 
     protected function rules()
     {
@@ -24,6 +25,8 @@ class Edit extends Component
             'dato.numero_control' => $this->dato['tipo'] === 'alumno' ? 'required|max:9' : 'nullable|max:9',
         ];
     }
+
+    protected $listeners = ['saveConfirmed' => 'save'];
 
     protected $messages = [
         'nombre.regex' => 'El nombre solo puede contener letras y espacios.',
@@ -38,18 +41,18 @@ class Edit extends Component
         $this->validateOnly($propertyname);
     }
 
-
     public function mount(SolicitanteModel $dato)
     {
         $this->dato = $dato->toArray();
         $this->initialDato = $dato->toArray();
+        $this->oldDato = $dato->toArray();
     }
 
     public function loadData()
     {
         $solicitante = SolicitanteModel::find($this->dato['id']);
         $this->dato = $solicitante->toArray();
-        $this->resetErrorBag(); 
+        $this->resetErrorBag();
         $this->open = true;
     }
 
@@ -60,19 +63,43 @@ class Edit extends Component
         $this->resetErrorBag();
     }
 
+    public function confirmSave()
+    {
+        // Realiza la validación
+        $this->validate();
+
+        // Verifica si los tres campos de nombre han cambiado
+        $newNombre = $this->dato['nombre'] !== $this->oldDato['nombre'];
+        $newApellido_p = $this->dato['apellido_p'] !== $this->oldDato['apellido_p'];
+        $newApellido_m = $this->dato['apellido_m'] !== $this->oldDato['apellido_m'];
+        $newArea = $this->dato['id_area'] !== $this->oldDato['id_area'];
+        $newTipo = $this->dato['tipo'] !== $this->oldDato['tipo'];
+
+        // Si hay algún cambio, muestra mensaje de confirmación
+        if ($newNombre || $newApellido_p || $newApellido_m || $newArea || $newTipo) {
+            $this->dispatch('showConfirmation');
+        } else {
+            // Si no hubo cambios, muestra mensaje de que no se realizaron cambios
+            $this->reset(['open']);
+            $this->dispatch('alert', 'No se realizaron cambios.');
+        }
+    }
+
     public function save()
     {
 
-        $this->validate();
         $solicitante = SolicitanteModel::find($this->dato['id']);
-        if($this->dato['tipo'] === 'docente'){
+        if ($this->dato['tipo'] === 'docente') {
             $this->dato['numero_control'] = null;
         }
         $solicitante->fill($this->dato);
         $solicitante->save();
+
+        $this->oldDato = $solicitante->toArray();
+
         $this->reset(['open']);
         $this->dispatch('render');
-        $this->dispatch('alert', 'La solicitante se ha modificado con exito.');
+        $this->dispatch('alert', 'El solicitante se ha modificado con exito.');
         $this->dato = $solicitante->toArray();
     }
     public function render()
