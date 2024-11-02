@@ -18,7 +18,7 @@ class DetallePrestamoModel extends Model
         'id_material',
         'cantidad',
         'EstadoPrestamo',
-        'observacion'
+        'observacion',
     ];
 
     public $timestamps = false;
@@ -32,5 +32,11 @@ class DetallePrestamoModel extends Model
     {
         return $this->belongsTo(MaterialModel::class, 'id_material');
     }
+
+    public function materialDP(): BelongsTo
+    {
+        return $this->belongsTo(MaterialModel::class, 'id_material');
+    }
+
     use HasFactory;
 }
