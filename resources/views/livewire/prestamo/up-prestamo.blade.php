@@ -3,7 +3,7 @@
         <div class="sm:w-max w-full flex items-center gap-6">
             <div class="relative w-full">
                 <x-label value="Escriba el solicitante:"></x-label>
-                <input type="text" wire:model.live="search" placeholder="Buscar solicitante..."
+                <input @if (!$solicitanteSeleccionado2) disabled @endif type="text" wire:model.live="search" placeholder="Buscar solicitante..."
                     class="w-full mt-1 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                     autocomplete="off" />
                 @if (strlen($search) > 0 && !$selectedSolicitante)
@@ -21,17 +21,21 @@
                         <div
                             class="absolute z-10 mt-2 border rounded-md bg-blue-tec text-white dark:bg-white dark:text-blue-tec p-2">
                             <p>Sin resultados</p>
-                            {{-- <a href="{{ route('solicitante') }}"
-                            class="mt-2 bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded">Agregar</a> --}}
                         </div>
                     @endif
                 @endif
             </div>
 
-            <button class="bg-green-600 hover:bg-green-500 pt-2 pb-1 px-2 rounded-md cursor-pointer"
+            <button @if (!$solicitanteSeleccionado2) hidden @endif class="bg-green-600 hover:bg-green-500 pt-2 pb-1 px-2 rounded-md cursor-pointer"
                 wire:click="filtrarDetalles">
                 <span class="material-symbols-outlined text-white">
                     check
+                </span>
+            </button>
+            <button @if (!$solicitanteSeleccionado) hidden @endif class="bg-red-600 hover:bg-red-500 pt-2 pb-1 px-2 rounded-md cursor-pointer"
+                wire:click="resetView">
+                <span class="material-symbols-outlined text-white">
+                    close
                 </span>
             </button>
         </div>
@@ -50,12 +54,12 @@
 
                         </div>
                     </th>
-                    <th scope="col" class="cursor-pointer px-6 py-3 " wire:click="order('id')">
+                    <th scope="col" class=" px-6 py-3 " >
                         <div class="flex items-center justify-center">
                             ID
                         </div>
                     </th>
-                    <th scope="col" class=" px-6 py-3 cursor-pointer" wire:click="order('nombre')">
+                    <th scope="col" class=" px-6 py-3 ">
                         <div class="flex items-center justify-center">
                             Fecha de devolución
                         </div>

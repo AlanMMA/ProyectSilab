@@ -13,6 +13,7 @@ class UpPrestamo extends Component
     public $solicitantes = [], $selectedDetalles = [];
     public $cant = 0, $cantid, $search = '', $detalles;
     public $selectedSolicitante = null, $solicitanteSeleccionado = false;
+    public $solicitanteSeleccionado2 = true;
     public $listeners = ['alerta', 'devolverMaterial'];
 
     public function updatedSearch()
@@ -54,6 +55,17 @@ class UpPrestamo extends Component
         $this->detalles = [];
     }
 
+    public function resetView()
+    {
+        $this->selectedSolicitante = null;
+        $this->cantid = null;
+        $this->solicitanteSeleccionado = false;
+        $this->detalles = [];
+        $this->selectedDetalles = [];
+        $this->search = null;
+        $this->solicitanteSeleccionado2 = true;
+    }
+
     public function filtrarDetalles()
     {
         if ($this->cantid) {
@@ -66,8 +78,10 @@ class UpPrestamo extends Component
             if ($this->detalles->isEmpty()) {
                 $this->dispatch('sinPrestamosPendientes');
                 $this->search = null;
+                $this->resetSelectedSolicitante();
             } else {
                 $this->solicitanteSeleccionado = true;
+                $this->solicitanteSeleccionado2 = false;
             }
         } else {
             $this->detalles = [];
@@ -89,21 +103,21 @@ class UpPrestamo extends Component
             $detalle = DetallePrestamoModel::find($detalleId);
 
             if ($detalle) {
-
                 $material = $detalle->materialDP;
                 $material->stock += $detalle->cantidad;
                 $material->save();
-
                 $detalle->EstadoPrestamo = 'devuelto';
                 $detalle->save();
             }
         }
-
-        $this->selectedDetalles = [];
         $this->filtrarDetalles();
-        $this->search = null;
         $this->dispatch('devolucionExitosa');
-        $this->solicitanteSeleccionado = false;
+
+        if (empty($this->detalles)) {
+            $this->selectedDetalles = [];
+            $this->search = null;
+            $this->solicitanteSeleccionado = false;
+        }
     }
 
     public function confirmarDevolucion()
