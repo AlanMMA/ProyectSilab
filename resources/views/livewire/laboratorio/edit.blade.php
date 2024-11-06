@@ -17,6 +17,11 @@
                 <x-input type="text" wire:model="dato.nombre" class="w-full mt-2"></x-input>
                 <x-input-error for="dato.nombre"></x-input-error>
             </div>
+            <div class="mt-10">
+                <x-label value="Limite de encargados:"></x-label>
+                <x-input type="text" wire:model="dato.num_max_encargado" class="w-full mt-2"></x-input>
+                <x-input-error for="dato.num_max_encargado"></x-input-error>
+            </div>
         </x-slot>
 
         <x-slot name="footer">
@@ -35,12 +40,9 @@
 
     @push('js')
     <script>
-        Livewire.on('showConfirmation', (dato) => {
-            const oldDate = dato[0];
-            const newDate = dato[1];
+        Livewire.on('showConfirmation', () => {
             Swal.fire({
                 title: "¿Estás seguro de editar el registro?",
-                html: `<p>Actual: ${oldDate}</p><p>Nuevo: ${newDate}</p>`,
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
@@ -52,6 +54,24 @@
                     Livewire.dispatch('saveConfirmed');
                 }
             });
+        });
+    </script>
+    @endpush
+
+    @push('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Livewire.on('alert1', message => {
+                setTimeout(() => {
+                    Swal.fire({
+                        title: 'Alerta',
+                        text: message,
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    });
+                }, 0);
+            });
+
         });
     </script>
     @endpush

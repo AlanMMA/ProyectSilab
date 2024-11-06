@@ -116,12 +116,12 @@
 
                         <td class="px-6 py-2 flex justify-center items-center gap-2">
                             @livewire('Encargado.Edit', ['dato' => $dato], key('edit-' . $dato->id))
-                            <a class="bg-red-600 hover:bg-red-500 pt-2 pb-1 px-2 rounded-md cursor-pointer"
+                            {{--<a class="bg-red-600 hover:bg-red-500 pt-2 pb-1 px-2 rounded-md cursor-pointer"
                                 wire:click="$dispatch('destroy', { id: {{ $dato->id }}, nombre: '{{ $dato->nombre }}' })">
                                 <span class="material-symbols-outlined text-white">
                                     delete
                                 </span>
-                            </a>
+                            </a>--}}
                         </td>
                     </tr>
                     @endforeach

@@ -9,7 +9,7 @@ class Create extends Component
 {
 
     public $open;
-    public $nombre = '';
+    public $nombre = '', $limite_enc = 0;
 
     protected $rules = [
         'nombre' => 'required|max:25|unique:laboratorio|regex:/^[\pL\s]+$/u',
@@ -24,6 +24,9 @@ class Create extends Component
 
     public function confirmSave2()
     {
+
+        $this->limite_enc = 1;
+
         // Realiza la validación
         $this->validate();
 
@@ -38,6 +41,7 @@ class Create extends Component
 
         LaboratorioModel::create([
             'nombre' => $this->nombre,
+            'num_max_encargado' => $this->limite_enc,
         ]);
 
         $this->reset(['open', 'nombre']);

@@ -17,15 +17,13 @@ class Edit extends Component
     public $nombreE, $apellido_p, $apellido_m;
     public $oldDato;
 
-    protected $rules = [
-        'dato.name' => 'required|string|min:3|max:50|regex:/^[a-zA-Z\s]+$/',
-        // 'dato.email' => 'required|email|max:255',
-        // 'dato.id_rol' => 'required|numeric',
-        'dato.email' => 'required|email|max:255|unique:users,email',
-        'dato.id_rol' => 'required|numeric',
-    ];
-
+    protected $rules;
     protected $listeners = ['saveConfirmed' => 'save'];
+
+    public function update($propertyname)
+    {
+        $this->validateOnly($propertyname);
+    }
 
     public function mount(User $dato)
     {
@@ -51,21 +49,38 @@ class Edit extends Component
         // Verifica si los tres campos de nombre han cambiado
         $nombreModificado = $this->dato['name'] !== $this->oldDato['name'];
         $emailModificado = $this->dato['email'] !== $this->oldDato['email'];
-        $rollModificado = $this->dato['id_rol'] !== $this->oldDato['id_rol'];
 
-        // Si hay algún cambio, muestra mensaje de confirmación
-        if ($nombreModificado || $emailModificado || $rollModificado) {
-
-            // Realiza la validación
-            $this->validate();
-
-            //Despacha el evento sweetalert
-            $this->dispatch('showConfirmation');
+        if ($nombreModificado || $emailModificado) {
+            // Realizar la validación de los cambios
+            if ($this->validateChanges($emailModificado)) {
+                // Solo si la validación pasó, despachamos confirmación
+                $this->dispatch('showConfirmation');
+            }
         } else {
             // Si no hubo cambios, muestra mensaje de que no se realizaron cambios
             $this->reset(['open']);
             $this->dispatch('alert', 'No se realizaron cambios.');
         }
+
+    }
+
+    private function validateChanges($emailModificado)
+    {
+        $rules = [
+            'dato.name' => 'required|string|min:3|max:50|regex:/^[a-zA-Z\s]+$/',
+        ];
+
+        // Agregar la validación única de 'nombre' solo si fue modificado y no es igual al original
+        if ($emailModificado && $this->dato['email'] !== $this->oldDato['email']) {
+            $rules['dato.email'] = 'required|email|max:255|unique:users,email';
+        } else {
+            $rules['dato.email'] = 'required|email|max:255';
+        }
+
+        // Realiza la validación con las reglas dinámicas
+        $this->validate($rules);
+
+        return true;
     }
 
     public function save()
@@ -75,6 +90,8 @@ class Edit extends Component
         $categoria->fill($this->dato);
         $categoria->save();
 
+        // Actualiza el valor de oldDato con el nombre nuevo guardado
+        $this->dato = $categoria->toArray();
         $this->oldDato = $categoria->toArray();
 
         $this->reset(['open', 'name']);

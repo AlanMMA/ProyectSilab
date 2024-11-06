@@ -55,17 +55,17 @@
                 @enderror
             </div>
             @else
-                <div class="mb-4">
-                    <x-label value="Encargado:"></x-label>
-                    @auth
-                        <x-input type="text" class="w-full"
-                            value="{{ $nombreE }} {{ $apellido_p }} {{ $apellido_m }} = {{ auth()->user()->id_encargado }}"
-                            disabled></x-input>
-                        <input type="hidden" wire:model="dato.id_encargado" value="{{ auth()->user()->id }}">
-                    @endauth
-                </div>
+            <div class="mb-4">
+                <x-label value="Encargado:"></x-label>
+                @auth
+                <x-input type="text" class="w-full"
+                    value="{{ $nombreE }} {{ $apellido_p }} {{ $apellido_m }} = {{ auth()->user()->id_encargado }}"
+                    disabled></x-input>
+                <input type="hidden" wire:model="dato.id_encargado" value="{{ auth()->user()->id }}">
+                @endauth
+            </div>
             @endif --}}
-            
+
         </x-slot>
 
         <x-slot name="footer">
@@ -98,6 +98,24 @@
                     Livewire.dispatch('saveConfirmed');
                 }
             });
+        });
+    </script>
+    @endpush
+
+    @push('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Livewire.on('alert1', message => {
+                setTimeout(() => {
+                    Swal.fire({
+                        title: 'Alerta',
+                        text: message,
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    });
+                }, 0);
+            });
+
         });
     </script>
     @endpush
