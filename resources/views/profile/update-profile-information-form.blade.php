@@ -90,22 +90,19 @@
 
         <div class="col-span-6 sm:col-span-4">
             <x-label for="supervisor_name" value="{{ __('Name of the supervisor') }}" />
-            <x-input id="supervisor_name" type="text" class="mt-1 block w-full"
-                value="{{ $this->user->encargado->nombre ?? '' }}" readonly />
+            <x-input id="supervisor_name" type="text" class="mt-1 block w-full" wire:model="supervisor_name" required />
             <x-input-error for="supervisor_name" class="mt-2" />
         </div>
-
+        
         <div class="col-span-6 sm:col-span-4">
             <x-label for="supervisor_patsur" value="{{ __('Paternal surname') }}" />
-            <x-input id="supervisor_patsur" type="text" class="mt-1 block w-full"
-                value="{{ $this->user->encargado->apellido_p ?? '' }}" readonly />
+            <x-input id="supervisor_patsur" type="text" class="mt-1 block w-full" wire:model="supervisor_patsur" required />
             <x-input-error for="supervisor_patsur" class="mt-2" />
         </div>
-
+        
         <div class="col-span-6 sm:col-span-4">
             <x-label for="supervisor_matsur" value="{{ __('Maternal surname') }}" />
-            <x-input id="supervisor_matsur" type="text" class="mt-1 block w-full"
-                value="{{ $this->user->encargado->apellido_m ?? '' }}" readonly />
+            <x-input id="supervisor_matsur" type="text" class="mt-1 block w-full" wire:model="supervisor_matsur" required />
             <x-input-error for="supervisor_matsur" class="mt-2" />
         </div>
 

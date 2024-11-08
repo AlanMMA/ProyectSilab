@@ -18,6 +18,10 @@ class UpdateProfileInformationForm extends Component
      */
     public $state = [];
 
+    public $supervisor_name;
+    public $supervisor_patsur;
+    public $supervisor_matsur;
+
     /**
      * The new avatar for the user.
      *
@@ -44,6 +48,11 @@ class UpdateProfileInformationForm extends Component
         $this->state = array_merge([
             'email' => $user->email,
         ], $user->withoutRelations()->toArray());
+
+        // Cargar valores iniciales del supervisor
+        $this->supervisor_name = $user->encargado->nombre ?? '';
+        $this->supervisor_patsur = $user->encargado->apellido_p ?? '';
+        $this->supervisor_matsur = $user->encargado->apellido_m ?? '';
     }
 
     /**
@@ -56,22 +65,26 @@ class UpdateProfileInformationForm extends Component
     {
         $this->resetErrorBag();
 
-        $updater->update(
-            Auth::user(),
-            $this->photo
-                ? array_merge($this->state, ['photo' => $this->photo])
-                : $this->state
-        );
+        $data = $this->photo
+        ? array_merge($this->state, ['photo' => $this->photo])
+        : $this->state;
+
+        $updater->update(Auth::user(), $data);
+
+        // Guardar los datos del supervisor
+        Auth::user()->encargado()->update([
+            'nombre' => $this->supervisor_name,
+            'apellido_p' => $this->supervisor_patsur,
+            'apellido_m' => $this->supervisor_matsur,
+        ]);
 
         if (isset($this->photo)) {
             return redirect()->route('profile.show');
         }
 
         $this->dispatch('saved');
-
         $this->dispatch('refresh-navigation-menu');
     }
-
     /**
      * Delete user's profile photo.
      *
