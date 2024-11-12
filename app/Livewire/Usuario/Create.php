@@ -43,7 +43,12 @@ class Create extends Component
         $this->validate();
 
         // Si la validación es exitosa, dispara el evento para mostrar SweetAlert
-        $this->dispatch('showConfirmation2');
+        $this->dispatch('showConfirmation2', [
+            'newDatos' => [
+                'name' => $this->name, // Incluye el nombre de alumno
+                'email' => $this->email, // Incluye el correo electrónico
+            ],
+        ]);
     }
 
     public function save()

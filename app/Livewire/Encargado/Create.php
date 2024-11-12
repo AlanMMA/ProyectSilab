@@ -65,6 +65,8 @@ class Create extends Component
                 'apellido_p' => $this->apellido_p,
                 'apellido_m' => $this->apellido_m,
                 'id_laboratorio' => $this->id_laboratorio,
+                'name' => $this->name, // Incluye el nombre de usuario
+                'email' => $this->email, // Incluye el correo electrónico
             ],
             'laboratorio_nombre' => $laboratorioNombre, // Enviar el nombre del laboratorio
         ]);

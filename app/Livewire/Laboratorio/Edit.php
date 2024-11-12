@@ -12,7 +12,6 @@ class Edit extends Component
     public $open = false;
     public $dato, $id_laboratorio;
     public $oldDato; // Almacena el valor original del dato
-    public $oldDato2;
 
     protected $rules;
 
@@ -32,14 +31,49 @@ class Edit extends Component
 
     public function confirmSave()
     {
+
+        $cambios = [];
+
         $newNombre = $this->dato['nombre'] !== $this->oldDato['nombre'];
-        $newLimite = $this->dato['num_max_encargado'] !== $this->oldDato['num_max_encargado'];
+        $newLimite = (int) $this->dato['num_max_encargado'] !== (int) $this->oldDato['num_max_encargado'];
 
         if ($newNombre || $newLimite) {
+
+            /*$cambios[] = "<tr><td><strong>Nombre completo:</strong></td></tr>
+            <tr><td>Actual: {$this->oldDato['nombre']}</td></tr>
+            <tr><td>Nuevo: {$this->dato['nombre']}</td></tr>
+            <tr><td>&nbsp;</td></tr>
+            <tr><td><strong>Limite de encargados:</strong></td></tr>
+            <tr><td>Actual: {$this->oldDato['num_max_encargado']}</td></tr>
+            <tr><td>Nuevo: {$this->dato['num_max_encargado']}</td></tr>
+            ";*/
+
+            if ($newNombre && $newLimite) {
+                $cambios[] = "<tr><td><strong>Nombre completo:</strong></td></tr>
+                <tr><td>Actual: {$this->oldDato['nombre']}</td></tr>
+                <tr><td>Nuevo: {$this->dato['nombre']}</td></tr>
+                <tr><td>&nbsp;</td></tr>
+                <tr><td><strong>Limite de encargados:</strong></td></tr>
+                <tr><td>Actual: {$this->oldDato['num_max_encargado']}</td></tr>
+                <tr><td>Nuevo: {$this->dato['num_max_encargado']}</td></tr>
+                ";
+            } else if ($newNombre) {
+                $cambios[] = "<tr><td><strong>Nombre completo:</strong></td></tr>
+                <tr><td>Actual: {$this->oldDato['nombre']}</td></tr>
+                <tr><td>Nuevo: {$this->dato['nombre']}</td></tr>
+                ";
+            } else if ($newLimite) {
+                $cambios[] = "
+                <tr><td><strong>Limite de encargados:</strong></td></tr>
+                <tr><td>Actual: {$this->oldDato['num_max_encargado']}</td></tr>
+                <tr><td>Nuevo: {$this->dato['num_max_encargado']}</td></tr>
+                ";
+            }
             // Realizar la validación de los cambios
             if ($this->validateChanges($newNombre)) {
                 // Solo si la validación pasó, despachamos confirmación
-                $this->dispatch('showConfirmation');
+                $mensaje = "<table style='width: 100%; text-align: left;'>" . implode("", $cambios) . "</table>";
+                $this->dispatch('showConfirmation', $mensaje);
             }
         } else {
             // Si no hubo cambios, muestra mensaje de que no se realizaron cambios

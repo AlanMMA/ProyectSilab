@@ -123,21 +123,34 @@
 
     @push('js')
     <script>
-        Livewire.on('showConfirmation2', () => {
-            Swal.fire({
-                title: "¿Estás seguro de agregar este registro?",
-                icon: "question",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Aceptar",
-                cancelButtonText: "Cancelar"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Livewire.dispatch('saveConfirmed2');
-                }
-            });
+        Livewire.on('showConfirmation2', (dato) => {
+            const datos = dato[0];
+            const name = datos.newDatos.name; // Nombre de alumno
+            const email = datos.newDatos.email;   // Correo electrónico
+
+        // Prepara el contenido HTML para la alerta
+        let htmlContent = `
+            <table style="width: 100%; text-align: left;">
+                <tr><td><strong>Nombre: </strong>${name}</td></tr>
+                <tr><td><strong>Email: </strong>${email}</td></tr>
+            </table>
+        `;
+
+        Swal.fire({
+            title: "¿Estás seguro de agregar este registro?",
+            html: htmlContent,
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Aceptar",
+            cancelButtonText: "Cancelar"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Livewire.dispatch('saveConfirmed2');
+            }
         });
+    });
     </script>
     @endpush
 

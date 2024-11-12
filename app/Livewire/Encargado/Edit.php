@@ -97,7 +97,7 @@ class Edit extends Component
         }
 
         // Verifica el cambio en laboratorio
-        if ($this->dato['id_laboratorio'] !== $this->oldDato['id_laboratorio']) {
+        if ((int) $this->dato['id_laboratorio'] !== (int) $this->oldDato['id_laboratorio']) {
             $oldLab = $this->laboratorios[$this->oldDato['id_laboratorio']] ?? 'No asignado';
             $newLab = $this->laboratorios[$this->dato['id_laboratorio']] ?? 'No asignado';
             $cambios[] = "<tr><td><strong>Laboratorio asignado</strong></td></tr>

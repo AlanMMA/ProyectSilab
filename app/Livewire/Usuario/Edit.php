@@ -46,15 +46,41 @@ class Edit extends Component
     public function confirmSave()
     {
 
-        // Verifica si los tres campos de nombre han cambiado
+        $cambios = [];
+
+        // Verifica si los 2 campos de alumnos han cambiado
         $nombreModificado = $this->dato['name'] !== $this->oldDato['name'];
         $emailModificado = $this->dato['email'] !== $this->oldDato['email'];
 
         if ($nombreModificado || $emailModificado) {
+
+            if ($nombreModificado && $emailModificado) {
+                $cambios[] = "<tr><td><strong>Nombre:</strong></td></tr>
+                <tr><td>Actual: {$this->oldDato['name']}</td></tr>
+                <tr><td>Nuevo: {$this->dato['name']}</td></tr>
+                <tr><td>&nbsp;</td></tr>
+                <tr><td><strong>Email:</strong></td></tr>
+                <tr><td>Actual: {$this->oldDato['email']}</td></tr>
+                <tr><td>Nuevo: {$this->dato['email']}</td></tr>
+                ";
+            } else if ($nombreModificado) {
+                $cambios[] = "<tr><td><strong>Nombre:</strong></td></tr>
+                <tr><td>Actual: {$this->oldDato['name']}</td></tr>
+                <tr><td>Nuevo: {$this->dato['name']}</td></tr>
+                ";
+            } else if ($emailModificado) {
+                $cambios[] = "
+                <tr><td><strong>Email:</strong></td></tr>
+                <tr><td>Actual: {$this->oldDato['email']}</td></tr>
+                <tr><td>Nuevo: {$this->dato['email']}</td></tr>
+                ";
+            }
+
             // Realizar la validación de los cambios
             if ($this->validateChanges($emailModificado)) {
+                $mensaje = "<table style='width: 100%; text-align: left;'>" . implode("", $cambios) . "</table>";
                 // Solo si la validación pasó, despachamos confirmación
-                $this->dispatch('showConfirmation');
+                $this->dispatch('showConfirmation', $mensaje);
             }
         } else {
             // Si no hubo cambios, muestra mensaje de que no se realizaron cambios

@@ -40,9 +40,10 @@
 
     @push('js')
     <script>
-        Livewire.on('showConfirmation', () => {
+        Livewire.on('showConfirmation', (mensaje) => {
             Swal.fire({
                 title: "¿Estás seguro de editar el registro?",
+                html: mensaje,
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
