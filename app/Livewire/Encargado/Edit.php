@@ -47,6 +47,19 @@ class Edit extends Component
         $this->laboratorios = LaboratorioModel::pluck('nombre', 'id')->toArray();
     }
 
+    public function openModal()
+    {
+        $this->resetDatos(); // Llama a resetDatos cada vez que se abre el modal
+        $this->open = true;
+    }
+    
+    // Nueva función para restablecer los datos al abrir el modal
+    public function resetDatos()
+    {
+        $encargado = EncargadoModel::find($this->dato['id']);
+        $this->dato = $encargado->toArray();
+    }
+
     public function confirmSave()
     {
         $this->validate();

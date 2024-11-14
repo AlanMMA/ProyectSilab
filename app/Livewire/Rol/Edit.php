@@ -25,6 +25,19 @@ class Edit extends Component
         $this->oldDato2 = $dato->toArray();
     }
 
+    public function openModal()
+    {
+        $this->resetDatos(); // Llama a resetDatos cada vez que se abre el modal
+        $this->open = true;
+    }
+    
+    // Nueva función para restablecer los datos al abrir el modal
+    public function resetDatos()
+    {
+        $rol = RolModel::find($this->dato['id']);
+        $this->dato = $rol->toArray();
+    }
+
     public function confirmSave()
     {
 

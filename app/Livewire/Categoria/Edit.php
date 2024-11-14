@@ -25,6 +25,18 @@ class Edit extends Component
         $this->oldDato2 = $dato->toArray();
     }
 
+    public function openModal()
+    {
+        $this->resetDatos(); // Llama a resetDatos cada vez que se abre el modal
+        $this->open = true;
+    }
+    
+    public function resetDatos()
+    {
+        $categoria = CategoriaModel::find($this->dato['id']);
+        $this->dato = $categoria->toArray();
+    }
+
     public function confirmSave()
     {
 

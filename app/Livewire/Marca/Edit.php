@@ -25,6 +25,19 @@ class Edit extends Component
         $this->oldDato2 = $dato->toArray();
     }
 
+    public function openModal()
+    {
+        $this->resetDatos(); // Llama a resetDatos cada vez que se abre el modal
+        $this->open = true;
+    }
+
+    // Nueva función para restablecer los datos al abrir el modal
+    public function resetDatos()
+    {
+        $marca = MarcaModel::find($this->dato['id']);
+        $this->dato = $marca->toArray();
+    }
+
     public function confirmSave()
     {
 
@@ -43,7 +56,7 @@ class Edit extends Component
             $this->reset(['open']);
             $this->dispatch('alert', 'No se realizaron cambios.');
         }
-        
+
     }
 
     public function save()
