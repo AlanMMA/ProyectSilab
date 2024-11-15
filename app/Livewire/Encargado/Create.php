@@ -14,10 +14,12 @@ class Create extends Component
     public $open;
     public $nombre, $apellido_p, $apellido_m, $id_laboratorio, $idNext, $laboratorios;
     public $showPassword = false;
+    public $showPassword2 = false;
     public $name = '';
     public $email, $id_rol = 0;
     public $id_encargado = 0;
     public $password = '';
+    public $password_confirmation = '';
 
     protected function rules()
     {
@@ -29,6 +31,7 @@ class Create extends Component
             'name' => 'required|string|min:3|max:50|regex:/^[a-zA-Z\s]+$/',
             'email' => 'required|email|min:18|max:255|unique:users,email',
             'password' => 'required|string|min:9|max:255|regex:/^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{9,}$/',
+            'password_confirmation' => 'same:password',
             'id_rol' => 'required|numeric|min:1',
         ];
     }
@@ -93,11 +96,12 @@ class Create extends Component
                     'password' => bcrypt($this->password),
                     'id_rol' => $this->id_rol,
                     'id_encargado' => $idUp,
+                    'id_estado' => 1
                 ]);
 
                 DB::commit();
 
-                $this->reset(['open', 'nombre', 'apellido_p', 'apellido_m', 'name', 'email', 'password']);
+                $this->reset(['open', 'nombre', 'apellido_p', 'apellido_m', 'name', 'email', 'password', 'password_confirmation']);
                 $this->dispatch('render');
                 $this->dispatch('alert', 'El encargado y el usuario se han guardado con éxito.');
             } else {
@@ -114,6 +118,11 @@ class Create extends Component
     public function togglePasswordVisibility()
     {
         $this->showPassword = !$this->showPassword;
+    }
+
+    public function togglePasswordVisibility2()
+    {
+        $this->showPassword2 = !$this->showPassword2;
     }
 
     public function verificarLaboratorio()

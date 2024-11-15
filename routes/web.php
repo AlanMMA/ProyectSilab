@@ -70,5 +70,4 @@ Route::middleware([
     Route::get('/Prestamos/{id}', function ($id) {
         return view('ViewUser/detallePrestamo-index', compact('id'));
     })->name('prestamos.detalle');
-
 });

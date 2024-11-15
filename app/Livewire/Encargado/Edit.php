@@ -3,7 +3,10 @@
 namespace App\Livewire\Encargado;
 
 use App\Models\EncargadoModel;
+use App\Models\EstadoUsuarioModel;
 use App\Models\LaboratorioModel;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class Edit extends Component
@@ -12,6 +15,7 @@ class Edit extends Component
     public $dato, $id_laboratorio, $laboratorios;
     public $open = false;
     public $oldDato; // Almacena el valor original del dato
+    public $result, $oldresult;
 
     protected function rules()
     {
@@ -20,6 +24,7 @@ class Edit extends Component
             'dato.apellido_p' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
             'dato.apellido_m' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
             'dato.id_laboratorio' => 'required|numeric',
+            'result.id_estado' => 'required|numeric|min:1'
         ];
     }
 
@@ -37,13 +42,13 @@ class Edit extends Component
     }
     public function mount(EncargadoModel $dato)
     {
-        // Convierte el modelo en un arreglo para acceder a todas sus propiedades
         $this->dato = $dato->toArray();
-
-        // Almacena los datos originales para la comparación
         $this->oldDato = $dato->toArray();
+        $this->result = User::where('id_encargado', intval($this->dato['id']))
+            ->first();
+        $this->result = $this->result->toArray();
+        $this->oldresult = $this->result;
 
-        // Cargar nombres de laboratorios
         $this->laboratorios = LaboratorioModel::pluck('nombre', 'id')->toArray();
     }
 
@@ -58,6 +63,7 @@ class Edit extends Component
         $nombreModificado = $this->dato['nombre'] !== $this->oldDato['nombre'];
         $apellidoPModificado = $this->dato['apellido_p'] !== $this->oldDato['apellido_p'];
         $apellidoMModificado = $this->dato['apellido_m'] !== $this->oldDato['apellido_m'];
+        $estadoModificado = $this->result['id_estado'] !== $this->oldresult['id_estado'];
 
         // Si los tres campos de nombre fueron modificados, concatenarlos en una sola línea
         if ($nombreModificado && $apellidoPModificado && $apellidoMModificado) {
@@ -105,6 +111,14 @@ class Edit extends Component
                   <tr><td>Nuevo: {$newLab}</td></tr>
                   <tr><td>&nbsp;</td></tr>";
         }
+        if ($this->result['id_estado'] !== $this->oldresult['id_estado']) {
+            $nombreEstadoActual = EstadoUsuarioModel::find($this->oldresult['id_estado'])->nombre ?? 'Desconocido';
+            $nombreEstadoNuevo = EstadoUsuarioModel::find($this->result['id_estado'])->nombre ?? 'Desconocido';
+            $cambios[] = "<tr><td><strong>Estado de usuario</strong></td></tr>
+                  <tr><td>Actual: {$nombreEstadoActual}</td></tr>
+                  <tr><td>Nuevo: {$nombreEstadoNuevo}</td></tr>
+                  <tr><td>&nbsp;</td></tr>";
+        }
 
         // Enviar cambios solo si hay modificaciones
         if (!empty($cambios)) {
@@ -119,16 +133,34 @@ class Edit extends Component
 
     public function save()
     {
-        $encargado = EncargadoModel::find($this->dato['id']);
-        $encargado->fill($this->dato);
-        $encargado->save();
+        DB::transaction(function () {
+            $encargado = EncargadoModel::find($this->dato['id']);
+            $encargado->fill($this->dato);
+            $encargado->save();
+            $this->oldDato = $encargado->toArray();
 
-        // Actualiza el valor de oldDato con el nombre nuevo guardado
-        $this->oldDato = $encargado->toArray();
+            $user = User::find($this->result['id']);
 
-        $this->reset(['open']);
-        $this->dispatch('render');
-        $this->dispatch('alert', 'El encargado se ha modificado con exito.');
+            if ($user && $this->result['id_estado'] !== $this->oldresult['id_estado']) {
+                $user->id_estado = $this->result['id_estado'];
+                $user->save();
+                $this->oldresult = $user->toArray();
+            }
+
+            $this->reset(['open']);
+            $this->dispatch('render');
+            $this->dispatch('alert', 'El encargado se ha modificado con exito.');
+        });
+        // $encargado = EncargadoModel::find($this->dato['id']);
+        // $encargado->fill($this->dato);
+        // $encargado->save();
+
+        // // Actualiza el valor de oldDato con el nombre nuevo guardado
+        // $this->oldDato = $encargado->toArray();
+
+        // $this->reset(['open']);
+        // $this->dispatch('render');
+        // $this->dispatch('alert', 'El encargado se ha modificado con exito.');
     }
 
     public function verificarLaboratorio()
@@ -151,6 +183,7 @@ class Edit extends Component
     public function render()
     {
         $laboratorios = LaboratorioModel::pluck('nombre', 'id');
-        return view('livewire.encargado.edit', compact('laboratorios'));
+        $estados = EstadoUsuarioModel::all();
+        return view('livewire.encargado.edit', compact('laboratorios', 'estados'));
     }
 }

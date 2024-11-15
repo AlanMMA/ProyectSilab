@@ -1,9 +1,10 @@
-<div class="flex flex-col gap-12">
+<div class="flex flex-col sm:gap-12 gap-6">
     <div class="px-6 flex sm:justify-between items-center flex-col sm:flex-row gap-6">
         <div class="sm:w-max w-full flex items-center gap-6">
             <div class="relative w-full">
                 <x-label value="Escriba el solicitante:"></x-label>
-                <input @if (!$solicitanteSeleccionado2) disabled @endif type="text" wire:model.live="search" placeholder="Buscar solicitante..."
+                <input @if (!$solicitanteSeleccionado2) disabled @endif type="text" wire:model.live="search"
+                    placeholder="Buscar solicitante..."
                     class="w-full mt-1 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                     autocomplete="off" />
                 @if (strlen($search) > 0 && !$selectedSolicitante)
@@ -26,23 +27,34 @@
                 @endif
             </div>
 
-            <button @if (!$solicitanteSeleccionado2) hidden @endif class="bg-green-600 hover:bg-green-500 pt-2 pb-1 px-2 rounded-md cursor-pointer"
+            <button @if (!$solicitanteSeleccionado2) hidden @endif
+                class="bg-green-600 hover:bg-green-500 pt-2 pb-1 px-2 rounded-md cursor-pointer"
                 wire:click="filtrarDetalles">
                 <span class="material-symbols-outlined text-white">
                     check
                 </span>
             </button>
-            <button @if (!$solicitanteSeleccionado) hidden @endif class="bg-red-600 hover:bg-red-500 pt-2 pb-1 px-2 rounded-md cursor-pointer"
-                wire:click="resetView">
+            <button @if (!$solicitanteSeleccionado) hidden @endif
+                class="bg-red-600 hover:bg-red-500 pt-2 pb-1 px-2 rounded-md cursor-pointer" wire:click="resetView">
                 <span class="material-symbols-outlined text-white">
                     close
                 </span>
             </button>
         </div>
+
+        <button type="button" 
+        wire:click="toggleSelectAll" 
+        @if (!$solicitanteSeleccionado) hidden @endif
+        class="w-min h-min text-sm pt-2 pb-1 px-2 text-white bg-blue-500 hover:bg-blue-700 rounded">
+    {{ $selectAll ? 'Deseleccionar Todos' : 'Seleccionar Todos' }}
+</button>
+
+
         <button @if (!$solicitanteSeleccionado) hidden @endif wire:click="confirmarDevolucion"
             class="w-min h-min text-sm bg-green-600 hover:bg-green-500 pt-2 pb-1 px-2 rounded-md cursor-pointer text-white">
             Devolver Seleccionados
         </button>
+
     </div>
 
     <div class="px-6 overflow-y-auto max-h-[60vh] sm:max-h-full">
@@ -54,7 +66,7 @@
 
                         </div>
                     </th>
-                    <th scope="col" class=" px-6 py-3 " >
+                    <th scope="col" class=" px-6 py-3 ">
                         <div class="flex items-center justify-center">
                             ID
                         </div>
@@ -92,8 +104,7 @@
                     <tr wire:key="area-{{ $detalle->id }}"
                         class=" odd:bg-white odd:dark:bg-gray-900 even:bg-[#D2D9D3] even:text-blue-tec odd: text-black even:dark:bg-gray-800 border-b dark:border-gray-700">
                         <th scope="row" class="px-6 py-2 text-center font-medium  whitespace-nowrap dark:text-white">
-                            <input type="checkbox" wire:click="toggleDetalleSelection({{ $detalle->id }})"
-                                @if (in_array($detalle->id, $selectedDetalles)) checked @endif>
+                            <input type="checkbox" wire:model.live="selectedDetalles" value={{ $detalle->id }}>
                         </th>
                         <td class="px-6 py-2 text-center font-medium  whitespace-nowrap dark:text-white">
                             {{ $detalle->id_prestamo }}

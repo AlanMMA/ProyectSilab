@@ -15,6 +15,7 @@ class DetallePrestamoModel extends Model
         'id_prestamo',
         'fecha_prestamo',
         'fecha_devolucion',
+        'fecha_entrega',
         'id_material',
         'cantidad',
         'EstadoPrestamo',

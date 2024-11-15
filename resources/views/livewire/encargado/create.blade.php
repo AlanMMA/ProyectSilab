@@ -82,6 +82,26 @@
                 <x-input-error for="id_rol"></x-input-error>
                 <x-input-error for="id_encargado"></x-input-error>
             </div>
+            <div class="mb-4">
+                <x-label value="Confirmar contraseña:"></x-label>
+                <div class="relative w-full flex items-center">
+                    <x-input wire:model="password_confirmation" wire:keyup="update('password_confirmation')"
+                        :type="$showPassword2 ? 'text' : 'password'" class="w-full pr-12"></x-input>
+                    <button type="button" wire:click="togglePasswordVisibility2"
+                        class="ml-auto px-3 flex items-center focus:outline-none">
+                        @if ($showPassword2)
+                        <span class="material-symbols-outlined ">
+                            visibility
+                        </span>
+                        @else
+                        <span class="material-symbols-outlined">
+                            visibility_off
+                        </span>
+                        @endif
+                    </button>
+                </div>
+                <x-input-error for="password_confirmation"></x-input-error>
+            </div>
         </x-slot>
         <x-slot name="footer">
             <div class="gap-4">

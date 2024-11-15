@@ -61,7 +61,9 @@
                         <x-slot name="content">
                             <x-dropdown-link href="{{ route('prestamo') }}">{{ __('Consultar prestamos') }}</x-dropdown-link>
                             <x-dropdown-link href="{{ route('solicitante') }}">{{ __('Solicitante') }}</x-dropdown-link>
+                            @if (auth()->user()->id_rol !== 7)
                             <x-dropdown-link href="{{ route('upprestamo') }}">{{ __('Recibir prestamo') }}</x-dropdown-link>
+                            @endif
                         </x-slot>
                     </x-dropdown-nav>
 
@@ -75,9 +77,11 @@
                             <x-dropdown-link href="{{ route('material')}}" :active="request()->routeIs('material')">
                                 {{__('Material')}}
                             </x-dropdown-link>
+                            @if (auth()->user()->id_rol !== 7)
                             <x-dropdown-link href="{{ route('materialEntradas')}}" :active="request()->routeIs('materialEntradas')">
                                 {{__('Entradas al inventario')}}
                             </x-dropdown-link>
+                            @endif
                         </x-slot>
                     </x-dropdown-nav>
                     @endauth

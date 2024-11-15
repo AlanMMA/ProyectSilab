@@ -1,6 +1,6 @@
 <div>
     <a wire:click="$set('open', true)"
-        class="material-symbols-outlined  font-bold text-white py-2 px-2 rounded cursor-pointer bg-yellow-500">
+        class="material-symbols-outlined  font-bold text-white py-2 px-2 rounded cursor-pointer bg-yellow-400 hover:bg-yellow-300">
         <span class="material-symbols-outlined">
             edit
         </span>
@@ -15,14 +15,39 @@
         <x-slot name="content">
             <div class="mb-4">
                 <x-label value="Nombre:"></x-label>
-                <x-input type="text" wire:model="dato.name" class="w-full mt-2"></x-input>
-                <x-input-error for="dato.name"></x-input-error>
+                <x-input type="text" wire:model="result.nombre" class="w-full mt-2"></x-input>
+                <x-input-error for="result.nombre"></x-input-error>
             </div>
             <div class="mb-4">
-                <x-label value="Correo electronico:"></x-label>
-                <x-input type="text" wire:model="dato.email" class="w-full mt-2"></x-input>
-                <x-input-error for="dato.email"></x-input-error>
+                <x-label value="Apellido paterno:"></x-label>
+                <x-input type="text" wire:model="result.apellido_pS" class="w-full mt-2"></x-input>
+                <x-input-error for="result.apellido_pS"></x-input-error>
             </div>
+            <div class="mb-4">
+                <x-label value="Apellido materno:"></x-label>
+                <x-input type="text" wire:model="result.apellido_mS" class="w-full mt-2"></x-input>
+                <x-input-error for="result.apellido_mS"></x-input-error>
+            </div>
+            <div class="mb-4">
+                <x-label value="Numero de control:"></x-label>
+                <x-input type="text" wire:model="result.no_control" class="w-full mt-2"></x-input>
+                <x-input-error for="result.no_control"></x-input-error>
+            </div>
+            <div class="mb-4">
+                <x-label value="correo electronico:"></x-label>
+                <x-input type="text" disabled wire:model="dato.email" class="w-full mt-2"></x-input>
+            </div>
+            <div class="mb-4">
+                <x-label value="Estado del usuario:"></x-label>
+                <select wire:model.live="dato.id_estado"
+                    class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                    @foreach ($estados as $estado)
+                        <option value="{{ $estado->id }}">{{$estado->nombre}}</option>
+                    @endforeach
+                </select>
+                <x-input-error for="dato.id_estado"></x-input-error>
+            </div>
+
             {{-- <div class="mb-4">
                 <x-label value="Asignar un rol:"></x-label>
                 <select name="id_rol" wire:model.live="dato.id_rol"
@@ -65,7 +90,6 @@
                     @endauth
                 </div>
             @endif --}}
-            
         </x-slot>
 
         <x-slot name="footer">
@@ -83,23 +107,24 @@
     </x-dialog-modal>
 
     @push('js')
-    <script>
-        Livewire.on('showConfirmation', () => {
-            Swal.fire({
-                title: "¿Estás seguro de editar el registro?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Aceptar",
-                cancelButtonText: "Cancelar"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Livewire.dispatch('saveConfirmed');
-                }
+        <script>
+            Livewire.on('showConfirmation', (mensaje) => {
+                Swal.fire({
+                    title: "¿Estás seguro de editar el registro?",
+                    html: mensaje,
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Aceptar",
+                    cancelButtonText: "Cancelar"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Livewire.dispatch('saveConfirmed');
+                    }
+                });
             });
-        });
-    </script>
+        </script>
     @endpush
 
 </div>

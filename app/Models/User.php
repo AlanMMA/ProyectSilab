@@ -30,6 +30,8 @@ class User extends Authenticatable
         'password',
         'id_rol',
         'id_encargado',
+        'id_ss',
+        'id_estado'
     ];
 
     public function rol(): BelongsTo
@@ -40,6 +42,16 @@ class User extends Authenticatable
     public function encargado(): BelongsTo
     {
         return $this->belongsTo(EncargadoModel::class, 'id_encargado');
+    }
+
+    public function alumnos(): BelongsTo
+    {
+        return $this->belongsTo(Alumnos_ServicioModel::class, 'id_ss');    
+    }
+
+    public function estado(): BelongsTo
+    {
+        return $this->belongsTo(EstadoUsuarioModel::class, 'id_estado');
     }
 
     /**

@@ -37,13 +37,11 @@ class Edit extends Component
 
             // Despacha el evento de SweetAlert con el nombre original (oldDato)
             $this->dispatch('showConfirmation', $this->oldDato, $this->dato['nombre']);
-
         } else {
             // Si no hubo cambios, muestra mensaje de que no se realizaron cambios
             $this->reset(['open']);
             $this->dispatch('alert', 'No se realizaron cambios.');
         }
-
     }
 
     public function save()

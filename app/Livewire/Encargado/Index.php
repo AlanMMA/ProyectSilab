@@ -12,7 +12,7 @@ class Index extends Component
 
     public $search;
     public $sort = 'id';
-    public $nombre, $apellido_p, $apellido_m, $id_laboratorio;
+    public $nombre, $apellido_p, $apellido_m, $id_laboratorio, $excludedId;
     public $direc = 'asc';
     public $cant = '10';
     protected $listeners = ['render' => 'render', 'destroyPost'];
@@ -30,6 +30,7 @@ class Index extends Component
 
     public function render()
     {
+
         $datos = EncargadoModel::where('nombre', 'like', '%' . $this->search . '%')
             ->orWhere('apellido_p', 'like', '%' . $this->search . '%')
             ->orWhere('apellido_m', 'like', '%' . $this->search . '%')
@@ -49,6 +50,7 @@ class Index extends Component
             ->withQueryString();
         return view('livewire.encargado.index', compact('datos'));
     }
+    
 
     public function order($sort)
     {

@@ -62,6 +62,33 @@
                 <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
             </div>
+            <div class="mb-4">
+                <x-label value="Estado del usuario:"></x-label>
+                <select wire:model.live="result.id_estado"
+                    class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                    @foreach ($estados as $estado)
+                        <option value="{{ $estado->id }}">{{$estado->nombre}}</option>
+                    @endforeach
+                </select>
+                <x-input-error for="dato.id_estado"></x-input-error>
+            </div>
+
+            <div class="mb-4">
+                <x-label value="Usuario:"></x-label>
+                <x-input wire:model="result.name" wire:keyup="update('result.name')" type="text" class="w-full" disabled>
+                </x-input>
+                @error('result.name')
+                <span class="text-red-500 text-sm">{{$message}}</span>
+                @enderror
+            </div>
+            <div class="mb-4">
+                <x-label value="Correo electronico:"></x-label>
+                <x-input wire:model="result.email" wire:keyup="update('result.email')" type="text" class="w-full" disabled>
+                </x-input>
+                @error('result.email')
+                <span class="text-red-500 text-sm">{{$message}}</span>
+                @enderror
+            </div>
 
         </x-slot>
 
@@ -107,7 +134,7 @@
     </script>
     @endpush
 
-    @push('js')
+        @push('js')
     <script>
         Livewire.on('showConfirmation', (mensaje) => {
             Swal.fire({

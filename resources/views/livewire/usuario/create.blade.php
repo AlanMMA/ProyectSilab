@@ -12,6 +12,30 @@
         <x-slot name="content">
             <div class="mb-4">
                 <x-label value="Nombre:"></x-label>
+                <x-input wire:model="nombre" wire:keyup="update('nombre')" type="text" value="{{ old('nombre') }}"
+                    class="w-full"></x-input>
+                <x-input-error for="nombre"></x-input-error>
+            </div>
+            <div class="mb-4">
+                <x-label value="Apellido paterno:"></x-label>
+                <x-input wire:model="apellido_pS" wire:keyup="update('apellido_pS')" type="text" value="{{ old('apellido_pS') }}"
+                    class="w-full"></x-input>
+                <x-input-error for="apellido_pS"></x-input-error>
+            </div>
+            <div class="mb-4">
+                <x-label value="Apellido materno:"></x-label>
+                <x-input wire:model="apellido_mS" wire:keyup="update('apellido_mS')" type="text" value="{{ old('apellido_mS') }}"
+                    class="w-full"></x-input>
+                <x-input-error for="apellido_mS"></x-input-error>
+            </div>
+            <div class="mb-4">
+                <x-label value="Numero de control:"></x-label>
+                <x-input wire:model="no_control" wire:keyup="update('no_control')" type="text" value="{{ old('no_control') }}"
+                    class="w-full"></x-input>
+                <x-input-error for="no_control"></x-input-error>
+            </div>
+            <div class="mb-4">
+                <x-label value="usuario:"></x-label>
                 <x-input wire:model="name" wire:keyup="update('name')" type="text" value="{{ old('name') }}"
                     class="w-full"></x-input>
                 <x-input-error for="name"></x-input-error>
@@ -24,28 +48,38 @@
             </div>
             <div class="mb-4">
                 <x-label value="Contraseña:"></x-label>
-
                 <div class="relative w-full flex items-center">
-
                     <x-input wire:model="password" wire:keyup="update('password')"
-                        :type="$showPassword ? 'text' : 'password'" class="w-full pr-12"></x-input>
-
+                             :type="$showPassword ? 'text' : 'password'" class="w-full pr-12"></x-input>
                     <button type="button" wire:click="togglePasswordVisibility"
-                        class="ml-auto px-3 flex items-center focus:outline-none">
+                            class="ml-auto px-3 flex items-center focus:outline-none">
                         @if ($showPassword)
-                        <span class="material-symbols-outlined ">
-                            visibility
-                        </span>
+                            <span class="material-symbols-outlined">visibility</span>
                         @else
-                        <span class="material-symbols-outlined">
-                            visibility_off
-                        </span>
+                            <span class="material-symbols-outlined">visibility_off</span>
                         @endif
                     </button>
                 </div>
                 <x-input-error for="password"></x-input-error>
             </div>
-
+            
+            <div class="mb-4">
+                <x-label value="Confirmar contraseña:"></x-label>
+                <div class="relative w-full flex items-center">
+                    <x-input wire:model="password_confirmation" wire:keyup="update('password_confirmation')"
+                             :type="$showPassword2 ? 'text' : 'password'" class="w-full pr-12"></x-input>
+                    <button type="button" wire:click="togglePasswordVisibility2"
+                            class="ml-auto px-3 flex items-center focus:outline-none">
+                        @if ($showPassword2)
+                            <span class="material-symbols-outlined">visibility</span>
+                        @else
+                            <span class="material-symbols-outlined">visibility_off</span>
+                        @endif
+                    </button>
+                </div>
+                <x-input-error for="password_confirmation"></x-input-error> <!-- Nueva validación -->
+            </div>
+            
             <div class="mb-4">
                 <x-label value="Encargado:"></x-label>
                 @auth
@@ -123,22 +157,39 @@
 
     @push('js')
     <script>
-        Livewire.on('showConfirmation2', () => {
-            Swal.fire({
-                title: "¿Estás seguro de agregar este registro?",
-                icon: "question",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Aceptar",
-                cancelButtonText: "Cancelar"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Livewire.dispatch('saveConfirmed2');
-                }
-            });
+        Livewire.on('showConfirmation2', (dato) => {
+            const datos = dato[0];
+            const name = datos.newDatos.nombre;
+            const last_p = datos.newDatos.apellido_pS;
+            const last_m = datos.newDatos.apellido_mS;
+            const no_control = datos.newDatos.no_control;
+
+        let htmlContent = `
+            <table style="width: 100%; text-align: left;">
+                <tr><td><strong>Nombre: </strong>${name}</td></tr>
+                <tr><td><strong>Apellido Paterno: </strong>${last_p}</td></tr>
+                <tr><td><strong>Apellido Materno: </strong>${last_m}</td></tr>
+                <tr><td><strong>Numero de control: </strong>${no_control}</td></tr>
+            </table>
+        `;
+
+        Swal.fire({
+            title: "¿Estás seguro de agregar este registro?",
+            html: htmlContent,
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Aceptar",
+            cancelButtonText: "Cancelar"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Livewire.dispatch('saveConfirmed2'); // Llama al método save para guardar el nuevo encargado
+            }
         });
+    });
     </script>
     @endpush
+
 
 </div>
