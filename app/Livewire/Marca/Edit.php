@@ -59,9 +59,9 @@ class Edit extends Component
 
         // Agregar la validación única de 'nombre' solo si fue modificado y no es igual al original
         if ($newNombre && strtolower($this->dato['nombre']) !== strtolower($this->oldDato2['nombre'])) {
-            $rules['dato.nombre'] = 'required|max:20|unique:marca,nombre';
+            $rules['dato.nombre'] = 'required|max:20|unique:marca,nombre|regex:/^[\pL\s]+$/u';
         } else {
-            $rules['dato.nombre'] = 'required|max:20';
+            $rules['dato.nombre'] = 'required|max:20|regex:/^[\pL\s]+$/u';
         }
 
         // Realiza la validación con las reglas dinámicas
