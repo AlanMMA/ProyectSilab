@@ -22,12 +22,12 @@ class Create extends Component
     protected function rules()
     {
         return [
-            'nombre' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
+            'nombre' => 'required|min:3|max:25|regex:/^[\pL\s]+$/u',
             'apellido_p' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
             'apellido_m' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
             'id_laboratorio' => 'required|numeric|gt:0',
             'name' => 'required|string|min:3|max:50|regex:/^[a-zA-Z\s]+$/',
-            'email' => 'required|email|min:18|max:255|unique:users,email',
+            'email' => 'required|email|min:16|max:255|unique:users,email',
             'password' => 'required|string|min:9|max:255|regex:/^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{9,}$/',
             'id_rol' => 'required|numeric|min:1',
         ];

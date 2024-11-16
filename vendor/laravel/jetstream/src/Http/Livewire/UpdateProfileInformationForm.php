@@ -2,6 +2,7 @@
 
 namespace Laravel\Jetstream\Http\Livewire;
 
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Fortify\Contracts\UpdatesUserProfileInformation;
 use Livewire\Component;
@@ -18,6 +19,7 @@ class UpdateProfileInformationForm extends Component
      */
     public $state = [];
 
+    public $dato, $oldDato, $email;
     public $supervisor_name;
     public $supervisor_patsur;
     public $supervisor_matsur;
@@ -41,9 +43,11 @@ class UpdateProfileInformationForm extends Component
      *
      * @return void
      */
-    public function mount()
+    public function mount(User $dato)
     {
         $user = Auth::user();
+        $this->dato = $dato->toArray();
+        $this->oldDato = $dato->toArray();
 
         $this->state = array_merge([
             'email' => $user->email,
@@ -54,6 +58,9 @@ class UpdateProfileInformationForm extends Component
         $this->supervisor_patsur = $user->encargado->apellido_p ?? '';
         $this->supervisor_matsur = $user->encargado->apellido_m ?? '';
     }
+
+    // Evento para confirmación
+    protected $listeners = ['saveProfileChanges' => 'updateProfileInformation'];
 
     /**
      * Update the user's profile information.
@@ -85,6 +92,43 @@ class UpdateProfileInformationForm extends Component
         $this->dispatch('saved');
         $this->dispatch('refresh-navigation-menu');
     }
+
+    // En tu componente Livewire
+    public function confirmSave()
+    {
+        // Verificar si el 'email' ha sido modificado
+        $emailModificado = isset($this->dato['email']) && isset($this->oldDato['email']) && $this->dato['email'] !== $this->oldDato['email'];
+
+        // Validar los cambios, pasando si el email ha sido modificado
+        if ($this->validateChanges($emailModificado)) {
+            // Si pasa la validación, muestra la alerta de SweetAlert
+            $this->dispatch('showConfirmationAlert');
+        }
+    }
+
+    private function validateChanges($emailModificado)
+    {
+        // Reglas básicas para los otros campos
+        $rules = [
+            'state.name' => 'required|string|min:3|max:50|regex:/^[a-zA-Z\s]+$/',
+            'supervisor_name' => 'required|min:3|max:25|regex:/^[\pL\s]+$/u',
+            'supervisor_patsur' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
+            'supervisor_matsur' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
+        ];
+
+        // Si el email ha sido modificado, agrega la validación única
+        if ($emailModificado) {
+            $rules['state.email'] = 'required|email|min:16|max:255|unique:users,email';
+        } else {
+            $rules['state.email'] = 'required|email|min:16|max:255';
+        }
+
+        // Realiza la validación con las reglas dinámicas
+        $this->validate($rules);
+
+        return true;
+    }
+
     /**
      * Delete user's profile photo.
      *

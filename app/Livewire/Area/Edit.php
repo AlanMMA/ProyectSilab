@@ -12,10 +12,6 @@ class Edit extends Component
     public $oldDato; // Almacena el valor original del dato
     public $oldDato2;
 
-    protected $rules = [
-        'dato.nombre' => 'required|max:15|unique:area,nombre',
-    ];
-
     protected $listeners = ['saveConfirmed' => 'save'];
 
     public function mount(AreaModel $dato)
@@ -44,12 +40,11 @@ class Edit extends Component
         $newNombre = $this->dato['nombre'] !== $this->oldDato2['nombre'];
 
         if ($newNombre) {
-
-            // Realiza la validación
-            $this->validate();
-
-            // Despacha el evento de SweetAlert con el nombre original (oldDato)
-            $this->dispatch('showConfirmation', $this->oldDato, $this->dato['nombre']);
+            // Realizar la validación de los cambios
+            if ($this->validateChanges($newNombre)) {
+                // Solo si la validación pasó, despachamos confirmación
+                $this->dispatch('showConfirmation', $this->oldDato, $this->dato['nombre']);
+            }
 
         } else {
             // Si no hubo cambios, muestra mensaje de que no se realizaron cambios
@@ -57,6 +52,22 @@ class Edit extends Component
             $this->dispatch('alert', 'No se realizaron cambios.');
         }
 
+    }
+
+    private function validateChanges($newNombre)
+    {
+
+        // Agregar la validación única de 'nombre' solo si fue modificado y no es igual al original
+        if ($newNombre && strtolower($this->dato['nombre']) !== strtolower($this->oldDato2['nombre'])) {
+            $rules['dato.nombre'] = 'required|max:15|unique:area,nombre';
+        } else {
+            $rules['dato.nombre'] = 'required|max:15';
+        }
+
+        // Realiza la validación con las reglas dinámicas
+        $this->validate($rules);
+
+        return true;
     }
 
     public function save()
