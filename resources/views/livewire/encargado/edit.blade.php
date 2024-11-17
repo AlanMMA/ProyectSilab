@@ -1,5 +1,5 @@
 <div>
-    <a wire:click="$set('open', true)"
+    <a wire:click="openModal"
         class="material-symbols-outlined  font-bold text-white py-2 px-2 rounded cursor-pointer bg-yellow-500">
         <span class="material-symbols-outlined">
             edit
@@ -52,13 +52,13 @@
                 <select name="id_laboratorio" id="id_laboratorio-{{ $dato['id'] ?? 'new' }}"
                     wire:model="dato.id_laboratorio" wire:change="verificarLaboratorio"
                     class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
-                    <option value="0">Seleccione un laboratorio</option>
+                    <option value="">Seleccione un laboratorio</option>
                     @foreach ($laboratorios as $id => $nombre)
                     <option value="{{ $id }}">{{ $nombre }}</option>
                     @endforeach
                 </select>
 
-                @error('id_laboratorio')
+                @error('dato.id_laboratorio')
                 <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
             </div>

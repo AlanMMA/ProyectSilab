@@ -18,20 +18,20 @@
             </div>
             <div class="mb-4">
                 <x-label value="Apellido paterno:"></x-label>
-                <x-input wire:model="apellido_pS" wire:keyup="update('apellido_pS')" type="text" value="{{ old('apellido_pS') }}"
-                    class="w-full"></x-input>
+                <x-input wire:model="apellido_pS" wire:keyup="update('apellido_pS')" type="text"
+                    value="{{ old('apellido_pS') }}" class="w-full"></x-input>
                 <x-input-error for="apellido_pS"></x-input-error>
             </div>
             <div class="mb-4">
                 <x-label value="Apellido materno:"></x-label>
-                <x-input wire:model="apellido_mS" wire:keyup="update('apellido_mS')" type="text" value="{{ old('apellido_mS') }}"
-                    class="w-full"></x-input>
+                <x-input wire:model="apellido_mS" wire:keyup="update('apellido_mS')" type="text"
+                    value="{{ old('apellido_mS') }}" class="w-full"></x-input>
                 <x-input-error for="apellido_mS"></x-input-error>
             </div>
             <div class="mb-4">
                 <x-label value="Numero de control:"></x-label>
-                <x-input wire:model="no_control" wire:keyup="update('no_control')" type="text" value="{{ old('no_control') }}"
-                    class="w-full"></x-input>
+                <x-input wire:model="no_control" wire:keyup="update('no_control')" type="text"
+                    value="{{ old('no_control') }}" class="w-full"></x-input>
                 <x-input-error for="no_control"></x-input-error>
             </div>
             <div class="mb-4">
@@ -50,36 +50,36 @@
                 <x-label value="Contraseña:"></x-label>
                 <div class="relative w-full flex items-center">
                     <x-input wire:model="password" wire:keyup="update('password')"
-                             :type="$showPassword ? 'text' : 'password'" class="w-full pr-12"></x-input>
+                        :type="$showPassword ? 'text' : 'password'" class="w-full pr-12"></x-input>
                     <button type="button" wire:click="togglePasswordVisibility"
-                            class="ml-auto px-3 flex items-center focus:outline-none">
+                        class="ml-auto px-3 flex items-center focus:outline-none">
                         @if ($showPassword)
-                            <span class="material-symbols-outlined">visibility</span>
+                        <span class="material-symbols-outlined">visibility</span>
                         @else
-                            <span class="material-symbols-outlined">visibility_off</span>
+                        <span class="material-symbols-outlined">visibility_off</span>
                         @endif
                     </button>
                 </div>
                 <x-input-error for="password"></x-input-error>
             </div>
-            
+
             <div class="mb-4">
                 <x-label value="Confirmar contraseña:"></x-label>
                 <div class="relative w-full flex items-center">
                     <x-input wire:model="password_confirmation" wire:keyup="update('password_confirmation')"
-                             :type="$showPassword2 ? 'text' : 'password'" class="w-full pr-12"></x-input>
+                        :type="$showPassword2 ? 'text' : 'password'" class="w-full pr-12"></x-input>
                     <button type="button" wire:click="togglePasswordVisibility2"
-                            class="ml-auto px-3 flex items-center focus:outline-none">
+                        class="ml-auto px-3 flex items-center focus:outline-none">
                         @if ($showPassword2)
-                            <span class="material-symbols-outlined">visibility</span>
+                        <span class="material-symbols-outlined">visibility</span>
                         @else
-                            <span class="material-symbols-outlined">visibility_off</span>
+                        <span class="material-symbols-outlined">visibility_off</span>
                         @endif
                     </button>
                 </div>
                 <x-input-error for="password_confirmation"></x-input-error> <!-- Nueva validación -->
             </div>
-            
+
             <div class="mb-4">
                 <x-label value="Encargado:"></x-label>
                 @auth

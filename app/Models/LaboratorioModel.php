@@ -13,7 +13,13 @@ class LaboratorioModel extends Model
     protected $fillable = [
         'id',
         'nombre',
+        'num_max_encargado',
     ];
+
+    public function encargados()
+    {
+        return $this->hasMany(EncargadoModel::class, 'id_laboratorio', 'id');
+    }
 
     public $timestamps = false;
 

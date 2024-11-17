@@ -55,7 +55,7 @@
             <x-label for="name" value="{{ __('Name') }}" />
             <x-input id="name" type="text" class="mt-1 block w-full" wire:model="state.name" required
                 autocomplete="name" />
-            <x-input-error for="name" class="mt-2" />
+            <x-input-error for="state.name" class="mt-2" />
         </div>
 
         <!-- Email -->
@@ -90,22 +90,21 @@
 
         <div class="col-span-6 sm:col-span-4">
             <x-label for="supervisor_name" value="{{ __('Name of the supervisor') }}" />
-            <x-input id="supervisor_name" type="text" class="mt-1 block w-full"
-                value="{{ $this->user->encargado->nombre ?? '' }}" readonly />
+            <x-input id="supervisor_name" type="text" class="mt-1 block w-full" wire:model="supervisor_name" required />
             <x-input-error for="supervisor_name" class="mt-2" />
         </div>
 
         <div class="col-span-6 sm:col-span-4">
             <x-label for="supervisor_patsur" value="{{ __('Paternal surname') }}" />
-            <x-input id="supervisor_patsur" type="text" class="mt-1 block w-full"
-                value="{{ $this->user->encargado->apellido_p ?? '' }}" readonly />
+            <x-input id="supervisor_patsur" type="text" class="mt-1 block w-full" wire:model="supervisor_patsur"
+                required />
             <x-input-error for="supervisor_patsur" class="mt-2" />
         </div>
 
         <div class="col-span-6 sm:col-span-4">
             <x-label for="supervisor_matsur" value="{{ __('Maternal surname') }}" />
-            <x-input id="supervisor_matsur" type="text" class="mt-1 block w-full"
-                value="{{ $this->user->encargado->apellido_m ?? '' }}" readonly />
+            <x-input id="supervisor_matsur" type="text" class="mt-1 block w-full" wire:model="supervisor_matsur"
+                required />
             <x-input-error for="supervisor_matsur" class="mt-2" />
         </div>
 
@@ -119,8 +118,30 @@
             {{ __('Saved.') }}
         </x-action-message>
 
-        <x-button wire:loading.attr="disabled" wire:target="photo">
+        <x-button wire:loading.attr="disabled" wire:target="photo" x-on:click.prevent="$wire.confirmSave()">
             {{ __('Save') }}
         </x-button>
     </x-slot>
+
+    @push('js')
+    <script>
+        Livewire.on('showConfirmationAlert', () => {
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "¿Quieres guardar los cambios en tu perfil?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, guardar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Livewire.dispatch('saveProfileChanges'); // Emitir el evento de guardado final
+            }
+        });
+    });
+    </script>
+    @endpush
+
 </x-form-section>

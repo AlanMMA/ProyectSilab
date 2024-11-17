@@ -4,7 +4,6 @@ namespace App\Livewire\Usuario;
 
 use App\Models\Alumnos_ServicioModel;
 use App\Models\EncargadoModel;
-use App\Models\EstadoUsuarioModel;
 use App\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -21,9 +20,8 @@ class Index extends Component
     protected $listeners = ['render' => 'render', 'destroyPost'];
     public $mostrarModal = false;
     use WithPagination;
-    public $encargados;
+    public $encargados, $encargados2;
     public $SelectEncargado = 0;
-
 
     public function mount()
     {
@@ -55,16 +53,21 @@ class Index extends Component
     //     return view('livewire.usuario.index', compact('datos'));
     // }
 
+    public function updatedSelectEncargado($value)
+    {
+        $this->encargados2 = EncargadoModel::find($value);
+    }
+
     public function render()
     {
         $this->UserId = auth()->user()->id_encargado;
-    
+
         if (auth()->user()->id_rol == 7 && $this->SelectEncargado == 0) {
             $datos = new LengthAwarePaginator([], 0, $this->cant);
         } else {
             $encargadoId = auth()->user()->id_rol == 7 && $this->SelectEncargado > 0
-                ? $this->SelectEncargado
-                : $this->UserId;
+            ? $this->SelectEncargado
+            : $this->UserId;
             $datos = User::where('id_encargado', $encargadoId)
                 ->where('id_rol', 2)
                 ->where(function ($query) {
@@ -76,11 +79,11 @@ class Index extends Component
                 })
                 ->when($this->sort == 'id_estado', function ($query) {
                     $query->join('estadousuario as estado', 'estado.id', '=', 'users.id_estado')
-                          ->orderBy('estado.nombre', $this->direc); 
+                        ->orderBy('estado.nombre', $this->direc);
                 })
                 ->when($this->sort == 'no_control', function ($query) {
                     $query->join('alumnos_servicio', 'alumnos_servicio.id', '=', 'users.id_ss')
-                          ->orderBy('alumnos_servicio.no_control', $this->direc);
+                        ->orderBy('alumnos_servicio.no_control', $this->direc);
                 })
                 ->when(!$this->sort || !in_array($this->sort, ['id_estado', 'no_control']), function ($query) {
                     $query->orderBy($this->sort, $this->direc);
@@ -88,12 +91,9 @@ class Index extends Component
                 ->paginate($this->cant)
                 ->withQueryString();
         }
-    
+
         return view('livewire.usuario.index', compact('datos'));
     }
-        
-
-
 
     public function order($sort)
     {
@@ -127,7 +127,6 @@ class Index extends Component
         DB::beginTransaction();
         $cat = User::find($id);
         $cat2 = $cat->id_ss;
-
 
         try {
             $alumnoSS = Alumnos_ServicioModel::where('id', $cat2)->first();

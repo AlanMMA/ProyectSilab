@@ -52,6 +52,19 @@ class Edit extends Component
         $this->laboratorios = LaboratorioModel::pluck('nombre', 'id')->toArray();
     }
 
+    public function openModal()
+    {
+        $this->resetDatos(); // Llama a resetDatos cada vez que se abre el modal
+        $this->open = true;
+    }
+    
+    // Nueva función para restablecer los datos al abrir el modal
+    public function resetDatos()
+    {
+        $encargado = EncargadoModel::find($this->dato['id']);
+        $this->dato = $encargado->toArray();
+    }
+
     public function confirmSave()
     {
         $this->validate();
@@ -103,7 +116,7 @@ class Edit extends Component
         }
 
         // Verifica el cambio en laboratorio
-        if ($this->dato['id_laboratorio'] !== $this->oldDato['id_laboratorio']) {
+        if ((int) $this->dato['id_laboratorio'] !== (int) $this->oldDato['id_laboratorio']) {
             $oldLab = $this->laboratorios[$this->oldDato['id_laboratorio']] ?? 'No asignado';
             $newLab = $this->laboratorios[$this->dato['id_laboratorio']] ?? 'No asignado';
             $cambios[] = "<tr><td><strong>Laboratorio asignado</strong></td></tr>
@@ -165,19 +178,35 @@ class Edit extends Component
 
     public function verificarLaboratorio()
     {
+        // Verificar si se seleccionó la opción "Seleccione un laboratorio" (valor 0 o null)
+        if (empty($this->dato['id_laboratorio']) || $this->dato['id_laboratorio'] == 0) {
+            return;
+        }
+
+        // Si el laboratorio no ha cambiado, no hacemos nada
         if ($this->dato['id_laboratorio'] == EncargadoModel::find($this->dato['id'])->id_laboratorio) {
             return;
         }
 
-        $ocupado = EncargadoModel::where('id_laboratorio', $this->dato['id_laboratorio'])
-            ->where('id', '!=', $this->dato['id'])
-            ->exists();
+        // Obtener el laboratorio seleccionado
+        $laboratorio = LaboratorioModel::find($this->dato['id_laboratorio']);
 
-        if ($ocupado) {
-            $this->dispatch('alert2', 'Este laboratorio ya está asignado a otro encargado.');
-
-            $this->dato['id_laboratorio'] = EncargadoModel::find($this->dato['id'])->id_laboratorio;
+        if (!$laboratorio) {
+            $this->dispatch('alert2', 'Laboratorio no encontrado.');
+            return;
         }
+
+        // Contar el número de encargados actuales en el laboratorio seleccionado
+        $cantidadEncargados = EncargadoModel::where('id_laboratorio', $this->dato['id_laboratorio'])->count();
+
+        // Comparar con el número máximo de encargados permitido
+        if ($cantidadEncargados >= $laboratorio->num_max_encargado) {
+            $this->dispatch('alert2', "No se puede agregar más encargados a este laboratorio. Límite alcanzado: {$laboratorio->num_max_encargado}");
+            // Revertir al laboratorio anterior
+            $this->dato['id_laboratorio'] = EncargadoModel::find($this->dato['id'])->id_laboratorio;
+            return; // Salir del método
+        }
+
     }
 
     public function render()

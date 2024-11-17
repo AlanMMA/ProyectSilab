@@ -7,7 +7,6 @@ use App\Models\EncargadoModel;
 use App\Models\EstadoUsuarioModel;
 use App\Models\RolModel;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -36,6 +35,18 @@ class Edit extends Component
         $this->validateOnly($propertyname);
     }
 
+    public function openModal()
+    {
+        $this->resetDatos(); // Llama a resetDatos cada vez que se abre el modal
+        $this->open = true;
+    }
+
+    // Nueva función para restablecer los datos al abrir el modal
+    public function resetDatos()
+    {
+        $usuario = User::find($this->dato['id']);
+        $this->dato = $usuario->toArray();
+    }
 
     public function mount()
     {
@@ -45,7 +56,6 @@ class Edit extends Component
         $this->olddato = $this->dato;
 
     }
-
 
     public function confirmSave()
     {
@@ -63,7 +73,6 @@ class Edit extends Component
             $apellidoPModificado = $this->result['apellido_pS'] !== $this->oldresult['apellido_pS'];
             $apellidoMModificado = $this->result['apellido_mS'] !== $this->oldresult['apellido_mS'];
             $estadoModificado = $this->dato['id_estado'] !== $this->olddato['id_estado'];
-
 
             // Si los tres campos de nombre fueron modificados, concatenarlos en una sola línea
             if ($nombreModificado && $apellidoPModificado && $apellidoMModificado) {
@@ -131,6 +140,26 @@ class Edit extends Component
             // Mostrar errores si la validación falla
             dd($e->errors());
         }
+
+    }
+
+    private function validateChanges($emailModificado)
+    {
+        $rules = [
+            'dato.name' => 'required|string|min:3|max:50|regex:/^[a-zA-Z\s]+$/',
+        ];
+
+        // Agregar la validación única de 'nombre' solo si fue modificado y no es igual al original
+        if ($emailModificado && $this->dato['email'] !== $this->oldDato['email']) {
+            $rules['dato.email'] = 'required|email|max:255|unique:users,email';
+        } else {
+            $rules['dato.email'] = 'required|email|max:255';
+        }
+
+        // Realiza la validación con las reglas dinámicas
+        $this->validate($rules);
+
+        return true;
     }
 
     public function save()
@@ -145,6 +174,9 @@ class Edit extends Component
 
             // Actualizar en la tabla User para id_estado
             $user = User::find($this->dato['id']);
+            // Actualiza el valor de oldDato con el nombre nuevo guardado
+            //$this->dato = $categoria->toArray();
+            //$this->oldDato = $categoria->toArray();
 
             if ($user && $this->dato['id_estado'] !== $this->olddato['id_estado']) {
                 $user->id_estado = $this->dato['id_estado'];
@@ -204,8 +236,6 @@ class Edit extends Component
     {
         $this->showPassword2 = !$this->showPassword2;
     }
-
-
 
     public function render()
     {

@@ -58,7 +58,8 @@ class Create extends Component
                 'apellido_pS' => $this->apellido_pS,
                 'apellido_mS' => $this->apellido_mS,
                 'no_control' => $this->no_control,
-
+                'name' => $this->name, // Incluye el nombre de alumno
+                'email' => $this->email, // Incluye el correo electrónico
             ],
         ]);
     }

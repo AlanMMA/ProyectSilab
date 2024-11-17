@@ -24,12 +24,12 @@ class Create extends Component
     protected function rules()
     {
         return [
-            'nombre' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
+            'nombre' => 'required|min:3|max:25|regex:/^[\pL\s]+$/u',
             'apellido_p' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
             'apellido_m' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
-            'id_laboratorio' => 'required|numeric',
+            'id_laboratorio' => 'required|numeric|gt:0',
             'name' => 'required|string|min:3|max:50|regex:/^[a-zA-Z\s]+$/',
-            'email' => 'required|email|min:18|max:255|unique:users,email',
+            'email' => 'required|email|min:16|max:255|unique:users,email',
             'password' => 'required|string|min:9|max:255|regex:/^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{9,}$/',
             'password_confirmation' => 'same:password',
             'id_rol' => 'required|numeric|min:1',
@@ -42,6 +42,7 @@ class Create extends Component
         'nombre.regex' => 'El nombre solo puede contener letras y espacios.',
         'apellido_p.regex' => 'El apellido paterno solo puede contener letras y espacios.',
         'apellido_m.regex' => 'El apellido materno solo puede contener letras y espacios.',
+        'id_laboratorio.gt' => 'Por favor, seleccione un laboratorio.',
     ];
 
     public function update($propertyname)
@@ -67,6 +68,8 @@ class Create extends Component
                 'apellido_p' => $this->apellido_p,
                 'apellido_m' => $this->apellido_m,
                 'id_laboratorio' => $this->id_laboratorio,
+                'name' => $this->name, // Incluye el nombre de usuario
+                'email' => $this->email, // Incluye el correo electrónico
             ],
             'laboratorio_nombre' => $laboratorioNombre, // Enviar el nombre del laboratorio
         ]);
@@ -127,11 +130,31 @@ class Create extends Component
 
     public function verificarLaboratorio()
     {
-        $ocupado = EncargadoModel::where('id_laboratorio', $this->id_laboratorio)->exists();
 
-        if ($ocupado) {
-            $this->dispatch('alert1', 'Este laboratorio ya está asignado a otro encargado.');
+        if ($this->id_laboratorio == 0) {
+            // Si el laboratorio no está seleccionado, no hacemos nada
+            return;
+        }
 
+        // Obtiene el laboratorio seleccionado
+        $laboratorio = LaboratorioModel::find($this->id_laboratorio);
+
+        // Verifica si el laboratorio existe
+        if (!$laboratorio) {
+            $this->dispatch('alert1', 'Laboratorio no encontrado.');
+            $this->id_laboratorio = 0;
+            return;
+        }
+
+        // Obtiene el número máximo de encargados permitido para este laboratorio
+        $maxEncargados = $laboratorio->num_max_encargado;
+
+        // Cuenta cuántos encargados ya están asignados al laboratorio
+        $encargadosActuales = EncargadoModel::where('id_laboratorio', $this->id_laboratorio)->count();
+
+        if ($encargadosActuales >= $maxEncargados) {
+            // Si el límite se alcanza o excede, muestra un mensaje de alerta
+            $this->dispatch('alert1', "El laboratorio ya ha alcanzado el número máximo de encargados permitido ({$maxEncargados}).");
             $this->id_laboratorio = 0;
         }
     }

@@ -10,7 +10,7 @@ class Edit extends Component
 {
     public $open;
     public $dato;
-    public $name, $email, $id_rol, $tipo;
+    public $name, $email, $id_rol, $tipo, $areas;
     public $initialDato;
     public $oldDato;
 
@@ -46,6 +46,7 @@ class Edit extends Component
         $this->dato = $dato->toArray();
         $this->initialDato = $dato->toArray();
         $this->oldDato = $dato->toArray();
+        $this->areas = AreaModel::pluck('nombre', 'id')->toArray();
     }
 
     public function loadData()
@@ -68,18 +69,83 @@ class Edit extends Component
         // Realiza la validación
         $this->validate();
 
-        // Verifica si los tres campos de nombre han cambiado
-        $newNombre = $this->dato['nombre'] !== $this->oldDato['nombre'];
-        $newApellido_p = $this->dato['apellido_p'] !== $this->oldDato['apellido_p'];
-        $newApellido_m = $this->dato['apellido_m'] !== $this->oldDato['apellido_m'];
-        $newArea = $this->dato['id_area'] !== $this->oldDato['id_area'];
-        $newTipo = $this->dato['tipo'] !== $this->oldDato['tipo'];
+        // Construimos el arreglo de cambios
+        $cambios = [];
 
-        // Si hay algún cambio, muestra mensaje de confirmación
-        if ($newNombre || $newApellido_p || $newApellido_m || $newArea || $newTipo) {
-            $this->dispatch('showConfirmation');
+        // Verifica si los tres campos de nombre han cambiado
+        $nombreModificado = $this->dato['nombre'] !== $this->oldDato['nombre'];
+        $apellidoPModificado = $this->dato['apellido_p'] !== $this->oldDato['apellido_p'];
+        $apellidoMModificado = $this->dato['apellido_m'] !== $this->oldDato['apellido_m'];
+        $tipoModificado = $this->dato['tipo'] !== $this->oldDato['tipo'];
+        $noControlModificado = $this->dato['numero_control'] !== $this->oldDato['numero_control'];
+
+        // Si los tres campos de nombre fueron modificados, concatenarlos en una sola línea
+        if ($nombreModificado && $apellidoPModificado && $apellidoMModificado) {
+            $cambios[] = "<tr><td><strong>Nombre completo</strong></td></tr>
+                  <tr><td>Actual: {$this->oldDato['nombre']} {$this->oldDato['apellido_p']} {$this->oldDato['apellido_m']}</td></tr>
+                  <tr><td>Nuevo: {$this->dato['nombre']} {$this->dato['apellido_p']} {$this->dato['apellido_m']}</td></tr>
+                  <tr><td>&nbsp;</td></tr>";
+        } else if ($apellidoPModificado && $apellidoMModificado) {
+            $cambios[] = "<tr><td><strong>Apellidos</strong></td></tr>
+                  <tr><td>Actual: {$this->oldDato['apellido_p']} {$this->oldDato['apellido_m']}</td></tr>
+                  <tr><td>Nuevo: {$this->dato['apellido_p']} {$this->dato['apellido_m']}</td></tr>
+                  <tr><td>&nbsp;</td></tr>";
         } else {
-            // Si no hubo cambios, muestra mensaje de que no se realizaron cambios
+            // Solo el nombre fue modificado
+            if ($nombreModificado) {
+                $cambios[] = "<tr><td><strong>Nombre</strong></td></tr>
+                      <tr><td>Actual: {$this->oldDato['nombre']}</td></tr>
+                      <tr><td>Nuevo: {$this->dato['nombre']}</td></tr>
+                      <tr><td>&nbsp;</td></tr>";
+            }
+
+            // Solo el apellido paterno fue modificado
+            if ($apellidoPModificado) {
+                $cambios[] = "<tr><td><strong>Apellido Paterno</strong></td></tr>
+                      <tr><td>Actual: {$this->oldDato['apellido_p']}</td></tr>
+                      <tr><td>Nuevo: {$this->dato['apellido_p']}</td></tr>
+                      <tr><td>&nbsp;</td></tr>";
+            }
+
+            // Solo el apellido materno fue modificado
+            if ($apellidoMModificado) {
+                $cambios[] = "<tr><td><strong>Apellido Materno</strong></td></tr>
+                      <tr><td>Actual: {$this->oldDato['apellido_m']}</td></tr>
+                      <tr><td>Nuevo: {$this->dato['apellido_m']}</td></tr>
+                      <tr><td>&nbsp;</td></tr>";
+            }
+        }
+
+        // Verifica el cambio en area
+        if ((int) $this->dato['id_area'] !== (int) $this->oldDato['id_area']) {
+            $oldArea = $this->areas[$this->oldDato['id_area']] ?? 'No asignado';
+            $newArea = $this->areas[$this->dato['id_area']] ?? 'No asignado';
+            $cambios[] = "<tr><td><strong>Area asignada</strong></td></tr>
+                  <tr><td>Actual: {$oldArea}</td></tr>
+                  <tr><td>Nuevo: {$newArea}</td></tr>
+                  <tr><td>&nbsp;</td></tr>";
+        }
+
+        if ($tipoModificado) {
+            $cambios[] = "<tr><td><strong>Tipo</strong></td></tr>
+                  <tr><td>Actual: {$this->oldDato['tipo']}</td></tr>
+                  <tr><td>Nuevo: {$this->dato['tipo']}</td></tr>
+                  <tr><td>&nbsp;</td></tr>";
+        }
+
+        if ($noControlModificado) {
+            $cambios[] = "<tr><td><strong>No. Control</strong></td></tr>
+                  <tr><td>Actual: {$this->oldDato['numero_control']}</td></tr>
+                  <tr><td>Nuevo: {$this->dato['numero_control']}</td></tr>
+                  <tr><td>&nbsp;</td></tr>";
+        }
+
+        // Enviar cambios solo si hay modificaciones
+        if (!empty($cambios)) {
+            // Enviar los cambios como un mensaje HTML en forma de tabla
+            $mensaje = "<table style='width: 100%; text-align: left;'>" . implode("", $cambios) . "</table>";
+            $this->dispatch('showConfirmation', $mensaje);
+        } else {
             $this->reset(['open']);
             $this->dispatch('alert', 'No se realizaron cambios.');
         }
