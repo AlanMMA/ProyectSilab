@@ -34,6 +34,12 @@ class Index extends Component
         $this->resetPage();
     }
 
+    public function updatedSelectEncargado($value)
+    {
+        $this->encargados2 = EncargadoModel::find($value);
+    }
+
+
     // public function render()
     // {
     //     $this->UserId = auth()->user()->id_encargado;
@@ -53,10 +59,7 @@ class Index extends Component
     //     return view('livewire.usuario.index', compact('datos'));
     // }
 
-    public function updatedSelectEncargado($value)
-    {
-        $this->encargados2 = EncargadoModel::find($value);
-    }
+
 
     public function render()
     {

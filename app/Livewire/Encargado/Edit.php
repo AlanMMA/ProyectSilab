@@ -14,7 +14,7 @@ class Edit extends Component
 
     public $dato, $id_laboratorio, $laboratorios;
     public $open = false;
-    public $oldDato; // Almacena el valor original del dato
+    public $oldDato;
     public $result, $oldresult;
 
     protected function rules()
@@ -44,9 +44,18 @@ class Edit extends Component
     {
         $this->dato = $dato->toArray();
         $this->oldDato = $dato->toArray();
-        $this->result = User::where('id_encargado', intval($this->dato['id']))
-            ->first();
-        $this->result = $this->result->toArray();
+        // $this->result = User::where('id_encargado', intval($this->dato['id']))
+        //     ->first();
+        // $this->result = $this->result->toArray();
+        $user = User::where('id_encargado', intval($this->dato['id']))->first();
+
+        if ($user) {
+            $this->result = $user->toArray();
+            $this->oldresult = $this->result;
+        } else {
+            $this->result = [];
+            $this->oldresult = [];
+        }
         $this->oldresult = $this->result;
 
         $this->laboratorios = LaboratorioModel::pluck('nombre', 'id')->toArray();

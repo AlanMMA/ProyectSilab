@@ -25,7 +25,7 @@
                             <x-dropdown-link href="{{ route('area') }}">{{ __('Area') }}</x-dropdown-link>
                             @endif
                             <x-dropdown-link href="{{ route('categoria') }}">{{ __('Categoria') }}</x-dropdown-link>
-                            @if (auth()->user()->id_rol == 1 || auth()->user()->id_rol == 7) 
+                            @if (auth()->user()->id_rol == 7) 
                             <x-dropdown-link href="{{ route('rol') }}">{{ __('Rol') }}</x-dropdown-link>
                             @if(auth()->user()->id_rol == 7)
                             <x-dropdown-link href="{{ route('laboratorio')}}">{{ __('Laboratorio') }}</x-dropdown-link>
@@ -173,7 +173,7 @@
                         <x-slot name="content">
                             <!-- Account Management -->
                             <div class="block px-4 py-2 text-xs text-gray-400">
-                                {{ __('Manage Account') }}
+                                {{ __('Gestión de cuenta') }}
                             </div>
 
                             <x-dropdown-link href="{{ route('profile.show') }}">

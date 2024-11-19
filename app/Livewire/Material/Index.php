@@ -7,6 +7,7 @@ use App\Models\EncargadoModel;
 use App\Models\MarcaModel;
 use App\Models\MaterialModel;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -109,11 +110,58 @@ class Index extends Component
             $this->direc = 'asc';
         }
     }
-    public function destroyPost($id)
-    {
-        $cat = MaterialModel::find($id);
-        if ($cat) {
-            $cat->delete();
+    // public function destroyPost($id)
+    // {
+    //     $cat = MaterialModel::find($id);
+    //     if ($cat) {
+    //         $cat->delete();
+    //     }
+    // }
+
+    public function destroyPost($id){
+
+        DB::beginTransaction();
+
+        try {
+            // Obtenemos el nombre del material que se va a borrar
+            $material = DB::table('material')->where('id', $id)->first();
+            
+            if (!$material) {
+                return response()->json(['error' => 'Material no encontrado.'], 404);
+                DB::rollBack();
+            }
+    
+            // Primero, obtenemos los registros de `detalle_prestamo` que están vinculados al `id_material`
+            $detallePrestamos = DB::table('detalle_prestamo')
+                ->where('id_material', $id)
+                ->get();
+    
+            // Si hay registros en detalle_prestamo, actualizamos el campo 'observacion'
+            foreach ($detallePrestamos as $detalle) {
+                // Concatenamos el nombre del material a la observación
+                $nuevaObservacion = $detalle->observacion . ' - Material Prestado: ' . $material->nombre;
+                
+                // Actualizamos la observación y desvinculamos el material
+                DB::table('detalle_prestamo')
+                    ->where('id', $detalle->id)
+                    ->update([
+                        'id_material' => null, 
+                        'observacion' => $nuevaObservacion
+                    ]);
+            }
+    
+            // Ahora eliminamos el material en la tabla `material`
+            DB::table('material')
+                ->where('id', $id)
+                ->delete();
+    
+            DB::commit();
+            return response()->json(['message' => 'Material eliminado correctamente.'], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'error' => 'Error al eliminar el material: ' . $e->getMessage()
+            ], 500);
         }
     }
 }

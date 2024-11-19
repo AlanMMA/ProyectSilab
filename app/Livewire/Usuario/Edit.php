@@ -25,7 +25,6 @@ class Edit extends Component
         'result.nombre' => 'required|string|min:3|max:50|regex:/^[\pL\s]+$/u',
         'result.apellido_pS' => 'required|string|min:3|max:15|regex:/^[\pL\s]+$/u',
         'result.apellido_mS' => 'required|string|min:3|max:15|regex:/^[\pL\s]+$/u',
-        'dato.id_estado' => 'required|min:1',
     ];
 
     protected $listeners = ['saveConfirmed' => 'save'];

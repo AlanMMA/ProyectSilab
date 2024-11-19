@@ -69,9 +69,13 @@ class UpPrestamo extends Component
     }
 
     public function filtrarDetalles()
-    {
+    {   
+       
         if ($this->cantid) {
-            $prestamos = PrestamoModel::where('id_solicitante', $this->cantid)->pluck('id');
+            $encarg = auth()->user()->id_encargado;
+            $prestamos = PrestamoModel::where('id_solicitante', $this->cantid)
+            ->where('id_encargado', $encarg)
+            ->pluck('id');
 
             $this->detalles = DetallePrestamoModel::whereIn('id_prestamo', $prestamos)
                 ->whereIn('EstadoPrestamo', ['pendiente', 'atrasado'])

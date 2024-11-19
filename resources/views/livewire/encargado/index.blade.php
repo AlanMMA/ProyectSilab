@@ -152,11 +152,11 @@
                     showCancelButton: true,
                     confirmButtonColor: "#3085d6",
                     cancelButtonColor: "#d33",
-                    confirmButtonText: "Aceptar (10)",
+                    confirmButtonText: "Aceptar (5)",
                     didOpen: () => {
                         const confirmButton = Swal.getConfirmButton();
                         confirmButton.disabled = true;
-                        let countdown = 10;
+                        let countdown = 5;
                         const timer = setInterval(() => {
                             countdown -= 1;
                             confirmButton.textContent = `Aceptar (${countdown})`;

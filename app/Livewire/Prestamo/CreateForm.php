@@ -10,6 +10,7 @@ use Livewire\Component;
 class CreateForm extends Component
 {
     public $cant = 0, $cantid, $search = '', $fechaPrestamo, $buttonTable;
+    public $prest;
     public $solicitantes = [], $materiales = [], $selectedMaterials = [];
     public $solicitanteSeleccionado = false;
     public $solicitanteSeleccionado2 = true;
@@ -137,8 +138,10 @@ class CreateForm extends Component
 
     public function mount()
     {
+        $this->prest = auth()->user()->id_encargado;
         $this->solicitantes = SolicitanteModel::all();
-        $this->materiales = MaterialModel::all();
+        // $this->materiales = MaterialModel::where('id_encargado', $this->prest)->get()->toArray();
+        $this->materiales = MaterialModel::where('id_encargado', $this->prest)->get()->toArray();
         $this->fechaPrestamo = now()->format('Y/m/d');
         $this->selectedMaterials = [];
     }

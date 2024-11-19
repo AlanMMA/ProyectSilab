@@ -1,7 +1,8 @@
-<div class="bg-white dark:bg-gray-800 relative" x-data="{ open: false, days: 7 }">
+<div class="bg-white dark:bg-gray-800 relative " 
+    x-data="{ open: false, days: 7 }">
     <div class="flex flex-col text-black dark:text-white text-lg font-semibold mb-3 sm:w-sm">
-        <div class="flex justify-between">
-            <p class="text-center text-xl pb-2 flex-1">Préstamos cercanos a vencer.</p>
+        <div class="flex justify-between w-full">
+            <p class="text-center text-xl pb-2 ">Préstamos cercanos a vencer.</p>
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                 class="ml-2 fill-black dark:fill-white cursor-pointer" @click="open = !open" <!-- Activador del menú -->
                 >
@@ -11,14 +12,14 @@
         </div>
         <!-- Menú desplegable -->
         <div x-show="open" @click.away="open = false"
-            class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded shadow-lg p-4">
+            class="absolute right-0 mt-1 w-48 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded shadow-lg px-2 py-2">
 
             <label for="daysInput" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                 Rango de días:
             </label>
 
             <input type="number" id="daysInput" x-model="days" min="1"
-                class="mt-1 w-full px-2 py-1 border border-gray-300 dark:border-gray-600 rounded focus:outline-none" />
+                class="mt-1 w-full px-2 py-1 border text-black border-gray-300 dark:border-gray-600 rounded focus:outline-none" />
 
             <p x-show="days <= 0" class="text-red-500 text-sm mt-1">El número de días debe ser mayor a 0.</p>
 
@@ -30,21 +31,31 @@
     </div>
     <div class="sm:grid sm:grid-cols-3 gap-4 items-start flex flex-col">
         @foreach ($prestamos as $prestamo)
-            <div class="flex flex-col items-start">
-                <div class="flex">
-                    <span class="mr-2 text-black dark:text-white text-base font-normal">•</span>
-                    <p class="text-black dark:text-white text-base font-normal">
-                        {{ $prestamo->solicitante->nombre }} {{ $prestamo->solicitante->apellido_p }}
-                        {{ $prestamo->solicitante->apellido_m }}
-                    </p>
-                </div>
-                @foreach ($prestamo->detalles as $detalle)
-                    <p class="pl-4 text-black dark:text-white text-xs font-normal">Material:
-                        {{ $detalle->material->nombre }}</p>
-                    <p class="ml-4 text-black dark:text-white text-xs font-normal bg-red-500">Vence:
-                        {{ \Carbon\Carbon::parse($detalle->fecha_devolucion)->format('d/m/Y') }}</p>
-                @endforeach
+        @if (!$prestamos || $prestamos->isEmpty())
+            <p>Sin prestamos cercanos</p>
+        @else
+        <div class="flex flex-col items-start">
+            <div class="flex">
+                <span class="mr-2 text-black dark:text-white text-base font-normal">•</span>
+                <p class="text-black dark:text-white text-base font-normal">
+                    {{ $prestamo->solicitante->nombre }} {{ $prestamo->solicitante->apellido_p }}
+                    {{ $prestamo->solicitante->apellido_m }}
+                </p>
             </div>
+            @foreach ($prestamo->detalles as $detalle)
+                <p class="pl-4 text-black dark:text-white text-xs font-normal">Material:
+                    @if (!isset($detalle->material->nombre))
+                        Material borrado
+                    @else
+                    {{ $detalle->material->nombre }}
+                    @endif
+                </p>
+                <p class="ml-4 text-black dark:text-white text-xs font-normal bg-red-500">Vence:
+                    {{ \Carbon\Carbon::parse($detalle->fecha_devolucion)->format('d/m/Y') }}</p>
+            @endforeach
+        </div>
+        @endif
+            
         @endforeach
     </div>
 </div>
