@@ -32,7 +32,7 @@ class CardPrest extends Component
                 $query->whereBetween('fecha_devolucion', [$fechaActual, $fechaLimite])
                       ->where('EstadoPrestamo', 'pendiente');
             }])
-            ->limit(4)
+            ->limit(6)
             ->get();
     }
     

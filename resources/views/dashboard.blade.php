@@ -6,7 +6,7 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 relative">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
                 <div class="w-full flex flex-col justify-center items-center p-4 text-center">
                     <div class="mb-6">
@@ -49,13 +49,16 @@
                         @endauth
                         <p></p>
                     </div>
-                    <div class="w-full h-auto flex sm:flex-row flex-col sm:items-start items-center gap-4">
+                    <div class="w-full h-max flex sm:flex-row flex-col sm:items-start items-center gap-4">
                         <x-dashboard-card>
                            @livewire('home.card-prest')
                         </x-dashboard-card>
                         <x-dashboard-card>
                             @livewire('home.card-stock')
                         </x-dashboard-card>
+                    </div>
+                    <div>
+                        <p class="text-[#1B396A] dark:text-white text-4xl  mt-4">Su sistema de confianza.</p>
                     </div>
                 </div>
             </div>

@@ -21,9 +21,10 @@ class PasswordResetEncargado extends Component
         $this->validateOnly($propertyname);
     }
 
-    public function mount($dato){
-        $this->result = User::where('id_encargado', $dato['id'])
-        ->first();
+    public function mount($dato)
+    {
+        $this->result = User::where('id_encargado', $dato['id'])->first();
+        $this->result = $this->result ?? null;
     }
 
 
@@ -37,12 +38,14 @@ class PasswordResetEncargado extends Component
         $this->showPassword2 = !$this->showPassword2;
     }
 
-    public function resetPass(){
+    public function resetPass()
+    {
         $this->validate();
         $this->dispatch('Confirm');
     }
 
-    public function save(){
+    public function save()
+    {
         $this->validate();
         $usuario = User::find($this->result['id']);
         $usuario->password = bcrypt($this->password);

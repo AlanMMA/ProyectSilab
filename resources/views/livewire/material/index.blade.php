@@ -266,7 +266,7 @@
             {{ $datos->onEachSide(1)->links() }}
         </div>
     </div>
-    @push('js')
+    {{-- @push('js')
         <script>
             Livewire.on('destroy', event => {
                 Swal.fire({
@@ -291,5 +291,47 @@
                 });
             });
         </script>
-    @endpush
+    @endpush --}}
+
+    @push('js')
+    <script>
+        Livewire.on('destroy', event => {
+            Swal.fire({
+                title: "¿Estás seguro de eliminar el material " + event.nombre + "?",
+                html: `<span style="color: red;">Al borrar un material que se haya dato en prestamos, al ver los detalles se verá nulo.</span><br>
+                       <span style"color: #333;">Podrá ver unicamente el nombre del material en el campo de observaciones.</span>`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Aceptar (5)",
+                didOpen: () => {
+                    const confirmButton = Swal.getConfirmButton();
+                    confirmButton.disabled = true;
+                    let countdown = 5;
+                    const timer = setInterval(() => {
+                        countdown -= 1;
+                        confirmButton.textContent = `Aceptar (${countdown})`;
+                        if (countdown <= 0) {
+                            confirmButton.disabled = false;
+                            confirmButton.textContent = "Aceptar";
+                            clearInterval(timer);
+                        }
+                    }, 1000);
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Livewire.dispatch('destroyPost', {
+                            id: event.id
+                        });
+                    Swal.fire({
+                        title: "Operación exitosa",
+                        text: "Ha eliminado el registro: " + event.nombre,
+                        icon: "success"
+                    });
+                }
+            });
+        });
+    </script>
+@endpush
 </div>

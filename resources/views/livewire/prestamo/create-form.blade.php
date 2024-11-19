@@ -62,7 +62,7 @@
             @if (!$solicitanteSeleccionado) disabled @endif>
             <option value="0">Seleccione un material</option>
             @foreach ($materiales as $material)
-                <option value="{{ $material->id }}">{{ $material->nombre }}</option>
+                <option value="{{ $material['id'] }}">{{ $material['nombre'] }}</option>
             @endforeach
         </select>
     </div>

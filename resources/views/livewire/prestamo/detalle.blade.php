@@ -63,6 +63,11 @@
                                     @endif
                                 </div>
                             </th>
+                            <th scope="col" class="px-6 py-3 text-center">
+                                <div class="flex items-center justify-center">
+                                    Observación
+                                </div>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -73,10 +78,17 @@
                                 {{ $detalle->fecha_devolucion }}
                             </td>
                             <td class="px-6 py-2 text-center font-medium  whitespace-nowrap dark:text-white">
+                                @if ($detalle->material)
                                 {{ $detalle->material->nombre }}
+                                @else
+                                    Elemento borrado
+                                @endif
                             </td>
                             <td class="px-6 py-2 text-center font-medium  whitespace-nowrap dark:text-white">
                                 {{ $detalle->cantidad }}
+                            </td>
+                            <td class="px-6 py-2 text-center font-medium  whitespace-nowrap dark:text-white">
+                                {{ $detalle->observacion }}
                             </td>
                         </tr>
 
