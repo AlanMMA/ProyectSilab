@@ -1,8 +1,8 @@
 <div class="bg-white dark:bg-gray-800 relative " 
     x-data="{ open: false, days: 7 }">
     <div class="flex flex-col text-black dark:text-white text-lg font-semibold mb-3 sm:w-sm">
-        <div class="flex justify-between">
-            <p class="text-center text-xl pb-2 flex-1">Préstamos cercanos a vencer.</p>
+        <div class="flex justify-between w-full">
+            <p class="text-center text-xl pb-2 ">Préstamos cercanos a vencer.</p>
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                 class="ml-2 fill-black dark:fill-white cursor-pointer" @click="open = !open" <!-- Activador del menú -->
                 >
@@ -44,7 +44,12 @@
             </div>
             @foreach ($prestamo->detalles as $detalle)
                 <p class="pl-4 text-black dark:text-white text-xs font-normal">Material:
-                    {{ $detalle->material->nombre }}</p>
+                    @if (!isset($detalle->material->nombre))
+                        Material borrado
+                    @else
+                    {{ $detalle->material->nombre }}
+                    @endif
+                </p>
                 <p class="ml-4 text-black dark:text-white text-xs font-normal bg-red-500">Vence:
                     {{ \Carbon\Carbon::parse($detalle->fecha_devolucion)->format('d/m/Y') }}</p>
             @endforeach

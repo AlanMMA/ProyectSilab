@@ -1,4 +1,4 @@
-<x-form-section submit="updatePassword">
+<x-form-section submit="validatePassword">
     <x-slot name="title">
         {{ __('Update Password') }}
     </x-slot>
@@ -11,19 +11,19 @@
         <div class="col-span-6 sm:col-span-4">
             <x-label for="current_password" value="{{ __('Current Password') }}" />
             <x-input id="current_password" type="password" class="mt-1 block w-full" wire:model="state.current_password" autocomplete="current-password" />
-            <x-input-error for="current_password" class="mt-2" />
+            <x-input-error for="state.current_password" class="mt-2" />
         </div>
 
         <div class="col-span-6 sm:col-span-4">
             <x-label for="password" value="{{ __('New Password') }}" />
             <x-input id="password" type="password" class="mt-1 block w-full" wire:model="state.password" autocomplete="new-password" />
-            <x-input-error for="password" class="mt-2" />
+            <x-input-error for="state.password" class="mt-2" />
         </div>
 
         <div class="col-span-6 sm:col-span-4">
             <x-label for="password_confirmation" value="{{ __('Confirm Password') }}" />
             <x-input id="password_confirmation" type="password" class="mt-1 block w-full" wire:model="state.password_confirmation" autocomplete="new-password" />
-            <x-input-error for="password_confirmation" class="mt-2" />
+            <x-input-error for="state.password_confirmation" class="mt-2" />
         </div>
     </x-slot>
 
@@ -36,4 +36,26 @@
             {{ __('Save') }}
         </x-button>
     </x-slot>
+
+
+    @push('js')
+    <script>
+        Livewire.on('showConfirmation', () => {
+            Swal.fire({
+                title: "¿Estás seguro de actualizar la contraseña?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Aceptar",
+                cancelButtonText: "Cancelar"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Livewire.dispatch('updatePassword');
+                }
+            });
+        });
+    </script>
+    @endpush
+
 </x-form-section>

@@ -29,10 +29,12 @@ class Index extends Component
 
     public function render()
     {
-        $datos = LaboratorioModel::where('nombre', 'like', '%' . $this->search . '%')
+        $datos = LaboratorioModel::withCount('encargados') // Agrega el conteo de encargados
+            ->where('nombre', 'like', '%' . $this->search . '%')
             ->orderBy($this->sort, $this->direc)
             ->paginate($this->cant)
             ->withQueryString();
+
         return view('livewire.laboratorio.index', compact('datos'));
     }
 
@@ -54,7 +56,7 @@ class Index extends Component
     public function destroyPost($id)
     {
         $cat = LaboratorioModel::find($id);
-        
+
         if ($cat) {
             $cat->delete();
         }

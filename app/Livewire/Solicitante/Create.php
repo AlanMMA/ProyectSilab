@@ -9,9 +9,9 @@ use Livewire\Component;
 class Create extends Component
 {
     public $open;
-    public $nombre, $apellido_p, $apellido_m, $id_area2, $numero_control;
+    public $nombre, $apellido_p, $apellido_m, $id_area2, $numero_control, $areas;
     public $tipo;
-    
+
     protected function rules()
     {
         return [
@@ -44,8 +44,21 @@ class Create extends Component
         // Realiza la validación
         $this->validate();
 
+        // Obtiene el nombre del laboratorio a partir del ID seleccionado
+        $areaNombre = $this->areas[$this->id_area2] ?? 'No asignado';
+
         // Si la validación es exitosa, dispara el evento para mostrar SweetAlert
-        $this->dispatch('showConfirmation2');
+        $this->dispatch('showConfirmation2', [
+            'newDatos' => [
+                'nombre' => $this->nombre,
+                'apellido_p' => $this->apellido_p,
+                'apellido_m' => $this->apellido_m,
+                'id_area' => $this->id_area2,
+                'tipo' => $this->tipo,
+                'numero_control' => $this->numero_control,
+            ],
+            'area_nombre' => $areaNombre, // Enviar el nombre del laboratorio
+        ]);
     }
 
     public function save()
@@ -65,6 +78,11 @@ class Create extends Component
         $this->reset(['open', 'nombre', 'apellido_p', 'apellido_m', 'numero_control']);
         $this->dispatch('render');
         $this->dispatch('alert', 'El solicitante se ha guardado con exito.');
+    }
+
+    public function mount()
+    {
+        $this->areas = AreaModel::pluck('nombre', 'id')->toArray();
     }
 
     public function render()

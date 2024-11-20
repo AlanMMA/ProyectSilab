@@ -62,6 +62,24 @@
                                 @endif
                             </div>
                         </th>
+                        <th scope="col" class="cursor-pointer px-6 py-3 text-center"
+                            wire:click="order('num_max_encargado')">
+                            <div class="flex items-center justify-center">
+                                Limite de encargados
+                                @if ($sort == 'num_max_encargado')
+                                @if ($direc == 'asc')
+                                <span class="material-symbols-outlined">vertical_align_bottom</span>
+                                @else
+                                <span class="material-symbols-outlined">vertical_align_top</span>
+                                @endif
+                                @else
+                                <span class="material-symbols-outlined">unfold_more</span>
+                                @endif
+                            </div>
+                        </th>
+                        <th scope="col" class="cursor-pointer px-6 py-3 text-center">
+                            Encargados Actuales
+                        </th>
                         <th scope="col" class="px-6 py-3 text-center">
                             <div class="flex items-center justify-center">
                                 Acciones
@@ -78,6 +96,12 @@
                         </th>
                         <td class="px-6 py-2 text-center font-medium  whitespace-nowrap dark:text-white">
                             {{ $dato->nombre }}
+                        </td>
+                        <td class="px-6 py-2 text-center font-medium  whitespace-nowrap dark:text-white">
+                            {{ $dato->num_max_encargado }}
+                        </td>
+                        <td class="px-6 py-2 text-center font-medium whitespace-nowrap dark:text-white">
+                            {{ $dato->encargados_count }}
                         </td>
 
                         <td class="px-6 py-2 flex justify-center items-center gap-2">

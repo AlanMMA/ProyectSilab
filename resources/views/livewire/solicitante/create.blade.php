@@ -83,9 +83,33 @@
 
     @push('js')
     <script>
-        Livewire.on('showConfirmation2', () => {
+        Livewire.on('showConfirmation2', (dato) => {
+
+            const datos = dato[0];
+            const name = `${datos.newDatos.nombre} ${datos.newDatos.apellido_p} ${datos.newDatos.apellido_m}`;
+            const area = datos.area_nombre;
+            const tipo = datos.newDatos.tipo;
+            const numero_control = datos.newDatos.numero_control;
+
+
+        // Prepara el contenido HTML para la alerta
+        let htmlContent = `
+            <table style="width: 100%; text-align: left;">
+                <tr><td><strong>Nombre completo: </strong>${name}</td></tr>
+                <tr><td><strong>Area: </strong>${area}</td></tr>
+                <tr><td><strong>Tipo de solicitante: </strong>${tipo}</td></tr>
+        `;
+
+        // Agrega el número de control solo si el tipo es "alumno"
+        if (tipo === 'alumno') {
+            htmlContent += `<tr><td><strong>No. Control: </strong>${numero_control}</td></tr>`;
+        }
+
+        htmlContent += `</table>`;
+
             Swal.fire({
                 title: "¿Estás seguro de agregar este registro?",
+                html: htmlContent,
                 icon: "question",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",

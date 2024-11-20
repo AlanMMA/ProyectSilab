@@ -1,11 +1,10 @@
 <div>
-    <a wire:click="$set('open', true)"
+    <a wire:click="openModal"
         class="material-symbols-outlined  font-bold text-white py-2 px-2 rounded cursor-pointer bg-yellow-400 hover:bg-yellow-300">
         <span class="material-symbols-outlined">
             edit
         </span>
     </a>
-
 
     <x-dialog-modal wire:model="open">
         <x-slot name="title">
@@ -42,7 +41,7 @@
                 <select wire:model.live="dato.id_estado"
                     class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
                     @foreach ($estados as $estado)
-                        <option value="{{ $estado->id }}">{{$estado->nombre}}</option>
+                    <option value="{{ $estado->id }}">{{$estado->nombre}}</option>
                     @endforeach
                 </select>
                 <x-input-error for="dato.id_estado"></x-input-error>
@@ -80,15 +79,15 @@
                 @enderror
             </div>
             @else
-                <div class="mb-4">
-                    <x-label value="Encargado:"></x-label>
-                    @auth
-                        <x-input type="text" class="w-full"
-                            value="{{ $nombreE }} {{ $apellido_p }} {{ $apellido_m }} = {{ auth()->user()->id_encargado }}"
-                            disabled></x-input>
-                        <input type="hidden" wire:model="dato.id_encargado" value="{{ auth()->user()->id }}">
-                    @endauth
-                </div>
+            <div class="mb-4">
+                <x-label value="Encargado:"></x-label>
+                @auth
+                <x-input type="text" class="w-full"
+                    value="{{ $nombreE }} {{ $apellido_p }} {{ $apellido_m }} = {{ auth()->user()->id_encargado }}"
+                    disabled></x-input>
+                <input type="hidden" wire:model="dato.id_encargado" value="{{ auth()->user()->id }}">
+                @endauth
+            </div>
             @endif --}}
         </x-slot>
 
@@ -107,8 +106,8 @@
     </x-dialog-modal>
 
     @push('js')
-        <script>
-            Livewire.on('showConfirmation', (mensaje) => {
+    <script>
+        Livewire.on('showConfirmation', (mensaje) => {
                 Swal.fire({
                     title: "¿Estás seguro de editar el registro?",
                     html: mensaje,
@@ -124,7 +123,25 @@
                     }
                 });
             });
-        </script>
+    </script>
+    @endpush
+
+    @push('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Livewire.on('alert1', message => {
+                setTimeout(() => {
+                    Swal.fire({
+                        title: 'Alerta',
+                        text: message,
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    });
+                }, 0);
+            });
+
+        });
+    </script>
     @endpush
 
 </div>
