@@ -86,6 +86,7 @@ class Edit extends Component
         $this->dispatch('alert', 'La marca se ha modificado con exito.');
 
     }
+    
     public function render()
     {
         return view('livewire.marca.edit');
