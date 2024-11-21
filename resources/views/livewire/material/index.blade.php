@@ -239,21 +239,27 @@
             </table>
         </div>
         @else
-        @if ($Gerente == 7)
-        <div class="py-4 px-6 flex justify-around gap-6">
-            <p class="bg-white flex gap justify-between w-full py-4 px-4">
-                Seleccione a un encargado para poder ver los datos
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000">
-                    <path d="M440-160v-487L216-423l-56-57 320-320 320 320-56 57-224-224v487h-80Z" />
-                </svg>
-            </p>
+        <div class="px-6 py-4">
+            @if ($search)
+                <p class="bg-white px-6 py-4">
+                    No hay resultados que coincidan con su busqueda.
+                </p>
+            @elseif ($SelectEncargado && $encargados2)
+                <p class="bg-white px-6 py-4 text-center">
+                    El encargado <br>
+                    {{ $encargados2->nombre }} {{ $encargados2->apellido_p }} {{ $encargados2->apellido_m }} <br>
+                    actualmente no cuenta con alumnos de servicio social.
+                </p>
+            @elseif (!$search && !$SelectEncargado && $Gerente == 7)
+                <p class="bg-white px-6 py-4 text-center">
+                    Primero seleccione a un encargado para ver su información.
+                </p>
+            @else
+                <p class="bg-white px-6 py-4 text-center">
+                    Actualmente no hay datos en esta tabla.
+                </p>
+            @endif
         </div>
-        @else
-        <div class="py-4 px-6 bg-white">
-            No hay resultados con esos caracteres
-        </div>
-        @endif
-
         @endif
         <div class="px-6 py-3">
             {{ $datos->onEachSide(1)->links() }}

@@ -14,7 +14,7 @@ use Livewire\WithPagination;
 class Index extends Component
 {
 
-    public $search, $UserId, $encargados;
+    public $search, $UserId, $encargados, $encargados2;
     public $sort = 'id';
     public $direc = 'asc';
     public $cant = '10';
@@ -28,6 +28,11 @@ class Index extends Component
         $this->direc = 'asc';
         $this->UserId = auth()->user()->id_encargado;
         $this->encargados = EncargadoModel::all();
+    }
+
+    public function updatedSelectEncargado($value)
+    {
+        $this->encargados2 = EncargadoModel::find($value);
     }
 
     public function updatingSearch()

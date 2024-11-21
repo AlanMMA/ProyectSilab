@@ -31,7 +31,8 @@ class User extends Authenticatable
         'id_rol',
         'id_encargado',
         'id_ss',
-        'id_estado'
+        'id_estado',
+        'clave_seguridad'
     ];
 
     public function rol(): BelongsTo

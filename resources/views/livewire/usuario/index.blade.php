@@ -212,6 +212,10 @@
                     {{ $encargados2->nombre }} {{ $encargados2->apellido_p }} {{ $encargados2->apellido_m }} <br>
                     actualmente no cuenta con alumnos de servicio social.
                 </p>
+            @else
+            <p class="bg-white px-6 py-4 text-center">
+                Actualmente no hay datos registrados en la tabla.
+            </p>
             @endif
         </div>
         @endif

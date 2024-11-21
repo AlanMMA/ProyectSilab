@@ -4,7 +4,10 @@ namespace App\Livewire\Prestamo;
 
 use App\Models\EncargadoModel;
 use App\Models\PrestamoModel;
+use Carbon\Carbon;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -19,7 +22,10 @@ class Index extends Component
     public $encargados, $encargados2, $SelectEncargado = 0;
     public $searchEnabled = false;
     public $rolActual;
+    public $fechaInicial, $fechaFinal, $verificarExistencia;
     use WithPagination;
+
+    public $listeners = ['verificarExistencia'];
 
     public function verDetalle($id)
     {
@@ -137,4 +143,78 @@ class Index extends Component
             $this->direc = 'asc';
         }
     }
+
+    public function deleteByDateRange()
+    {
+        $this->validate([
+            'fechaInicial' => 'required|date',
+            'fechaFinal' => 'required|date|after_or_equal:fechaInicial',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $prestamosIds = DB::table('prestamo')
+                ->whereBetween('fecha', [$this->fechaInicial, $this->fechaFinal])
+                ->pluck('id');
+            if ($prestamosIds->isEmpty()) {
+                $this->dispatch('deletionError', 'No se encontraron registros en el rango de fechas.');
+                return;
+                DB::rollBack();
+            }
+
+            DB::table('detalle_prestamo')
+                ->whereIn('id_prestamo', $prestamosIds)
+                ->delete();
+
+            DB::table('prestamo')
+                ->whereIn('id', $prestamosIds)
+                ->delete();
+
+            DB::commit();
+            $this->dispatch('deletionSuccess', 'Registros eliminados correctamente.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->dispatch('deletionError', 'Hubo un error al eliminar los registros: ' . $e->getMessage());
+        }
+    }
+
+    public function verificarExistencia($fechas)
+    {
+        // Verificar si las fechas están vacías o son incorrectas
+        if (empty($fechas[0]) || empty($fechas[1])) {
+            Log::info('Fechas vacías: ', $fechas);
+            $this->dispatch('registroNoEncontrado');
+            return;
+        }
+    
+        // Intentar parsear las fechas usando Carbon
+        try {
+            $fechaInicial = Carbon::parse($fechas[0])->format('Y-m-d');
+            $fechaFinal = Carbon::parse($fechas[1])->format('Y-m-d');
+        } catch (\Exception $e) {
+            Log::error('Error al parsear las fechas: ' . $e->getMessage());
+            $this->dispatch('registroNoEncontrado');
+            return;
+        }
+    
+        Log::info('Fechas procesadas: ', [
+            'fechaInicial' => $fechaInicial, 
+            'fechaFinal' => $fechaFinal
+        ]);
+    
+        // Verificar si existen registros entre las fechas
+        $prestamosIds = DB::table('prestamo')
+            ->whereBetween('fecha', [$fechaInicial, $fechaFinal])
+            ->pluck('id');
+    
+        if ($prestamosIds->isEmpty()) {
+            Log::info('No se encontraron registros para el rango de fechas: ' . $fechaInicial . ' - ' . $fechaFinal);
+            $this->dispatch('registroNoEncontrado');
+        } else {
+            Log::info('Registros encontrados para el rango de fechas: ' . $fechaInicial . ' - ' . $fechaFinal);
+            $this->dispatch('confirmDeletion', $fechaInicial, $fechaFinal);
+        }
+    }
+
 }
