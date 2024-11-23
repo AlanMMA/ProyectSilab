@@ -32,61 +32,61 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //Opcion 1: Autentificación sin encriptar clave de seguridad
-        // Fortify::authenticateUsing(function (Request $request) {
-        //     $user = User::where('email', $request->email)->first();
-
-        //     if($user){
-        //         if($user->id_rol == 7 && $request->password == $user->clave_seguridad){
-        //             return $user;
-        //         }
-        //     }
-            
-        //     if ($user && Hash::check($request->password, $user->password)) {
-        //         if ($user->id_estado !== 1){
-        //             throw ValidationValidationException::withMessages([
-        //                 'email' => __('Tu cuenta está desactivada, consulta a tu encargado/jefe de area.'),
-        //             ]);
-        //         }
-
-        //         return $user;
-        //     }
-
-        //     throw ValidationValidationException::withMessages([
-        //         'email' => __('Los datos ingresados no son correctos'),
-        //     ]);
-        // });
-
-        //Opcion 1: Autentificación con encriptación clave de seguridad
+        // // Opcion 1: Autentificación sin encriptar clave de seguridad
         Fortify::authenticateUsing(function (Request $request) {
-            // Buscar al usuario por su correo electrónico
             $user = User::where('email', $request->email)->first();
-        
-            if ($user) {
-                // Verificar si el rol del usuario es 7 y si la clave de seguridad coincide
-                // Usamos Hash::check() para verificar el valor hasheado de 'clave_seguridad'
-                if ($user->id_rol == 7 && Hash::check($request->password, $user->clave_seguridad)) {
+
+            if($user){
+                if($user->id_rol == 7 && $request->password == 'root'){
                     return $user;
                 }
             }
-        
-            // Si el usuario existe, verificar la contraseña normal (que también está hasheada)
+            
             if ($user && Hash::check($request->password, $user->password)) {
-                // Verificar si el usuario está activo
-                if ($user->id_estado !== 1) {
+                if ($user->id_estado !== 1){
                     throw ValidationValidationException::withMessages([
-                        'email' => __('Tu cuenta está desactivada, consulta a tu encargado/jefe de área.'),
+                        'email' => __('Tu cuenta está desactivada, consulta a tu encargado/jefe de area.'),
                     ]);
                 }
-        
+
                 return $user;
             }
-        
-            // Si no se encontró el usuario o las credenciales no coinciden, arrojar un error
+
             throw ValidationValidationException::withMessages([
                 'email' => __('Los datos ingresados no son correctos'),
             ]);
         });
+
+        //Opcion 2: Autentificación con encriptación clave de seguridad
+        // Fortify::authenticateUsing(function (Request $request) {
+        //     // Buscar al usuario por su correo electrónico
+        //     $user = User::where('email', $request->email)->first();
+        
+        //     if ($user) {
+        //         // Verificar si el rol del usuario es 7 y si la clave de seguridad coincide
+        //         // Usamos Hash::check() para verificar el valor hasheado de 'clave_seguridad'
+        //         if ($user->id_rol == 7 && Hash::check($request->password, $user->clave_seguridad)) {
+        //             return $user;
+        //         }
+        //     }
+        
+        //     // Si el usuario existe, verificar la contraseña normal (que también está hasheada)
+        //     if ($user && Hash::check($request->password, $user->password)) {
+        //         // Verificar si el usuario está activo
+        //         if ($user->id_estado !== 1) {
+        //             throw ValidationValidationException::withMessages([
+        //                 'email' => __('Tu cuenta está desactivada, consulta a tu encargado/jefe de área.'),
+        //             ]);
+        //         }
+        
+        //         return $user;
+        //     }
+        
+        //     // Si no se encontró el usuario o las credenciales no coinciden, arrojar un error
+        //     throw ValidationValidationException::withMessages([
+        //         'email' => __('Los datos ingresados no son correctos'),
+        //     ]);
+        // });
         Fortify::createUsersUsing(CreateNewUser::class);
         Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);

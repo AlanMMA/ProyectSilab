@@ -23,12 +23,12 @@
             {{--
             <x-section-border />--}}
             @endif
-            <x-section-border />
+            {{-- <x-section-border />
             @if (auth()->user()->id_rol == 7)
             <div class="mt-10 sm:mt-0">
                 @livewire('profile.clave-up')
             </div>
-            @endif
+            @endif --}}
 
             {{--if (Laravel\Fortify\Features::canManageTwoFactorAuthentication())
             <div class="mt-10 sm:mt-0">

@@ -31,6 +31,9 @@
                             <x-dropdown-link href="{{ route('laboratorio')}}">{{ __('Laboratorio') }}</x-dropdown-link>
                             @endif
                             @endif
+                            @if(auth()->user()->id_rol != 7)
+                            <x-dropdown-link href="{{ route('localizacion')}}">{{ __('Localizacion') }}</x-dropdown-link>
+                            @endif
                             <x-dropdown-link href="{{ route('marca')}}">{{ __('Marca') }}</x-dropdown-link>
                         </x-slot>
                     </x-dropdown-nav>

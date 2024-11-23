@@ -4,6 +4,7 @@ namespace App\Livewire\Material;
 
 use App\Models\CategoriaModel;
 use App\Models\EncargadoModel;
+use App\Models\localizacion;
 use App\Models\MarcaModel;
 use App\Models\MaterialModel;
 use App\Models\User;
@@ -14,7 +15,7 @@ class Create extends Component
 {
 
     public $open;
-    public $nombre, $id_marca, $modelo, $id_categoria, $stock, $descripcion, $localizacion, $id_encargado;
+    public $nombre, $id_marca, $modelo, $id_categoria, $stock, $descripcion, $id_localizacion, $id_encargado;
 
     protected function rules()
     {
@@ -25,7 +26,7 @@ class Create extends Component
             'id_categoria' => 'required|numeric',
             'stock' => 'required|numeric',
             'descripcion' => 'required|max:200',
-            'localizacion' => 'required|max:50|regex:/^[\pL0-9\s]+$/u',
+            'id_localizacion' => 'required|max:50|regex:/^[\pL0-9\s]+$/u',
             'id_encargado' => 'required|numeric',
         ];
     }
@@ -33,7 +34,7 @@ class Create extends Component
     protected $messages = [
         'nombre.regex' => 'El nombre solo puede contener letras y espacios.',
         'modelo.regex' => 'El modelo solo puede contener letras y numeros.',
-        'localizacion.regex' => 'La localizacion solo puede contener letras y numeros.',
+        'id_localizacion.regex' => 'La id_localizacion solo puede contener letras y numeros.',
     ];
 
     public function update($propertyname)
@@ -62,11 +63,11 @@ class Create extends Component
             'id_categoria' => $this->id_categoria,
             'stock' => $this->stock,
             'descripcion' => $this->descripcion,
-            'localizacion' => $this->localizacion,
+            'id_localizacion' => $this->id_localizacion,
             'id_encargado' => $this->id_encargado,
         ]);
 
-        $this->reset(['open', 'nombre', 'modelo', 'stock', 'descripcion', 'localizacion']);
+        $this->reset(['open', 'nombre', 'modelo', 'stock', 'descripcion', 'id_localizacion']);
         $this->dispatch('render');
         $this->dispatch('alert', 'El material se ha guardado con exito.');
     }
@@ -74,6 +75,7 @@ class Create extends Component
     public function render()
     {
         $user = User::with('encargado')->find(Auth::id());
+        $datt = auth()->user()->id_encargado;
         $this->id_encargado = $user->id_encargado;
         $nombreE = $user->encargado ? $user->encargado->nombre : 'No asignado';
         $apellido_p = $user->encargado ? $user->encargado->apellido_p : '';
@@ -81,7 +83,8 @@ class Create extends Component
         $marcas = MarcaModel::pluck('nombre', 'id');
         $categorias = CategoriaModel::pluck('nombre', 'id');
         $encargados = EncargadoModel::pluck('nombre', 'id');
-        return view('livewire.material.create', compact('marcas', 'categorias', 'nombreE', 'apellido_p', 'apellido_m'));
+        $localizaciones = localizacion::where('id_encargado', $datt)->get();
+        return view('livewire.material.create', compact('marcas', 'categorias', 'nombreE', 'apellido_p', 'apellido_m', 'localizaciones'));
     }
 
 }

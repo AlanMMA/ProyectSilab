@@ -19,7 +19,7 @@ class MaterialModel extends Model
         'id_categoria',
         'stock',
         'descripcion',
-        'localizacion',
+        'id_localizacion',
         'id_encargado',
     ];
 
@@ -36,6 +36,10 @@ class MaterialModel extends Model
     public function encargado(): BelongsTo
     {
         return $this->BelongsTo(EncargadoModel::class, 'id_encargado');
+    }
+
+    public function localizacion(): BelongsTo{
+        return $this->belongsTo(localizacion::class, 'id_localizacion');
     }
 
     public $timestamps = false;

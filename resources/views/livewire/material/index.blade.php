@@ -215,7 +215,7 @@
                             {{ $dato->descripcion }}
                         </td>
                         <td class="px-6 py-2 text-center font-medium  whitespace-nowrap dark:text-white">
-                            {{ $dato->localizacion }}
+                            {{ $dato->localizacion->nombre ?? 'N/A'  }}
                         </td>
                         {{-- <td class="px-6 py-2 text-center font-medium  whitespace-nowrap dark:text-white">
                             {{ $dato->encargado->nombre }}
@@ -297,7 +297,7 @@
         Livewire.on('destroy', event => {
             Swal.fire({
                 title: "¿Estás seguro de eliminar el material " + event.nombre + "?",
-                html: `<span style="color: red;">Al borrar un material que se haya dato en prestamos, al ver los detalles se verá nulo.</span><br>
+                html: `<span style="color: red;">Al borrar un material que se haya dado en prestamos, al ver los detalles se verá nulo.</span><br>
                        <span style"color: #333;">Podrá ver unicamente el nombre del material en el campo de observaciones.</span>`,
                 icon: "warning",
                 showCancelButton: true,

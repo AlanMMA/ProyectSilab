@@ -58,7 +58,7 @@ class Index extends Component
                     ->orWhere('modelo', 'like', '%' . $this->search . '%')
                     ->orWhere('stock', 'like', '%' . $this->search . '%')
                     ->orWhere('descripcion', 'like', '%' . $this->search . '%')
-                    ->orWhere('localizacion', 'like', '%' . $this->search . '%')
+                    ->orWhere('id_localizacion', 'like', '%' . $this->search . '%')
                     ->orWhereHas('marca', function ($query) {
                         $query->where('nombre', 'like', '%' . $this->search . '%');
                     })

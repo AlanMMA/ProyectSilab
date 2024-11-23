@@ -4,7 +4,6 @@
             {{ __('Dashboard') }}
         </h2>
     </x-slot>
-
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 relative">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
@@ -51,9 +50,7 @@
                                         class="text-red-600">{{ auth()->user()->name }}</span>
                                 </p>
                             @endif
-
                         @endauth
-                        <p></p>
                     </div>
                     <div class="w-full h-max flex sm:flex-row flex-col sm:items-start items-center gap-4">
                         <x-dashboard-card>

@@ -4,6 +4,7 @@ namespace App\Livewire\Material;
 
 use App\Models\CategoriaModel;
 use App\Models\EncargadoModel;
+use App\Models\localizacion;
 use App\Models\MarcaModel;
 use App\Models\MaterialModel;
 use Livewire\Component;
@@ -23,7 +24,7 @@ class Edit extends Component
             'dato.modelo' => 'required|max:20|regex:/^[\pL0-9\s]+$/u',
             'dato.id_categoria' => 'required|numeric',
             'dato.descripcion' => 'required|max:200',
-            'dato.localizacion' => 'required|max:50|regex:/^[\pL0-9\s]+$/u',
+            'dato.id_localizacion' => 'required|numeric',
             'dato.id_encargado' => 'required|numeric',
         ];
     }
@@ -33,7 +34,7 @@ class Edit extends Component
     protected $messages = [
         'dato.nombre.regex' => 'El nombre solo puede contener letras y espacios.',
         'dato.modelo.regex' => 'El modelo solo puede contener letras y numeros.',
-        'dato.localizacion.regex' => 'La localizacion solo puede contener letras y numeros.',
+        'dato.id_localizacion.regex' => 'La id_localizacion solo puede contener letras y numeros.',
     ];
 
     public function update($propertyname)
@@ -72,7 +73,7 @@ class Edit extends Component
         $newCategoria = $this->dato['id_categoria'] !== $this->oldDato['id_categoria'];
         $newStock = $this->dato['stock'] !== $this->oldDato['stock'];
         $newDescripcion = $this->dato['descripcion'] !== $this->oldDato['descripcion'];
-        $newLocalizcion = $this->dato['localizacion'] !== $this->oldDato['localizacion'];
+        $newLocalizcion = $this->dato['id_localizacion'] !== $this->oldDato['id_localizacion'];
         $newEncargado = $this->dato['id_encargado'] !== $this->oldDato['id_encargado'];
 
         // Si hay algún cambio, muestra mensaje de confirmación
@@ -104,11 +105,13 @@ class Edit extends Component
         $nombres = EncargadoModel::pluck('nombre', 'id')->toArray();
         $apellidos_p = EncargadoModel::pluck('apellido_p', 'id')->toArray();
         $apellidos_m = EncargadoModel::pluck('apellido_m', 'id')->toArray();
+        $datt = auth()->user()->id_encargado;
+        $localizaciones = localizacion::where('id_encargado', $datt)->get();
 
         $nombre_completo = [];
         foreach ($nombres as $id => $nombre) {
             $nombre_completo[$id] = "{$nombre} {$apellidos_p[$id]} {$apellidos_m[$id]}";
         }
-        return view('livewire.material.edit', compact('marcas', 'categorias', 'nombre_completo'));
+        return view('livewire.material.edit', compact('marcas', 'categorias', 'nombre_completo', 'localizaciones'));
     }
 }
