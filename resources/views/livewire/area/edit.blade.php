@@ -6,7 +6,7 @@
         </span>
     </a>
 
-    <x-dialog-modal wire:model="open">
+    <x-dialog-modal wire:model.live="open">
         <x-slot name="title">
             Editar el registro
         </x-slot>
@@ -14,10 +14,10 @@
         <x-slot name="content">
             <div class="mt-10">
                 <x-label value="Nombre:"></x-label>
-                <x-input type="text" wire:model="dato.nombre" class="w-full mt-2"></x-input>
+                <x-input type="text" wire:model="dato.nombre" wire:keyup="update('dato.nombre')" class="w-full mt-2"></x-input>
                 <x-input-error for="dato.nombre"></x-input-error>
             </div>
-        </x-slot>
+        </x-slot>        
 
         <x-slot name="footer">
             <div class="gap-4">

@@ -28,7 +28,7 @@ class Create extends Component
             'apellido_p' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
             'apellido_m' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
             'id_laboratorio' => 'required|numeric|gt:0',
-            'name' => 'required|string|min:3|max:50|regex:/^[a-zA-Z\s]+$/',
+            'name' => 'required|string|min:5|max:50|regex:/^[\pL\s]+$/u',
             'email' => 'required|email|min:16|max:255|unique:users,email',
             'password' => 'required|string|min:9|max:255|regex:/^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{9,}$/',
             'password_confirmation' => 'same:password',
@@ -38,12 +38,31 @@ class Create extends Component
 
     protected $listeners = ['saveConfirmed2' => 'save'];
 
-    protected $messages = [
-        'nombre.regex' => 'El nombre solo puede contener letras y espacios.',
-        'apellido_p.regex' => 'El apellido paterno solo puede contener letras y espacios.',
-        'apellido_m.regex' => 'El apellido materno solo puede contener letras y espacios.',
-        'id_laboratorio.gt' => 'Por favor, seleccione un laboratorio.',
-    ];
+    // protected function messages()
+    // {
+    //     return [
+    //         'nombre.required' => 'El nombre es obligatorio.',
+    //         'nombre.max' => 'El nombre no puede tener más de 25 caracteres.',
+    //         'nombre.min' => 'El nombre debe tener al menos 3 caracteres.',
+
+    //         'apellido_p.required' => 'El apellido paterno es obligatorio.',
+    //         'apellido_p.max' => 'El apellido paterno no puede tener más de 20 caracteres.',
+    //         'apellido_p.min' => 'El apellido paterno debe tener al menos 3 caracteres.',
+
+    //         'apellido_m.required' => 'El apellido materno es obligatorio.',
+    //         'apellido_m.max' => 'El apellido materno no puede tener más de 20 caracteres.',
+    //         'apellido_m.min' => 'El apellido materno debe tener al menos 3 caracteres.',
+
+    //         'id_laboratorio.required' => 'El laboratorio es obligatorio.',
+    //         'id_laboratorio.numeric' => 'El id del laboratorio debe ser numerico.',
+    //         'id_laboratorio.gt' => 'El numero debe ser mayor a 0.',
+
+    //         'name.required' => 'El usuario es obligatorio.',
+    //         'name.max' => 'El nombre no puede tener más de 50 caracteres.',
+    //         'name.min' => 'El nombre debe tener al menos 5 caracteres.',
+            
+    //     ];
+    // }
 
     public function update($propertyname)
     {

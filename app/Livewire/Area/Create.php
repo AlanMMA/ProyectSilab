@@ -16,6 +16,15 @@ class Create extends Component
 
     protected $listeners = ['saveConfirmed2' => 'save'];
 
+    protected function messages()
+    {
+        return [
+            'nombre.required' => 'El nombre es obligatorio.',
+            'nombre.max' => 'El nombre no puede tener más de 15 caracteres.',
+            'nombre.unique' => 'Este nombre de area ya está registrado.',
+        ];
+    }
+
     public function update($propertyname)
     {
         $this->validateOnly($propertyname);
