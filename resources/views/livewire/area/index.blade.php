@@ -23,87 +23,85 @@
             </div>
         </div>
         @if ($datos->count())
-            <div class="px-6 overflow-y-auto max-h-[60vh] sm:max-h-full">
-                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-white uppercase bg-blue-tec dark:bg-gray-700 dark:text-gray-400 w-full">
-                        <tr>
-                            <th scope="col" class="cursor-pointer px-6 py-3 " wire:click="order('id')">
-                                <div class="flex items-center justify-center">
-                                    ID
-                                    @if ($sort == 'id')
-                                        @if ($direc == 'asc')
-                                            <span class="material-symbols-outlined">
-                                                vertical_align_bottom
-                                            </span>
-                                        @else
-                                            <span class="material-symbols-outlined">
-                                                vertical_align_top
-                                            </span>
-                                        @endif
-                                    @else
-                                        <span class="material-symbols-outlined">
-                                            unfold_more
-                                        </span>
-                                    @endif
+        <div class="px-6 overflow-y-auto max-h-[60vh] sm:max-h-full">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-white uppercase bg-blue-tec dark:bg-gray-700 dark:text-gray-400 w-full">
+                    <tr>
+                        <th scope="col" class="cursor-pointer px-6 py-3 " wire:click="order('id')">
+                            <div class="flex items-center justify-center">
+                                ID
+                                @if ($sort == 'id')
+                                @if ($direc == 'asc')
+                                <span class="material-symbols-outlined">
+                                    vertical_align_bottom
+                                </span>
+                                @else
+                                <span class="material-symbols-outlined">
+                                    vertical_align_top
+                                </span>
+                                @endif
+                                @else
+                                <span class="material-symbols-outlined">
+                                    unfold_more
+                                </span>
+                                @endif
 
-                                </div>
-                            </th>
-                            <th scope="col" class=" px-6 py-3 cursor-pointer" wire:click="order('nombre')">
-                                <div class="flex items-center justify-center">
-                                    Nombre
-                                    @if ($sort == 'nombre')
-                                        @if ($direc == 'asc')
-                                            <span class="material-symbols-outlined">vertical_align_bottom</span>
-                                        @else
-                                            <span class="material-symbols-outlined">vertical_align_top</span>
-                                        @endif
-                                    @else
-                                        <span class="material-symbols-outlined">unfold_more</span>
-                                    @endif
-                                </div>
-                            </th>
-                            <th scope="col" class="px-6 py-3 ">
-                                <div class="flex items-center justify-center">
-                                    Acciones
-                                </div>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($datos as $dato)
-                            <tr wire:key="area-{{ $dato->id }}"
-                                class=" odd:bg-white odd:dark:bg-gray-900 even:bg-[#D2D9D3] even:text-blue-tec odd: text-black even:dark:bg-gray-800 border-b dark:border-gray-700">
-                                <th scope="row"
-                                    class="px-6 py-2 text-center font-medium  whitespace-nowrap dark:text-white">
-                                    {{ $dato->id }}
-                                </th>
-                                <td
-                                    class="px-6 py-2 text-center font-medium  whitespace-nowrap dark:text-white">
-                                    {{ $dato->nombre }}
-                                </td>
+                            </div>
+                        </th>
+                        <th scope="col" class=" px-6 py-3 cursor-pointer" wire:click="order('nombre')">
+                            <div class="flex items-center justify-center">
+                                Nombre
+                                @if ($sort == 'nombre')
+                                @if ($direc == 'asc')
+                                <span class="material-symbols-outlined">vertical_align_bottom</span>
+                                @else
+                                <span class="material-symbols-outlined">vertical_align_top</span>
+                                @endif
+                                @else
+                                <span class="material-symbols-outlined">unfold_more</span>
+                                @endif
+                            </div>
+                        </th>
+                        <th scope="col" class="px-6 py-3 ">
+                            <div class="flex items-center justify-center">
+                                Acciones
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($datos as $dato)
+                    <tr wire:key="area-{{ $dato->id }}"
+                        class=" odd:bg-white odd:dark:bg-gray-900 even:bg-[#D2D9D3] even:text-blue-tec odd: text-black even:dark:bg-gray-800 border-b dark:border-gray-700">
+                        <th scope="row" class="px-6 py-2 text-center font-medium  whitespace-nowrap dark:text-white">
+                            {{ $dato->id }}
+                        </th>
+                        <td class="px-6 py-2 text-center font-medium  whitespace-nowrap dark:text-white">
+                            {{ $dato->nombre }}
+                        </td>
 
-                                <td class="px-6 py-2 flex justify-center items-center gap-2">
-                                    @livewire('Area.Edit', ['dato' => $dato], key('edit-' . $dato->id))
+                        <td class="px-6 py-2 flex justify-center items-center gap-2">
+                            @livewire('Area.Edit', ['dato' => $dato], key('edit-' . $dato->id))
 
-                                    <a class="bg-red-600 hover:bg-red-500 pt-2 pb-1 px-2 rounded-md cursor-pointer"
-                                        wire:click="$dispatch('destroy', { id: {{ $dato->id }}, nombre: '{{ $dato->nombre }}' })">
-                                        <span class="material-symbols-outlined text-white">
-                                            delete
-                                        </span>
-                                    </a>
+                            <a class="bg-red-600 hover:bg-red-500 pt-2 pb-1 px-2 rounded-md cursor-pointer"
+                                wire:click="$dispatch('destroy', { id: {{ $dato->id }}, nombre: '{{ $dato->nombre }}' })">
+                                <span class="material-symbols-outlined text-white">
+                                    delete
+                                </span>
+                            </a>
 
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
         @else
-            <div class="px-6 py-4 bg-white border-r-4">
-                No hay resultados
-                <br>
-                ¿Desea agregarlo?
-            </div>
+        <div class="px-6 py-4 bg-white border-r-4">
+            No hay resultados
+            <br>
+            ¿Desea agregarlo?
+        </div>
         @endif
 
         <div class="px-6 py-3">
@@ -112,8 +110,8 @@
     </div>
 
     @push('js')
-        <script>
-            Livewire.on('destroy', event => {
+    <script>
+        Livewire.on('destroy', event => {
                 Swal.fire({
                     title: "¿Estás seguro de eliminar el registro?",
                     text: "Registro: " + event.nombre,
@@ -136,6 +134,6 @@
                     }
                 });
             });
-        </script>
+    </script>
     @endpush
 </div>

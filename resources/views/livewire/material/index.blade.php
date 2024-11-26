@@ -42,6 +42,36 @@
             </div>
             @endif
         </div>
+        <div x-data="{ open: false }"
+            class="relative inline-block text-left py-4 px-6 items-center gap-4 w-full sm:-my-px">
+            <button @click="open = !open"
+                class="bg-blue-600 hover:bg-blue-500 text-white py-2 px-4 rounded-md inline-flex items-center">
+                Exportar
+                <svg class="w-4 h-4 ml-2 -mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+            <div x-show="open" @click.away="open = false"
+                class="absolute mt-2 bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none">
+                <a href="{{ route('materiales.pdf', [
+                'search' => $search ?? '',
+                'sort' => $sort ?? 'id',
+                'direc' => $direc ?? 'asc',
+                'cant' => $cant ?? 10,
+                'encargado' => $SelectEncargado ?? '']) }}"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                    Exportar a PDF
+                </a>
+                {{--<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                    Exportar a Excel
+                </a>
+                <a href="{{ route('materiales.xml') }}"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                    Exportar a XML
+                </a>--}}
+            </div>
+        </div>
         @if ($datos->count())
         <div class="px-6 overflow-y-auto max-h-[60vh] sm:max-h-full">
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 ">
@@ -259,6 +289,21 @@
             {{ $datos->onEachSide(1)->links() }}
         </div>
     </div>
+
+    @push('js')
+    <script>
+        @if (session('error'))
+        console.log('Mensaje de error capturado');
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: "{{ session('error') }}",
+                confirmButtonText: 'Aceptar'
+            });
+        @endif
+    </script>
+    @endpush
+
     @push('js')
     <script>
         Livewire.on('destroy', event => {

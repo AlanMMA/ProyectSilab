@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MaterialReportController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -70,4 +71,8 @@ Route::middleware([
     Route::get('/Prestamos/{id}', function ($id) {
         return view('ViewUser/detallePrestamo-index', compact('id'));
     })->name('prestamos.detalle');
+
+    Route::get('/materiales/pdf', [MaterialReportController::class, 'generatePDF'])->name('materiales.pdf');
+    //Route::get('/materiales/xml', [MaterialReportController::class, 'generateXML'])->name('materiales.xml');
+    //Route::get('/materiales/excel', [MaterialReportController::class, 'generateExcel'])->name('materiales.excel');
 });
