@@ -14,6 +14,16 @@ class Edit extends Component
 
     protected $listeners = ['saveConfirmed' => 'save'];
 
+    protected $rules = [
+        'dato.nombre' => 'required|min:3|max:15',
+    ];
+
+    public function update($propertyname)
+    {
+        $this->validateOnly($propertyname);
+        
+    }
+
     public function mount(CategoriaModel $dato)
     {
         $this->dato = $dato->toArray();
@@ -56,11 +66,12 @@ class Edit extends Component
     private function validateChanges($newNombre)
     {
 
+        $rules = [
+            'dato.nombre' => 'required|max:15',
+        ];
         // Agregar la validación única de 'nombre' solo si fue modificado y no es igual al original
         if ($newNombre && strtolower($this->dato['nombre']) !== strtolower($this->oldDato2['nombre'])) {
-            $rules['dato.nombre'] = 'required|max:15|unique:categoria,nombre';
-        } else {
-            $rules['dato.nombre'] = 'required|max:15';
+            $rules['dato.nombre'] = 'required|min:3|max:15|unique:categoria,nombre,' . $this->dato['id'];
         }
 
         // Realiza la validación con las reglas dinámicas

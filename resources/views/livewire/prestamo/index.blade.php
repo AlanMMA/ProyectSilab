@@ -2,7 +2,7 @@
     @php
         $Gerente = auth()->user()->id_rol;
     @endphp
-    @if ($Gerente != 7)
+    @if ($Gerente != 7 && $datos->count() >= 2)
         <div class="relative inline-block text-right w-full px-6">
             <!-- Botón que despliega el menú -->
             <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
@@ -38,8 +38,8 @@
         </div>
     @endif
     <div class="relative shadow-md">
+        @if ($Gerente == 7)
         <div class="py-4 px-6 flex flex-col w-full justify-end items-center gap-4 sm:flex-row">
-            @if ($Gerente == 7)
                 <p class="text-lg font-bold text-black dark:text-white">Prestamos del encargado:</p>
                 <select name="" wire:model.live="SelectEncargado"
                     class="w-min border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
@@ -50,9 +50,9 @@
                             {{ $encargado->apellido_m }}</option>
                     @endforeach
                 </select>
+            </div>
             @endif
-        </div>
-        <div class="py-4 px-6 block items-center gap-4 w-full sm:flex">
+        <div class="py-4 px-6 block items-center gap-4 w-full sm:flex ">
             <div class="flex items-center justify-center gap-1 mb-4 sm:mb-0">
                 <span class="text-gray-900 dark:text-white">Mostrar</span>
                 <select wire:model.live="cant"
@@ -79,7 +79,7 @@
         </div>
 
         @if ($datos->count())
-            <div class="px-6 overflow-y-auto max-h-[60vh] sm:max-h-full">
+            <div class="px-6 mb-4 overflow-y-auto max-h-[60vh] sm:max-h-full">
                 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 ">
                     <thead class="text-xs text-white uppercase bg-blue-tec dark:bg-gray-700 dark:text-gray-400 w-full">
                         <tr>

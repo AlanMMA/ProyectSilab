@@ -49,7 +49,7 @@
             </div>
             <div class="mb-4">
                 <x-label value="Stock:"></x-label>
-                <x-input wire:model="stock" wire:keyup="update('stock')" type="text" class="w-full"></x-input>
+                <x-input wire:model="stock" wire:keyup="update('stock')" type="number" min="1" class="w-full"></x-input>
                 @error('stock')
                 <span class="text-red-500 text-sm">{{$message}}</span>
                 @enderror

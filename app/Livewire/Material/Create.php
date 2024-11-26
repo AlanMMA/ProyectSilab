@@ -15,18 +15,18 @@ class Create extends Component
 {
 
     public $open;
-    public $nombre, $id_marca, $modelo, $id_categoria, $stock, $descripcion, $id_localizacion, $id_encargado;
+    public $nombre, $id_marca, $modelo, $id_categoria, $stock = 1, $descripcion, $id_localizacion, $id_encargado;
 
     protected function rules()
     {
         return [
-            'nombre' => 'required|max:20|regex:/^[\p{L}\p{N}\s]+$/u',
+            'nombre' => 'required|min:3|max:20|regex:/^[\p{L}\p{N}\s]+$/u',
             'id_marca' => 'required|numeric',
-            'modelo' => 'required|max:20|regex:/^[\pL0-9\s]+$/u',
+            'modelo' => 'required|min:3|max:20|regex:/^[\pL0-9\s-]+$/u',
             'id_categoria' => 'required|numeric',
-            'stock' => 'required|numeric',
-            'descripcion' => 'required|max:200',
-            'id_localizacion' => 'required|max:50|regex:/^[\pL0-9\s]+$/u',
+            'stock' => 'required|min:1|numeric',
+            'descripcion' => 'required|min:3|max:200',
+            'id_localizacion' => 'required|numeric',
             'id_encargado' => 'required|numeric',
         ];
     }

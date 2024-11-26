@@ -11,19 +11,10 @@ class Create extends Component
     public $nombre = '';
 
     protected $rules = [
-        'nombre' => 'required|max:15|unique:area',
+        'nombre' => 'required|min:3|max:15|unique:area',
     ];
 
     protected $listeners = ['saveConfirmed2' => 'save'];
-
-    protected function messages()
-    {
-        return [
-            'nombre.required' => 'El nombre es obligatorio.',
-            'nombre.max' => 'El nombre no puede tener más de 15 caracteres.',
-            'nombre.unique' => 'Este nombre de area ya está registrado.',
-        ];
-    }
 
     public function update($propertyname)
     {
@@ -55,6 +46,7 @@ class Create extends Component
 
     public function render()
     {
+        
         return view('livewire.area.create');
     }
 }

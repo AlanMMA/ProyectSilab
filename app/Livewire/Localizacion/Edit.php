@@ -14,6 +14,14 @@ class Edit extends Component
 
     protected $listeners = ['saveConfirmed' => 'save'];
 
+    protected $rules = [
+        'dato.nombre' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
+    ];
+    public function update($propertyname)
+    {
+        $this->validateOnly($propertyname);
+    }
+
     public function mount(localizacion $dato)
     {
         $this->dato = $dato->toArray();

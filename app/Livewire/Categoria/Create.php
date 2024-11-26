@@ -14,16 +14,6 @@ class Create extends Component
         'nombre' => 'required|min:4|max:10|unique:categoria',
     ];
 
-    protected function messages()
-    {
-        return [
-            'nombre.required' => 'El nombre es obligatorio.',
-            'nombre.max' => 'El nombre no puede tener más de 15 caracteres.',
-            'nombre.unique' => 'Esta categoria ya está registrada.',
-            'nombre.min' => 'El nombre debe tener al menos 4 caracteres.'
-        ];
-    }
-
 
     protected $listeners = ['saveConfirmed2' => 'save'];
 

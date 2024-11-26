@@ -34,16 +34,14 @@
                 <x-label value="Asignar un laboratorio:" />
                 <select name="id_laboratorio" id="id_laboratorio-{{ $dato['id'] ?? 'new' }}" wire:model="id_laboratorio"
                     wire:change="verificarLaboratorio"
+                    wire:keyup="update('id_laboratorio')"
                     class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
                     <option value="0">Seleccione un laboratorio</option>
                     @foreach ($laboratorios as $id => $nombre)
                     <option value="{{ $id }}">{{ $nombre }}</option>
                     @endforeach
                 </select>
-
-                @error('id_laboratorio')
-                <span class="text-red-500 text-sm">{{ $message }}</span>
-                @enderror
+                <x-input-error for="id_laboratorio"></x-input-error>
             </div>
 
             <p class="text-lg text-center text-[#111827] dark:text-white font-bold">Datos de usuario</p>

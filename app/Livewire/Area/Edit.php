@@ -21,10 +21,21 @@ class Edit extends Component
         $this->oldDato2 = $dato->toArray();
     }
 
+    protected $rules = [
+        'dato.nombre' => 'required|min:3|max:15',
+    ];
+
+
+    public function update($propertyname)
+    {
+        $this->validateOnly($propertyname);
+    }
+
     public function openModal()
     {
         $this->resetDatos(); // Llama a resetDatos cada vez que se abre el modal
         $this->open = true;
+        $this->resetErrorBag(['dato.nombre']);
     }
     
     // Nueva función para restablecer los datos al abrir el modal
@@ -55,19 +66,21 @@ class Edit extends Component
 
     private function validateChanges($newNombre)
     {
-
-        // Agregar la validación única de 'nombre' solo si fue modificado y no es igual al original
+        $rules = [
+            'dato.nombre' => 'required|min:3|max:15',
+        ];
+    
+        // Si el nombre fue modificado, agregamos la validación de unicidad
         if ($newNombre && strtolower($this->dato['nombre']) !== strtolower($this->oldDato2['nombre'])) {
-            $rules['dato.nombre'] = 'required|max:15|unique:area,nombre';
-        } else {
-            $rules['dato.nombre'] = 'required|max:15';
+            $rules['dato.nombre'] = 'required|min:3|max:15|unique:area,nombre,' . $this->dato['id'];
         }
-
+    
         // Realiza la validación con las reglas dinámicas
         $this->validate($rules);
-
+    
         return true;
     }
+    
 
     public function save()
     {

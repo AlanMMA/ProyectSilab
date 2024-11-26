@@ -22,9 +22,9 @@ class Edit extends Component
 
     protected $rules = [
         'result.no_control' => 'required|string|min:8|max:10|regex:/^[a-zA-Z0-9]+$/',
-        'result.nombre' => 'required|string|min:3|max:50|regex:/^[\pL\s]+$/u',
-        'result.apellido_pS' => 'required|string|min:3|max:15|regex:/^[\pL\s]+$/u',
-        'result.apellido_mS' => 'required|string|min:3|max:15|regex:/^[\pL\s]+$/u',
+        'result.nombre' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
+        'result.apellido_pS' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
+        'result.apellido_mS' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
     ];
 
     protected $listeners = ['saveConfirmed' => 'save'];
@@ -136,8 +136,8 @@ class Edit extends Component
                 $this->dispatch('alert', 'No se realizaron cambios.');
             }
         } catch (\Illuminate\Validation\ValidationException $e) {
-            // Mostrar errores si la validación falla
-            dd($e->errors());
+            // // Mostrar errores si la validación falla
+            // $this->dispatch('alert', $e->errors());
         }
 
     }

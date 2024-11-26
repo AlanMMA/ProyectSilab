@@ -28,45 +28,80 @@ class Create extends Component
             'apellido_p' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
             'apellido_m' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
             'id_laboratorio' => 'required|numeric|gt:0',
-            'name' => 'required|string|min:5|max:50|regex:/^[\pL\s]+$/u',
+            'name' => 'required|string|min:8|max:50',
             'email' => 'required|email|min:16|max:255|unique:users,email',
-            'password' => 'required|string|min:9|max:255|regex:/^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{9,}$/',
-            'password_confirmation' => 'same:password',
+            'password' => 'required|string|min:8|max:255',
+            'password_confirmation' => 'required|same:password',
             'id_rol' => 'required|numeric|min:1',
+
         ];
     }
 
+    protected $messages = [
+        'name.required' => 'El campo "name" es obligatorio.',
+        'password.required' => 'El campo "password" es obligatorio.',
+        'name.min' => 'El campo "name" debe tener al menos 8 caracteres.',
+        'password.min' => 'El campo "password" debe tener al menos 8 caracteres.',
+    ];
+
     protected $listeners = ['saveConfirmed2' => 'save'];
 
-    // protected function messages()
-    // {
-    //     return [
-    //         'nombre.required' => 'El nombre es obligatorio.',
-    //         'nombre.max' => 'El nombre no puede tener más de 25 caracteres.',
-    //         'nombre.min' => 'El nombre debe tener al menos 3 caracteres.',
-
-    //         'apellido_p.required' => 'El apellido paterno es obligatorio.',
-    //         'apellido_p.max' => 'El apellido paterno no puede tener más de 20 caracteres.',
-    //         'apellido_p.min' => 'El apellido paterno debe tener al menos 3 caracteres.',
-
-    //         'apellido_m.required' => 'El apellido materno es obligatorio.',
-    //         'apellido_m.max' => 'El apellido materno no puede tener más de 20 caracteres.',
-    //         'apellido_m.min' => 'El apellido materno debe tener al menos 3 caracteres.',
-
-    //         'id_laboratorio.required' => 'El laboratorio es obligatorio.',
-    //         'id_laboratorio.numeric' => 'El id del laboratorio debe ser numerico.',
-    //         'id_laboratorio.gt' => 'El numero debe ser mayor a 0.',
-
-    //         'name.required' => 'El usuario es obligatorio.',
-    //         'name.max' => 'El nombre no puede tener más de 50 caracteres.',
-    //         'name.min' => 'El nombre debe tener al menos 5 caracteres.',
-            
-    //     ];
-    // }
 
     public function update($propertyname)
     {
         $this->validateOnly($propertyname);
+        if (in_array($propertyname, ['name', 'password'])) {
+            $this->validateRegex($propertyname, $this->$propertyname);
+        }
+    }
+
+    private function validateRegex($field, $value)
+    {
+        // Resetea los errores del campo específico
+        $this->resetErrorBag($field);
+
+        // Reglas personalizadas
+        if (!preg_match('/[A-Z]/', $value)) {
+            $this->addError($field, "El campo \"$field\" debe contener al menos una letra mayúscula.");
+        }
+
+        if (!preg_match('/\d/', $value)) {
+            $this->addError($field, "El campo \"$field\" debe contener al menos un número.");
+        }
+
+        if (strlen($value) < 9) {
+            $this->addError($field, "El campo \"$field\" debe tener al menos 8 caracteres.");
+        }
+
+
+        if (!preg_match('/^[A-Za-z\d]+$/', $value)) {
+            $this->addError($field, "El campo \"$field\" solo puede contener letras y números.");
+        }
+    }
+
+    private function validateCustomRules()
+    {
+        $customErrors = [];
+
+        // Validación personalizada para "name"
+        if (!preg_match('/[A-Z]/', $this->name)) {
+            $customErrors['name'][] = 'El campo "name" debe contener al menos una letra mayúscula.';
+        }
+
+        if (!preg_match('/\d/', $this->name)) {
+            $customErrors['name'][] = 'El campo "name" debe contener al menos un número.';
+        }
+
+        // Validación personalizada para "password"
+        if (!preg_match('/[A-Z]/', $this->password)) {
+            $customErrors['password'][] = 'El campo "password" debe contener al menos una letra mayúscula.';
+        }
+
+        if (!preg_match('/\d/', $this->password)) {
+            $customErrors['password'][] = 'El campo "password" debe contener al menos un número.';
+        }
+
+        return $customErrors;
     }
 
     public function confirmSave2()
@@ -76,6 +111,18 @@ class Create extends Component
 
         // Realiza la validación
         $this->validate();
+
+        $customErrors = $this->validateCustomRules();
+
+        // Si hay errores personalizados, evita continuar
+        if (!empty($customErrors)) {
+            foreach ($customErrors as $field => $errorMessages) {
+                foreach ($errorMessages as $message) {
+                    $this->addError($field, $message);
+                }
+            }
+            return; // Detener la ejecución si hay errores
+        }
 
         // Obtiene el nombre del laboratorio a partir del ID seleccionado
         $laboratorioNombre = $this->laboratorios[$this->id_laboratorio] ?? 'No asignado';

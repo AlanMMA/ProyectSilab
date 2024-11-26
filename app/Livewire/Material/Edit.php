@@ -19,13 +19,13 @@ class Edit extends Component
     protected function rules()
     {
         return [
-            'dato.nombre' => 'required|max:20|regex:/^[\p{L}\p{N}\s]+$/u',
-            'dato.id_marca' => 'required|numeric',
-            'dato.modelo' => 'required|max:20|regex:/^[\pL0-9\s]+$/u',
-            'dato.id_categoria' => 'required|numeric',
-            'dato.descripcion' => 'required|max:200',
-            'dato.id_localizacion' => 'required|numeric',
-            'dato.id_encargado' => 'required|numeric',
+            'dato.nombre' => 'required|min:3|max:20|regex:/^[\p{L}\p{N}\s]+$/u',
+            'dato.id_marca' => 'required|numeric|min:1',
+            'dato.modelo' => 'required|min:3|max:20|regex:/^[\pL0-9\s-]+$/u',
+            'dato.id_categoria' => 'required|numeric|min:1',
+            'dato.descripcion' => 'required|min:3|max:200',
+            'dato.id_localizacion' => 'required|numeric|min:1',
+            'dato.id_encargado' => 'required|numeric|min:1',
         ];
     }
 
