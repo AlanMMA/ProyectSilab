@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Reporte de Materiales</title>
+    <title>Reporte de Áreas</title>
     <style>
         body {
             margin-top: 85px;
@@ -53,7 +53,7 @@
 
         .title {
             position: fixed;
-            top: 8px;
+            top: 15px;
             left: 0;
             right: 0;
             text-align: center;
@@ -61,14 +61,14 @@
             padding: 0;
         }
 
-        .subtitle {
+        /* Estilo para el número de página */
+        .page-number {
             position: fixed;
-            top: 40px;
-            left: 0;
+            bottom: 0;
             right: 0;
-            text-align: center;
-            margin: 0;
-            padding: 0;
+            margin-right: 20px;
+            font-size: 12px;
+            color: #1B396A;
         }
     </style>
 </head>
@@ -80,13 +80,7 @@
     <img src="{{ public_path('images/logo-right.jpg') }}" class="logo-right" alt="Logo Derecho">
 
     <!-- Titulo -->
-    <h1 class="title" style="text-align: center;">Reporte de Materiales</h1>
-
-    @if($encargadoNombre)
-    <h3 class="subtitle" style="text-align: center; margin-top: 10px; font-weight: normal;">Materiales del encargado:
-        <span style="font-weight: bold;">{{ $encargadoNombre }} </span>
-    </h3>
-    @endif
+    <h1 class="title" style="text-align: center;">Reporte de Áreas</h1>
 
     <!-- Contenido de la tabla -->
     <table>
@@ -94,15 +88,6 @@
             <tr>
                 <th>ID</th>
                 <th>Nombre</th>
-                <th>Marca</th>
-                <th>Modelo</th>
-                <th>Categoria</th>
-                <th>Stock</th>
-                <th>Descripción</th>
-                <th>Localización</th>
-                @if($incluirEncargado)
-                <th>Encargado</th>
-                @endif
             </tr>
         </thead>
         <tbody>
@@ -110,16 +95,6 @@
             <tr>
                 <td>{{ $dato->id }}</td>
                 <td>{{ $dato->nombre }}</td>
-                <td>{{ $dato->marca->nombre }}</td>
-                <td>{{ $dato->modelo }}</td>
-                <td>{{ $dato->categoria->nombre }}</td>
-                <td>{{ $dato->stock }}</td>
-                <td>{{ $dato->descripcion }}</td>
-                <td>{{ $dato->localizacion }}</td>
-                @if($incluirEncargado)
-                <td>{{ $dato->encargado ? $dato->encargado->nombre . ' ' . $dato->encargado->apellido_p : 'Sin
-                    encargado' }}</td>
-                @endif
             </tr>
             @endforeach
         </tbody>

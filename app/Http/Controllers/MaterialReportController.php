@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CategoriaModel;
+use App\Models\EncargadoModel;
+use App\Models\MarcaModel;
 use App\Models\MaterialModel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -36,13 +39,19 @@ class MaterialReportController extends Controller
 
         // Construir la consulta inicial
         $query = MaterialModel::query();
+        $encargadoNombre = null;
+        $incluirEncargado = false;
 
         if (auth()->user()->id_rol == 7) {
             if ($SelectEncargado == -1) {
                 // Jefe seleccionó "todos los encargados", no se filtra por `id_encargado`
+                $incluirEncargado = true; // Mostrar la columna con el encargado
             } elseif ($SelectEncargado > 0) {
                 // Jefe seleccionó un encargado específico
                 $query->where('id_encargado', $SelectEncargado);
+                //Obtiene el nombre del encargado seleccionado
+                $encargado = EncargadoModel::find($SelectEncargado);
+                $encargadoNombre = $encargado ? $encargado->nombre . ' ' . $encargado->apellido_p : null;
             } else {
                 // Jefe no seleccionó un encargado válido
                 return redirect()->back()->with('error', 'Por favor, seleccione un encargado para exportar los datos.');
@@ -50,6 +59,8 @@ class MaterialReportController extends Controller
         } else {
             // No es jefe, filtrar por el encargado asignado al usuario
             $query->where('id_encargado', $user2);
+            $encargado = EncargadoModel::find($user2);
+            $encargadoNombre = $encargado ? $encargado->nombre . ' ' . $encargado->apellido_p : null;
         }
 
         // Aplicar filtros adicionales (búsqueda)
@@ -63,8 +74,26 @@ class MaterialReportController extends Controller
             });
         }
 
-        // Aplicar ordenamiento
-        $query->orderBy($sort, $direc);
+        // Aplicar ordenamiento por nombre de marca, encargado o categoría si se especifica
+        if ($sort == 'id_marca') {
+            $query->orderBy(
+                MarcaModel::select('nombre')->whereColumn('marca.id', 'material.id_marca'),
+                $direc
+            );
+        } elseif ($sort == 'id_encargado') {
+            $query->orderBy(
+                EncargadoModel::select('nombre')->whereColumn('encargado.id', 'material.id_encargado'),
+                $direc
+            );
+        } elseif ($sort == 'id_categoria') {
+            $query->orderBy(
+                CategoriaModel::select('nombre')->whereColumn('categoria.id', 'material.id_categoria'),
+                $direc
+            );
+        } else {
+            // Para otros campos, ordenar normalmente por el campo recibido
+            $query->orderBy($sort, $direc);
+        }
 
         // Obtener los datos sin limitar (para exportar todos)
         $datos = $query->get();
@@ -75,7 +104,7 @@ class MaterialReportController extends Controller
             return redirect()->back();
         } else {
             // Generar el PDF con los datos filtrados
-            $pdf = Pdf::loadView('reportes.materiales-pdf', compact('datos', 'search', 'sort', 'direc'));
+            $pdf = Pdf::loadView('reportes.materiales-pdf', compact('datos', 'encargadoNombre', 'incluirEncargado', 'search', 'sort', 'direc'));
 
             // Descargar el PDF
             return $pdf->download('reporte_materiales.pdf');

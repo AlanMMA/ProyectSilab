@@ -196,6 +196,22 @@
                                 @endif
                             </div>
                         </th>
+                        @if ($SelectEncargado == -1)
+                        <th scope="col" class="cursor-pointer px-6 py-3 text-center" wire:click="order('id_encargado')">
+                            <div class="flex items-center justify-center">
+                                Encargado
+                                @if ($sort == 'id_encargado')
+                                @if ($direc == 'asc')
+                                <span class="material-symbols-outlined">vertical_align_bottom</span>
+                                @else
+                                <span class="material-symbols-outlined">vertical_align_top</span>
+                                @endif
+                                @else
+                                <span class="material-symbols-outlined">unfold_more</span>
+                                @endif
+                            </div>
+                        </th>
+                        @endif
                         {{-- <th scope="col" class="cursor-pointer px-6 py-3 text-center"
                             wire:click="order('id_encargado')">
                             <div class="flex items-center justify-center">
@@ -248,6 +264,11 @@
                         <td class="px-6 py-2 text-center font-medium  whitespace-nowrap dark:text-white">
                             {{ $dato->localizacion }}
                         </td>
+                        @if ($SelectEncargado == -1)
+                        <td class="px-6 py-2 text-center font-medium  whitespace-nowrap dark:text-white">
+                            {{ $dato->encargado->nombre ?? 'Sin encargado' }}
+                        </td>
+                        @endif
                         {{-- <td class="px-6 py-2 text-center font-medium  whitespace-nowrap dark:text-white">
                             {{ $dato->encargado->nombre }}
                         </td> --}}
