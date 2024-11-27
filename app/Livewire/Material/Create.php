@@ -20,9 +20,9 @@ class Create extends Component
     protected function rules()
     {
         return [
-            'nombre' => 'required|min:3|max:20|regex:/^[\p{L}\p{N}\s]+$/u',
+            'nombre' => 'required|min:3|max:50|regex:/^[\p{L}\p{N}\s]+$/u',
             'id_marca' => 'required|numeric',
-            'modelo' => 'required|min:3|max:20|regex:/^[\pL0-9\s-]+$/u',
+            'modelo' => 'required|min:3|unique:material|max:20|regex:/^[\pL0-9\s-]+$/u',
             'id_categoria' => 'required|numeric',
             'stock' => 'required|min:1|numeric',
             'descripcion' => 'required|min:3|max:200',
@@ -67,7 +67,7 @@ class Create extends Component
             'id_encargado' => $this->id_encargado,
         ]);
 
-        $this->reset(['open', 'nombre', 'modelo', 'stock', 'descripcion', 'id_localizacion']);
+        $this->reset(['open', 'nombre', 'modelo', 'stock', 'descripcion', 'id_localizacion', 'id_marca', 'id_categoria']);
         $this->dispatch('render');
         $this->dispatch('alert', 'El material se ha guardado con exito.');
     }

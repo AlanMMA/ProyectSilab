@@ -15,7 +15,7 @@ class Edit extends Component
     protected $listeners = ['saveConfirmed' => 'save'];
 
     protected $rules = [
-        'dato.nombre' => 'required|min:3|max:15',
+        'dato.nombre' => 'required|min:3|max:50',
     ];
 
     public function update($propertyname)

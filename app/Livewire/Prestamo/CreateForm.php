@@ -12,6 +12,9 @@ class CreateForm extends Component
     public $cant = 0, $cantid, $search = '', $fechaPrestamo, $buttonTable;
     public $prest;
     public $solicitantes = [], $materiales = [], $selectedMaterials = [];
+    public $searchMaterial = ''; // Cadena de búsqueda; 
+    public $selectedMaterial = null; // Material seleccionado
+
     public $solicitanteSeleccionado = false;
     public $solicitanteSeleccionado2 = true;
     protected $listeners = [
@@ -28,7 +31,7 @@ class CreateForm extends Component
     public function updatedCant($value)
     {
         $this->search = '';
-        
+
         if ($value == 'alumno') {
             $this->solicitantes = SolicitanteModel::where('tipo', 'alumno')->get();
         } elseif ($value == 'docente') {
@@ -58,6 +61,47 @@ class CreateForm extends Component
                 ->get();
         }
     }
+
+    public function updatedSearchMaterial()
+    {
+        $encarg = auth()->user()->id_encargado;
+        if (empty($this->searchMaterial)) {
+            $this->resetSelectedMaterial();
+            $this->materiales = MaterialModel::where('id_encargado', $encarg)->get()->toArray();
+            return;
+        }
+    
+        $this->materiales = MaterialModel::where('id_encargado', $encarg)
+            ->where(function ($query) {
+                $query->where('nombre', 'like', '%' . $this->searchMaterial . '%')
+                      ->orWhere('descripcion', 'like', '%' . $this->searchMaterial . '%')
+                      ->orWhere('modelo', 'like', '%' . $this->searchMaterial . '%'); // Nueva condición
+            })
+            ->get();
+    }
+    
+
+    public function selectMaterial($id)
+    {
+        // $this->selectedMaterial = MaterialModel::find($id);
+        // if ($this->selectedMaterial) {
+        //     $this->searchMaterial = $this->selectedMaterial->nombre;
+        // }
+        // $this->materiales = [];
+        $this->selectMat = $id;
+        $this->selectedMaterial = MaterialModel::find($id); // Opcional: Guarda los datos completos si los necesitas
+        $this->searchMaterial = $this->selectedMaterial->nombre; // Actualiza el input con el nombre del material seleccionado
+        $this->materiales = [];  // Vacía la lista desplegable
+    }
+
+    public function resetSelectedMaterial()
+    {
+        $this->selectedMaterial = null;
+        $this->searchMaterial = '';
+        $this->materiales = MaterialModel::all();
+    }
+
+
 
     public function resetSelectedSolicitante()
     {
@@ -101,18 +145,18 @@ class CreateForm extends Component
         if ($this->selectedSolicitante) {
             $this->search = $this->selectedSolicitante->nombre . ' ' . $this->selectedSolicitante->apellido_p;
         }
-        $this->solicitantes = []; 
-        $this->cantid = $id; 
+        $this->solicitantes = [];
+        $this->cantid = $id;
         $this->solicitanteSeleccionado2 = true;
     }
 
     public function clearSelection()
-{
-    $this->selectedSolicitante = null; 
-    $this->search = '';
-    $this->solicitantes = SolicitanteModel::all(); 
-    $this->solicitanteSeleccionado2 = false;
-}
+    {
+        $this->selectedSolicitante = null;
+        $this->search = '';
+        $this->solicitantes = SolicitanteModel::all();
+        $this->solicitanteSeleccionado2 = false;
+    }
 
     public function confirmarSeleccion()
     {
@@ -198,6 +242,7 @@ class CreateForm extends Component
                     'fechaDev' => $this->fechaDev
                 ]);
                 $this->selectMat = null;
+                $this->searchMaterial = null;
                 $this->Cantidad = 1;
                 $this->dispatch('mostrarBoton', true);
             }

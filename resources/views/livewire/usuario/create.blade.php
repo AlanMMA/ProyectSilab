@@ -34,6 +34,7 @@
                     value="{{ old('no_control') }}" class="w-full"></x-input>
                 <x-input-error for="no_control"></x-input-error>
             </div>
+            <p class="text-lg text-center text-[#111827] dark:text-white font-bold">Datos de usuario</p>
             <div class="mb-4">
                 <x-label value="usuario:"></x-label>
                 <x-input wire:model="name" wire:keyup="update('name')" type="text" value="{{ old('name') }}"

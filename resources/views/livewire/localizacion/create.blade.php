@@ -5,7 +5,7 @@
 
     <x-dialog-modal wire:model.live="open">
         <x-slot name="title">
-            Agregar una nueva marca
+            Agregar una nueva localización
         </x-slot>
 
         <x-slot name="content">

@@ -211,9 +211,9 @@
                         <td class="px-6 py-2 text-center font-medium  whitespace-nowrap dark:text-white">
                             {{ $dato->stock }}
                         </td>
-                        <td class="px-6 py-2 text-center font-medium  whitespace-nowrap dark:text-white">
+                        <td class="px-6 py-2 text-center font-medium whitespace-normal dark:text-white break-words max-w-[200px]">
                             {{ $dato->descripcion }}
-                        </td>
+                        </td>                        
                         <td class="px-6 py-2 text-center font-medium  whitespace-nowrap dark:text-white">
                             {{ $dato->localizacion->nombre ?? 'N/A'  }}
                         </td>

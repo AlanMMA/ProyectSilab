@@ -55,7 +55,7 @@
         <x-label value="Fecha de devolución:"></x-label>
         <x-input wire:model="fechaDev" class="w-full" type="date"></x-input>
     </div>
-    <div class="mt-6 mx-4">
+    {{-- <div class="mt-6 mx-4">
         <x-label value="Seleccione el material:"></x-label>
         <select wire:model.live = "selectMat"
             class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
@@ -65,7 +65,37 @@
                 <option value="{{ $material['id'] }}">{{ $material['nombre'] }}</option>
             @endforeach
         </select>
+    </div> --}}
+    <div class="mt-6 mx-4 flex gap-4 justify-center items-center">
+    <div class="relative w-full">
+        <x-label value="Material:"></x-label>
+        <input @if(!$solicitanteSeleccionado) disabled @endif type="text" wire:model.live="searchMaterial"
+            placeholder="Escriba para buscar material..."
+            class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+            autocomplete="off" />
+        @if (strlen($searchMaterial) > 0 && !$selectedMaterial)
+            @if (count($materiales) > 0)
+                <ul
+                    class="absolute z-10 mt-2 border rounded-md max-h-60 overflow-y-auto bg-blue-tec text-white dark:bg-white dark:text-blue-tec">
+                    @foreach ($materiales as $material)
+                        <li class="px-4 py-2 hover:bg-gray-100 hover:text-blue-tec dark:hover:bg-blue-tec dark:hover:text-white cursor-pointer"
+                            wire:click="selectMaterial({{ $material->id }})">
+                            {{ $material->nombre }} (Stock: {{ $material->stock }}) {{$material->modelo}}
+                        </li>
+                    @endforeach
+                </ul>
+            @else
+                <div
+                    class="absolute z-10 mt-2 border rounded-md bg-blue-tec text-white dark:bg-white dark:text-blue-tec p-2">
+                    <p>No encuentras el material? Agregalo:</p>
+                    <a href="{{ route('material') }}"
+                        class="mt-2 bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded">Agregar</a>
+                </div>
+            @endif
+        @endif
     </div>
+    </div>
+
     <div class="mt-6 mx-4">
         <x-label value="Cantidad:"></x-label>
         <x-input wire:model="Cantidad" class="w-full" type="number" min="1" placeholder="Ingrese cifra"

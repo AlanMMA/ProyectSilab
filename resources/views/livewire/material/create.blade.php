@@ -18,7 +18,7 @@
                 <x-label value="Elegir marca:"></x-label>
                 <select name="id_marca" id="id_marca-{{ $dato['id'] ?? 'new' }}" wire:model.live="id_marca"
                     class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
-                    <option value="0">Elija la marca del producto</option>
+                    <option value="0">Elija la marca del material</option>
                     @foreach ($marcas as $id => $nombre)
                     <option value="{{ $id }}">{{ $id }} {{ $nombre }}</option>
                     @endforeach
@@ -38,7 +38,7 @@
                 <x-label value="Elegir categoria:"></x-label>
                 <select name="id_categoria" id="id_categoria-{{ $dato['id'] ?? 'new' }}" wire:model.live="id_categoria"
                     class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
-                    <option value="0">Elija la categoria del producto</option>
+                    <option value="0">Elija la categoria del material</option>
                     @foreach ($categorias as $id => $nombre)
                     <option value="{{ $id }}">{{ $id }} {{ $nombre }}</option>
                     @endforeach
