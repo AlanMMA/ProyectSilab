@@ -8,6 +8,7 @@
         "php": "^8.1",
         "barryvdh/laravel-dompdf": "^3.0",
         "guzzlehttp/guzzle": "^7.2",
+        "laravel-lang/lang": "^14.8",
         "laravel/framework": "^10.10",
         "laravel/jetstream": "^4.3",
         "laravel/sanctum": "^3.3",
