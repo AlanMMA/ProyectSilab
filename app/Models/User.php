@@ -31,8 +31,10 @@ class User extends Authenticatable
         'id_rol',
         'id_encargado',
         'id_ss',
-        'id_estado'
+        'id_estado',
+        'clave_seguridad'
     ];
+
 
     public function rol(): BelongsTo
     {
@@ -54,6 +56,8 @@ class User extends Authenticatable
         return $this->belongsTo(EstadoUsuarioModel::class, 'id_estado');
     }
 
+
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -73,6 +77,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'clave_seguridad' => 'string',
     ];
 
     /**

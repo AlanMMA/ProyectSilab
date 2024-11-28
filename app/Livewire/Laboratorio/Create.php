@@ -12,7 +12,7 @@ class Create extends Component
     public $nombre = '', $limite_enc = 0;
 
     protected $rules = [
-        'nombre' => 'required|max:25|unique:laboratorio|regex:/^[\pL\s]+$/u',
+        'nombre' => 'required|min:4|max:25|unique:laboratorio|regex:/^[\pL\s]+$/u',
     ];
 
     protected $listeners = ['saveConfirmed2' => 'save'];

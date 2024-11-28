@@ -25,16 +25,35 @@
                             <x-dropdown-link href="{{ route('area') }}">{{ __('Area') }}</x-dropdown-link>
                             @endif
                             <x-dropdown-link href="{{ route('categoria') }}">{{ __('Categoria') }}</x-dropdown-link>
-                            @if (auth()->user()->id_rol == 1 || auth()->user()->id_rol == 7) 
-                            <x-dropdown-link href="{{ route('rol') }}">{{ __('Rol') }}</x-dropdown-link>
                             @if(auth()->user()->id_rol == 7)
                             <x-dropdown-link href="{{ route('laboratorio')}}">{{ __('Laboratorio') }}</x-dropdown-link>
                             @endif
+                            @if(auth()->user()->id_rol != 7)
+                            <x-dropdown-link href="{{ route('localizacion')}}">{{ __('Localizacion') }}</x-dropdown-link>
                             @endif
                             <x-dropdown-link href="{{ route('marca')}}">{{ __('Marca') }}</x-dropdown-link>
+                            @if (auth()->user()->id_rol == 7)
+                            <x-dropdown-link href="{{ route('rol') }}">{{ __('Rol') }}</x-dropdown-link>
+                            @endif
                         </x-slot>
                     </x-dropdown-nav>
-
+                    <x-dropdown-nav align="left" width="48">
+                        <x-slot name="trigger">
+                            <x-nav-link-dropdown :active="request()->routeIs(['material', 'materialEntradas'])" class="cursor-pointer">
+                                {{__('Inventario')}}
+                            </x-nav-link-dropdown>
+                        </x-slot>
+                        <x-slot name="content">
+                            @if (auth()->user()->id_rol !== 7)
+                            <x-dropdown-link href="{{ route('materialEntradas')}}" :active="request()->routeIs('materialEntradas')">
+                                {{__('Entradas')}}
+                            </x-dropdown-link>
+                            @endif
+                            <x-dropdown-link href="{{ route('material')}}" :active="request()->routeIs('material')">
+                                {{__('Material')}}
+                            </x-dropdown-link>
+                        </x-slot>
+                    </x-dropdown-nav>
                     @if(auth()->user()->id_rol == 1 || auth()->user()->id_rol == 7)
                     <x-dropdown-nav align="left" width="48">
                         <x-slot name="trigger">
@@ -60,30 +79,14 @@
                         </x-slot>
                         <x-slot name="content">
                             <x-dropdown-link href="{{ route('prestamo') }}">{{ __('Consultar prestamos') }}</x-dropdown-link>
-                            <x-dropdown-link href="{{ route('solicitante') }}">{{ __('Solicitante') }}</x-dropdown-link>
                             @if (auth()->user()->id_rol !== 7)
                             <x-dropdown-link href="{{ route('upprestamo') }}">{{ __('Recibir prestamo') }}</x-dropdown-link>
                             @endif
+                            <x-dropdown-link href="{{ route('solicitante') }}">{{ __('Solicitante') }}</x-dropdown-link>
                         </x-slot>
                     </x-dropdown-nav>
 
-                    <x-dropdown-nav align="left" width="48">
-                        <x-slot name="trigger">
-                            <x-nav-link-dropdown :active="request()->routeIs(['material', 'materialEntradas'])" class="cursor-pointer">
-                                {{__('Material')}}
-                            </x-nav-link-dropdown>
-                        </x-slot>
-                        <x-slot name="content">
-                            <x-dropdown-link href="{{ route('material')}}" :active="request()->routeIs('material')">
-                                {{__('Material')}}
-                            </x-dropdown-link>
-                            @if (auth()->user()->id_rol !== 7)
-                            <x-dropdown-link href="{{ route('materialEntradas')}}" :active="request()->routeIs('materialEntradas')">
-                                {{__('Entradas al inventario')}}
-                            </x-dropdown-link>
-                            @endif
-                        </x-slot>
-                    </x-dropdown-nav>
+
                     @endauth
                 </div>
             </div>
@@ -173,7 +176,7 @@
                         <x-slot name="content">
                             <!-- Account Management -->
                             <div class="block px-4 py-2 text-xs text-gray-400">
-                                {{ __('Manage Account') }}
+                                {{ __('Gestión de cuenta') }}
                             </div>
 
                             <x-dropdown-link href="{{ route('profile.show') }}">

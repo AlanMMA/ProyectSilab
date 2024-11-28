@@ -7,7 +7,7 @@ use Livewire\Component;
 
 class PasswordResetEncargado extends Component
 {
-    public $open;
+    public $open = false;
     public $showPassword, $showPassword2, $password, $password_confirmation;
     public $dato, $result;
     public $listeners = ['saveConfirmed' => 'save'];
@@ -21,9 +21,25 @@ class PasswordResetEncargado extends Component
         $this->validateOnly($propertyname);
     }
 
-    public function mount($dato){
-        $this->result = User::where('id_encargado', $dato['id'])
-        ->first();
+    protected $messages = [
+        'password.required' => 'La contraseña es obligatoria.',
+        'password.min' => 'La contraseña debe tener al menos 9 caracteres.',
+        'password.max' => 'La contraseña no puede tener más de 255 caracteres.',
+        'password.regex' => 'La contraseña debe contener al menos una letra mayúscula y un número.',
+        'password_confirmation.same' => 'Las contraseñas no coinciden.',
+    ];
+
+    public function mount($dato)
+    {
+        $this->result = User::where('id_encargado', $dato['id'])->first();
+        $this->result = $this->result ?? null;
+    }
+
+    public function openModal()
+    {
+        $this->reset(['password', 'password_confirmation']); // Llama a resetDatos cada vez que se abre el modal
+        $this->open = true;
+        $this->resetErrorBag(['password', 'password_confirmation']);
     }
 
 
@@ -37,12 +53,14 @@ class PasswordResetEncargado extends Component
         $this->showPassword2 = !$this->showPassword2;
     }
 
-    public function resetPass(){
+    public function resetPass()
+    {
         $this->validate();
         $this->dispatch('Confirm');
     }
 
-    public function save(){
+    public function save()
+    {
         $this->validate();
         $usuario = User::find($this->result['id']);
         $usuario->password = bcrypt($this->password);

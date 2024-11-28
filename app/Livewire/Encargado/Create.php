@@ -28,26 +28,80 @@ class Create extends Component
             'apellido_p' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
             'apellido_m' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
             'id_laboratorio' => 'required|numeric|gt:0',
-            'name' => 'required|string|min:3|max:50|regex:/^[a-zA-Z\s]+$/',
+            'name' => 'required|string|min:8|max:50',
             'email' => 'required|email|min:16|max:255|unique:users,email',
-            'password' => 'required|string|min:9|max:255|regex:/^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{9,}$/',
-            'password_confirmation' => 'same:password',
+            'password' => 'required|string|min:8|max:255',
+            'password_confirmation' => 'required|same:password',
             'id_rol' => 'required|numeric|min:1',
+
         ];
     }
 
+    protected $messages = [
+        'name.required' => 'El campo "name" es obligatorio.',
+        'password.required' => 'El campo "password" es obligatorio.',
+        'name.min' => 'El campo "name" debe tener al menos 8 caracteres.',
+        'password.min' => 'El campo "password" debe tener al menos 8 caracteres.',
+    ];
+
     protected $listeners = ['saveConfirmed2' => 'save'];
 
-    protected $messages = [
-        'nombre.regex' => 'El nombre solo puede contener letras y espacios.',
-        'apellido_p.regex' => 'El apellido paterno solo puede contener letras y espacios.',
-        'apellido_m.regex' => 'El apellido materno solo puede contener letras y espacios.',
-        'id_laboratorio.gt' => 'Por favor, seleccione un laboratorio.',
-    ];
 
     public function update($propertyname)
     {
         $this->validateOnly($propertyname);
+        if (in_array($propertyname, ['name', 'password'])) {
+            $this->validateRegex($propertyname, $this->$propertyname);
+        }
+    }
+
+    private function validateRegex($field, $value)
+    {
+        // Resetea los errores del campo específico
+        $this->resetErrorBag($field);
+
+        // Reglas personalizadas
+        if (!preg_match('/[A-Z]/', $value)) {
+            $this->addError($field, "El campo \"$field\" debe contener al menos una letra mayúscula.");
+        }
+
+        if (!preg_match('/\d/', $value)) {
+            $this->addError($field, "El campo \"$field\" debe contener al menos un número.");
+        }
+
+        if (strlen($value) < 9) {
+            $this->addError($field, "El campo \"$field\" debe tener al menos 8 caracteres.");
+        }
+
+
+        if (!preg_match('/^[A-Za-z\d]+$/', $value)) {
+            $this->addError($field, "El campo \"$field\" solo puede contener letras y números.");
+        }
+    }
+
+    private function validateCustomRules()
+    {
+        $customErrors = [];
+
+        // Validación personalizada para "name"
+        if (!preg_match('/[A-Z]/', $this->name)) {
+            $customErrors['name'][] = 'El campo "name" debe contener al menos una letra mayúscula.';
+        }
+
+        if (!preg_match('/\d/', $this->name)) {
+            $customErrors['name'][] = 'El campo "name" debe contener al menos un número.';
+        }
+
+        // Validación personalizada para "password"
+        if (!preg_match('/[A-Z]/', $this->password)) {
+            $customErrors['password'][] = 'El campo "password" debe contener al menos una letra mayúscula.';
+        }
+
+        if (!preg_match('/\d/', $this->password)) {
+            $customErrors['password'][] = 'El campo "password" debe contener al menos un número.';
+        }
+
+        return $customErrors;
     }
 
     public function confirmSave2()
@@ -57,6 +111,18 @@ class Create extends Component
 
         // Realiza la validación
         $this->validate();
+
+        $customErrors = $this->validateCustomRules();
+
+        // Si hay errores personalizados, evita continuar
+        if (!empty($customErrors)) {
+            foreach ($customErrors as $field => $errorMessages) {
+                foreach ($errorMessages as $message) {
+                    $this->addError($field, $message);
+                }
+            }
+            return; // Detener la ejecución si hay errores
+        }
 
         // Obtiene el nombre del laboratorio a partir del ID seleccionado
         $laboratorioNombre = $this->laboratorios[$this->id_laboratorio] ?? 'No asignado';

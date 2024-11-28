@@ -115,7 +115,8 @@
                 <td>{{ $dato->categoria->nombre }}</td>
                 <td>{{ $dato->stock }}</td>
                 <td>{{ $dato->descripcion }}</td>
-                <td>{{ $dato->localizacion }}</td>
+                <td>{{ $dato->localizacion ? $dato->localizacion->nombre : 'Sin
+                    encargado'}}</td>
                 @if($incluirEncargado)
                 <td>{{ $dato->encargado ? $dato->encargado->nombre . ' ' . $dato->encargado->apellido_p : 'Sin
                     encargado' }}</td>

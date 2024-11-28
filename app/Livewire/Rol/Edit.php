@@ -14,19 +14,29 @@ class Edit extends Component
 
     protected $listeners = ['saveConfirmed' => 'save'];
 
+    protected $rules = [
+        'dato.nombre' => 'required|min:3|max:15',
+    ];
+
+    
     public function mount(RolModel $dato)
     {
         $this->dato = $dato->toArray();
         $this->oldDato = $dato->nombre; // Almacena el nombre original
         $this->oldDato2 = $dato->toArray();
     }
+    public function update($propertyname)
+    {
+        $this->validateOnly($propertyname);
+    }
 
     public function openModal()
     {
         $this->resetDatos(); // Llama a resetDatos cada vez que se abre el modal
         $this->open = true;
+        $this->resetErrorBag(['dato.nombre']);
     }
-
+    
     // Nueva función para restablecer los datos al abrir el modal
     public function resetDatos()
     {

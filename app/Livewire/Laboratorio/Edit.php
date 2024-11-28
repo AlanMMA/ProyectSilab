@@ -10,13 +10,18 @@ class Edit extends Component
 {
 
     public $open = false;
-    public $dato, $id_laboratorio;
+    public $dato = [];
+    public $id_laboratorio;
     public $oldDato; // Almacena el valor original del dato
 
-    protected $rules;
+    protected $rules = [
+        'dato.nombre' => 'required|min:4|max:25|regex:/^[\pL\s]+$/u',
+        'dato.num_max_encargado' => 'required|numeric|min:1'
+    ];
 
     protected $listeners = ['saveConfirmed' => 'save'];
 
+    
     public function update($propertyname)
     {
         $this->validateOnly($propertyname);
@@ -46,7 +51,7 @@ class Edit extends Component
     {
 
         $cambios = [];
-
+        $this->validate();
         $newNombre = $this->dato['nombre'] !== $this->oldDato['nombre'];
         $newLimite = (int) $this->dato['num_max_encargado'] !== (int) $this->oldDato['num_max_encargado'];
 

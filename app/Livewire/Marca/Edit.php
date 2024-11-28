@@ -14,6 +14,14 @@ class Edit extends Component
 
     protected $listeners = ['saveConfirmed' => 'save'];
 
+    protected $rules = [
+        'dato.nombre' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
+    ];
+    public function update($propertyname)
+    {
+        $this->validateOnly($propertyname);
+    }
+
     public function mount(MarcaModel $dato)
     {
         $this->dato = $dato->toArray();
@@ -86,6 +94,7 @@ class Edit extends Component
         $this->dispatch('alert', 'La marca se ha modificado con exito.');
 
     }
+    
     public function render()
     {
         return view('livewire.marca.edit');

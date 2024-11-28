@@ -14,12 +14,12 @@
         <x-slot name="content">
             <div class="mt-10">
                 <x-label value="Nombre:"></x-label>
-                <x-input type="text" wire:model="dato.nombre" class="w-full mt-2"></x-input>
+                <x-input type="text" wire:model="dato.nombre" wire:keyup="update('dato.nombre')" class="w-full mt-2"></x-input>
                 <x-input-error for="dato.nombre"></x-input-error>
             </div>
             <div class="mt-10">
                 <x-label value="Limite de encargados:"></x-label>
-                <x-input type="text" wire:model="dato.num_max_encargado" class="w-full mt-2"></x-input>
+                <x-input type="text" wire:model="dato.num_max_encargado" wire:keyup="update('dato.num_max_encargado')" class="w-full mt-2"></x-input>
                 <x-input-error for="dato.num_max_encargado"></x-input-error>
             </div>
         </x-slot>

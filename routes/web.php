@@ -28,6 +28,10 @@ Route::middleware([
         return view('ViewUser/Rol-index');
     })->name('rol');
 
+    Route::get('/Localizacion', function () {
+        return view('ViewUser/Localizacion-index');
+    })->name('localizacion');
+
     Route::get('/Users', function () {
         return view('ViewUser/Usuario-index');
     })->name('user');

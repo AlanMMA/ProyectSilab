@@ -11,7 +11,7 @@ class Create extends Component
     public $nombre = '';
 
     protected $rules = [
-        'nombre' => 'required|max:15|unique:area',
+        'nombre' => 'required|min:3|max:15|unique:area',
     ];
 
     protected $listeners = ['saveConfirmed2' => 'save'];
@@ -46,6 +46,7 @@ class Create extends Component
 
     public function render()
     {
+        
         return view('livewire.area.create');
     }
 }

@@ -2,10 +2,45 @@
     @php
         $Gerente = auth()->user()->id_rol;
     @endphp
+    @if ($Gerente != 7 && $datos->count() >= 2)
+        <div class="relative inline-block text-right w-full px-6">
+            <!-- Botón que despliega el menú -->
+            <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+                onclick="toggleMenu(event)">
+                Eliminar prestamos
+            </button>
+            <!-- Menú desplegable -->
+            <div id="dropdownMenu"
+                class="mr-6 hidden absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-50">
+                <div class="flex justify-center pt-2">
+                    <label for="titulo" class="block text-base font-medium text-gray-700 dark:text-gray-200">Eliga un
+                        rango
+                        de fechas:</label>
+                </div>
+                <div class="p-4">
+                    <label for="fechaInicial" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Fecha
+                        Inicial:</label>
+                    <input type="date" id="fechaInicial" wire:model="fechaInicial"
+                        class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white sm:text-sm">
+
+                    <label for="fechaFinal"
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-200 mt-4">Fecha
+                        Final:</label>
+                    <input type="date" id="fechaFinal" wire:model="fechaFinal"
+                        class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white sm:text-sm">
+
+                    <button onclick="confirmDeletion()"
+                        class="mt-4 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded w-full">
+                        Eliminar Registros
+                    </button>
+                </div>
+            </div>
+        </div>
+    @endif
     <div class="relative shadow-md">
+        @if ($Gerente == 7)
         <div class="py-4 px-6 flex flex-col w-full justify-end items-center gap-4 sm:flex-row">
-            @if ($Gerente == 7)
-                <p class="text-lg font-bold text-black dark:text-white">Materiales del encargado:</p>
+                <p class="text-lg font-bold text-black dark:text-white">Prestamos del encargado:</p>
                 <select name="" wire:model.live="SelectEncargado"
                     class="w-min border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
                     <option value="0">Elija un encargado</option>
@@ -15,9 +50,9 @@
                             {{ $encargado->apellido_m }}</option>
                     @endforeach
                 </select>
+            </div>
             @endif
-        </div>
-        <div class="py-4 px-6 block items-center gap-4 w-full sm:flex">
+        <div class="py-4 px-6 block items-center gap-4 w-full sm:flex ">
             <div class="flex items-center justify-center gap-1 mb-4 sm:mb-0">
                 <span class="text-gray-900 dark:text-white">Mostrar</span>
                 <select wire:model.live="cant"
@@ -35,7 +70,7 @@
                 @endif
             </div>
             <x-input class="sm:flex-1 w-full mb-4 sm:mb-0" name="search" placeholder="¿Qué desea buscar?"
-            wire:model.live="search" type="text"></x-input>
+                wire:model.live="search" type="text"></x-input>
             @if ($Gerente != 7)
                 <div class="w-auto sm:flex justify-center mb-4 sm:mb-0 hidden">
                     <x-confirm-button :href="route('prestamosc')">Agregar</x-confirm-button>
@@ -44,7 +79,7 @@
         </div>
 
         @if ($datos->count())
-            <div class="px-6 overflow-y-auto max-h-[60vh] sm:max-h-full">
+            <div class="px-6 mb-4 overflow-y-auto max-h-[60vh] sm:max-h-full">
                 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 ">
                     <thead class="text-xs text-white uppercase bg-blue-tec dark:bg-gray-700 dark:text-gray-400 w-full">
                         <tr>
@@ -159,8 +194,9 @@
                                 <td class="px-6 py-2 flex justify-center items-center gap-2">
                                     <button wire:click="verDetalle({{ $dato->id }})"
                                         class="px-6 py-2 text-center font-medium  whitespace-nowrap dark:text-white">
-                                        <svg xmlns="http://www.w3.org/2000/svg" height="28px" viewBox="0 -960 960 960"
-                                            width="28px" class="fill-black dark:fill-white">>
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="28px"
+                                            viewBox="0 -960 960 960" width="28px"
+                                            class="fill-black dark:fill-white">>
                                             <path d="M200-800v241-1 400-640 200-200Zm80 400h140q9-23 22-43t30-37H280v80Zm0
                                         160h127q-5-20-6.5-40t.5-40H280v80ZM200-80q-33 0-56.5-23.5T120-160v-640q0-33
                                         23.5-56.5T200-880h320l240 240v100q-19-8-39-12.5t-41-6.5v-41H480v-200H200v640h241q16
@@ -202,21 +238,27 @@
                 </div>
             @endif
         @else
-        <div class="px-6 py-4">
-            @if ($search)
-                <p class="bg-white px-6 py-4">
-                    No hay resultados que coincidan con su busqueda.
-                </p>
-            @elseif ($SelectEncargado && $encargados2)
-                <p class="bg-white px-6 py-4 text-center">
-                    El encargado <br>
-                    {{ $encargados2->nombre }} {{ $encargados2->apellido_p }} {{ $encargados2->apellido_m }} <br>
-                    actualmente no ha realizado prestamos.
-                </p>
-            @endif
-        </div>
-        
-        
+            <div class="px-6 py-4">
+                @if ($search)
+                    <p class="bg-white px-6 py-4">
+                        No hay resultados que coincidan con su busqueda.
+                    </p>
+                @elseif ($SelectEncargado && $encargados2)
+                    <p class="bg-white px-6 py-4 text-center">
+                        El encargado <br>
+                        {{ $encargados2->nombre }} {{ $encargados2->apellido_p }} {{ $encargados2->apellido_m }} <br>
+                        actualmente no cuenta con alumnos de servicio social.
+                    </p>
+                @elseif (!$search && !$SelectEncargado && $Gerente == 7)
+                    <p class="bg-white px-6 py-4 text-center">
+                        Primero seleccione a un encargado para ver su información.
+                    </p>
+                @else
+                    <p class="bg-white px-6 py-4 text-center">
+                        Actualmente no hay datos en esta tabla.
+                    </p>
+                @endif
+            </div>
         @endif
 
         <div class="px-6 py-3">
@@ -247,6 +289,191 @@
                     }
                 });
             });
+        </script>
+    @endpush
+    {{-- 
+    @push('js')
+        <script>
+            function confirmDeletion() {
+                const fechaInicial = document.getElementById('fechaInicial').value;
+                const fechaFinal = document.getElementById('fechaFinal').value;
+
+                if (!fechaInicial || !fechaFinal) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Campos vacíos',
+                        text: 'Por favor, completa ambas fechas antes de proceder.',
+                    });
+                    return;
+                }
+
+                if (fechaInicial > fechaFinal) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Fechas incompatibles.',
+                        text: 'La fecha inicial no puede ser mayor a la fecha final.',
+                    });
+                    return;
+                }
+
+
+                Livewire.dispatch('deleteByDateRange', fechaInicial, fechaFinal);
+
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: `Esto eliminará los registros entre ${fechaInicial} y ${fechaFinal}.`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Aquí puedes invocar un método Livewire o realizar una solicitud
+                        @this.call('deleteByDateRange', fechaInicial, fechaFinal);
+                        Swal.fire('Eliminado', 'Los registros han sido eliminados.', 'success');
+                    }
+                });
+            }
+        </script>
+    @endpush --}}
+
+    @push('js')
+        <script>
+            function confirmDeletion() {
+                const fechaInicial = document.getElementById('fechaInicial').value;
+                const fechaFinal = document.getElementById('fechaFinal').value;
+
+
+
+                if (!fechaInicial || !fechaFinal) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Campos vacíos',
+                        text: 'Por favor, completa ambas fechas antes de proceder.',
+                    });
+                    return;
+                }
+
+                if (fechaInicial > fechaFinal) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Fechas incompatibles.',
+                        text: 'La fecha inicial no puede ser mayor a la fecha final.',
+                    });
+                    return;
+                }
+
+                // Aquí se muestra la alerta de confirmación antes de invocar el método de eliminación
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: `Esto eliminará los registros entre ${fechaInicial} y ${fechaFinal}.`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Solo se llama al método de eliminación si el usuario confirma
+                        @this.call('deleteByDateRange', fechaInicial, fechaFinal);
+                    }
+                });
+
+                Livewire.on('deletionError', (message) => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error al eliminar',
+                        text: message,
+                    });
+                });
+
+                Livewire.on('deletionSuccess', (message) => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Registros eliminados con exito.',
+                        text: message,
+                    });
+                });
+
+
+            }
+        </script>
+    @endpush
+
+
+    {{-- @push('js')
+    <script>
+        document.addEventListener('livewire:load', () => {
+            // Evento para cuando no se encuentran registros
+            Livewire.on('registroNoEncontrado', () => {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Sin registros',
+                    text: 'No se encontraron registros en el rango de fechas especificado.',
+                });
+            });
+    
+            // Evento para confirmar la eliminación
+            Livewire.on('confirmDeletion', (fechaInicial, fechaFinal) => {
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: `Esto eliminará los registros entre ${fechaInicial} y ${fechaFinal}.`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Livewire.dispatch('deleteByDateRange', [fechaInicial, fechaFinal]);
+                        Swal.fire('Eliminado', 'Los registros han sido eliminados.', 'success');
+                    }
+                });
+            });
+        });
+    
+        function confirmDeletion() {
+            const fechaInicial = document.getElementById('fechaInicial').value;
+            const fechaFinal = document.getElementById('fechaFinal').value;
+    
+            if (!fechaInicial || !fechaFinal) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Campos vacíos',
+                    text: 'Por favor, completa ambas fechas antes de proceder.',
+                });
+                return;
+            }
+    
+            if (fechaInicial > fechaFinal) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Fechas incompatibles',
+                    text: 'La fecha inicial no puede ser mayor a la fecha final.',
+                });
+                return;
+            }
+    
+            // Emite el evento de confirmación de eliminación, pasando las fechas
+            Livewire.dispatch('confirmDeletion', fechaInicial, fechaFinal);
+        }
+    </script>
+    @endpush
+     --}}
+
+
+
+
+    @push('js')
+        <script>
+            function toggleMenu(event) {
+                const menu = document.getElementById('dropdownMenu');
+                menu.classList.toggle('hidden');
+            }
         </script>
     @endpush
 </div>

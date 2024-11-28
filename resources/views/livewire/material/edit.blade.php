@@ -22,6 +22,7 @@
                 <x-label value="Asignar una marca:"></x-label>
                 <select name="id_marca" id="id_marca-{{ $dato['id'] ?? 'new' }}" wire:model.live="dato.id_marca"
                     class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                    <option value="0">Elija la marca del producto</option>
                     @foreach ($marcas as $id => $nombre)
                     <option value="{{ $id }}">{{ $id }} {{ $nombre }}</option>
                     @endforeach
@@ -43,6 +44,7 @@
                 <select name="id_categoria" id="id_categoria-{{ $dato['id'] ?? 'new' }}"
                     wire:model.live="dato.id_categoria"
                     class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                    <option value="0">Elija la categoria del material</option>
                     @foreach ($categorias as $id => $nombre)
                     <option value="{{ $id }}">{{ $id }} {{ $nombre }}</option>
                     @endforeach
@@ -69,12 +71,17 @@
                 @enderror
             </div>
             <div class="mb-4">
-                <x-label value="Localizacion:"></x-label>
-                <x-input wire:model="dato.localizacion" wire:keyup="update('dato.localizacion')" type="text"
-                    class="w-full">
-                </x-input>
-                @error('dato.localizacion')
-                <span class="text-red-500 text-sm">{{$message}}</span>
+                <x-label value="Asignar una categoria:"></x-label>
+                <select name="id_localizacion" id="id_localizacion-{{ $dato['id'] ?? 'new' }}"
+                    wire:model.live="dato.id_localizacion"
+                    class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                    <option value="0">Elija una localizacion</option>
+                    @foreach ($localizaciones as $localizacion)
+                    <option value="{{ $localizacion->id }}">{{ $localizacion->id }} {{ $localizacion->nombre }}</option>
+                    @endforeach
+                </select>
+                @error('dato.id_localizacion')
+                <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
             </div>
             <div class="mb-4">

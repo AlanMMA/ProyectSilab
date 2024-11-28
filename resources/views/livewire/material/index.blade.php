@@ -258,11 +258,11 @@
                         <td class="px-6 py-2 text-center font-medium  whitespace-nowrap dark:text-white">
                             {{ $dato->stock }}
                         </td>
-                        <td class="px-6 py-2 text-center font-medium  whitespace-nowrap dark:text-white">
+                        <td class="px-6 py-2 text-center font-medium whitespace-normal dark:text-white break-words max-w-[200px]">
                             {{ $dato->descripcion }}
-                        </td>
+                        </td>                        
                         <td class="px-6 py-2 text-center font-medium  whitespace-nowrap dark:text-white">
-                            {{ $dato->localizacion }}
+                            {{ $dato->localizacion->nombre ?? 'N/A'  }}
                         </td>
                         @if ($SelectEncargado == -1)
                         <td class="px-6 py-2 text-center font-medium  whitespace-nowrap dark:text-white">
@@ -291,21 +291,27 @@
             </table>
         </div>
         @else
-        @if ($Gerente == 7)
-        <div class="py-4 px-6 flex justify-around gap-6">
-            <p class="bg-white flex gap justify-between w-full py-4 px-4">
-                Seleccione a un encargado para poder ver los datos
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000">
-                    <path d="M440-160v-487L216-423l-56-57 320-320 320 320-56 57-224-224v487h-80Z" />
-                </svg>
-            </p>
+        <div class="px-6 py-4">
+            @if ($search)
+                <p class="bg-white px-6 py-4">
+                    No hay resultados que coincidan con su busqueda.
+                </p>
+            @elseif ($SelectEncargado && $encargados2)
+                <p class="bg-white px-6 py-4 text-center">
+                    El encargado <br>
+                    {{ $encargados2->nombre }} {{ $encargados2->apellido_p }} {{ $encargados2->apellido_m }} <br>
+                    actualmente no cuenta con alumnos de servicio social.
+                </p>
+            @elseif (!$search && !$SelectEncargado && $Gerente == 7)
+                <p class="bg-white px-6 py-4 text-center">
+                    Primero seleccione a un encargado para ver su información.
+                </p>
+            @else
+                <p class="bg-white px-6 py-4 text-center">
+                    Actualmente no hay datos en esta tabla.
+                </p>
+            @endif
         </div>
-        @else
-        <div class="py-4 px-6 bg-white">
-            No hay resultados con esos caracteres
-        </div>
-        @endif
-
         @endif
         <div class="px-6 py-3">
             {{ $datos->onEachSide(1)->links() }}
@@ -326,7 +332,7 @@
     </script>
     @endpush
 
-    @push('js')
+    {{--@push('js')
     <script>
         Livewire.on('destroy', event => {
                 Swal.fire({
@@ -350,6 +356,48 @@
                     }
                 });
             });
+        </script>
+    @endpush --}}
+
+    @push('js')
+    <script>
+        Livewire.on('destroy', event => {
+            Swal.fire({
+                title: "¿Estás seguro de eliminar el material " + event.nombre + "?",
+                html: `<span style="color: red;">Al borrar un material que se haya dado en prestamos, al ver los detalles se verá nulo.</span><br>
+                       <span style"color: #333;">Podrá ver unicamente el nombre del material en el campo de observaciones.</span>`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Aceptar (5)",
+                didOpen: () => {
+                    const confirmButton = Swal.getConfirmButton();
+                    confirmButton.disabled = true;
+                    let countdown = 5;
+                    const timer = setInterval(() => {
+                        countdown -= 1;
+                        confirmButton.textContent = `Aceptar (${countdown})`;
+                        if (countdown <= 0) {
+                            confirmButton.disabled = false;
+                            confirmButton.textContent = "Aceptar";
+                            clearInterval(timer);
+                        }
+                    }, 1000);
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Livewire.dispatch('destroyPost', {
+                            id: event.id
+                        });
+                    Swal.fire({
+                        title: "Operación exitosa",
+                        text: "Ha eliminado el registro: " + event.nombre,
+                        icon: "success"
+                    });
+                }
+            });
+        });
     </script>
-    @endpush
+@endpush
 </div>

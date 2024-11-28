@@ -11,7 +11,7 @@ class Create extends Component
     public $nombre = '';
 
     protected $rules = [
-        'nombre' => 'required|max:35|unique:roles',
+        'nombre' => 'required|min:3|max:35|unique:roles',
     ];
 
     protected $listeners = ['saveConfirmed2' => 'save'];
@@ -29,6 +29,7 @@ class Create extends Component
         // Si la validación es exitosa, dispara el evento para mostrar SweetAlert
         $this->dispatch('showConfirmation2', $this->nombre);
     }
+
 
     public function save()
     {

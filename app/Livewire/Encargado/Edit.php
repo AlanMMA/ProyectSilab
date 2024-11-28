@@ -14,7 +14,7 @@ class Edit extends Component
 
     public $dato, $id_laboratorio, $laboratorios;
     public $open = false;
-    public $oldDato; // Almacena el valor original del dato
+    public $oldDato;
     public $result, $oldresult;
 
     protected function rules()
@@ -24,7 +24,7 @@ class Edit extends Component
             'dato.apellido_p' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
             'dato.apellido_m' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
             'dato.id_laboratorio' => 'required|numeric',
-            'result.id_estado' => 'required|numeric|min:1'
+            'dato.id_estado' => 'required|numeric|min:1'
         ];
     }
 
@@ -44,9 +44,18 @@ class Edit extends Component
     {
         $this->dato = $dato->toArray();
         $this->oldDato = $dato->toArray();
-        $this->result = User::where('id_encargado', intval($this->dato['id']))
-            ->first();
-        $this->result = $this->result->toArray();
+        // $this->result = User::where('id_encargado', intval($this->dato['id']))
+        //     ->first();
+        // $this->result = $this->result->toArray();
+        $user = User::where('id_encargado', intval($this->dato['id']))->first();
+
+        if ($user) {
+            $this->result = $user->toArray();
+            $this->oldresult = $this->result;
+        } else {
+            $this->result = [];
+            $this->oldresult = [];
+        }
         $this->oldresult = $this->result;
 
         $this->laboratorios = LaboratorioModel::pluck('nombre', 'id')->toArray();
@@ -56,6 +65,7 @@ class Edit extends Component
     {
         $this->resetDatos(); // Llama a resetDatos cada vez que se abre el modal
         $this->open = true;
+        $this->resetErrorBag(['dato.nombre', 'dato.apellido_p', 'dato.apellido_m', 'dato.id_laboratorio', 'result.id_estado']);
     }
     
     // Nueva función para restablecer los datos al abrir el modal

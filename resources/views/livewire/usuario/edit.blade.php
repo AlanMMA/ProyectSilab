@@ -14,22 +14,22 @@
         <x-slot name="content">
             <div class="mb-4">
                 <x-label value="Nombre:"></x-label>
-                <x-input type="text" wire:model="result.nombre" class="w-full mt-2"></x-input>
+                <x-input type="text" wire:model="result.nombre" wire:keyup="update('result.nombre')" class="w-full mt-2"></x-input>
                 <x-input-error for="result.nombre"></x-input-error>
             </div>
             <div class="mb-4">
                 <x-label value="Apellido paterno:"></x-label>
-                <x-input type="text" wire:model="result.apellido_pS" class="w-full mt-2"></x-input>
+                <x-input type="text" wire:model="result.apellido_pS" wire:keyup="update('result.apellido_pS')" class="w-full mt-2"></x-input>
                 <x-input-error for="result.apellido_pS"></x-input-error>
             </div>
             <div class="mb-4">
                 <x-label value="Apellido materno:"></x-label>
-                <x-input type="text" wire:model="result.apellido_mS" class="w-full mt-2"></x-input>
+                <x-input type="text" wire:model="result.apellido_mS" wire:keyup="update('result.apellido_mS')" class="w-full mt-2"></x-input>
                 <x-input-error for="result.apellido_mS"></x-input-error>
             </div>
             <div class="mb-4">
                 <x-label value="Numero de control:"></x-label>
-                <x-input type="text" wire:model="result.no_control" class="w-full mt-2"></x-input>
+                <x-input type="text" wire:model="result.no_control" wire:keyup="update('result.no_control')" class="w-full mt-2"></x-input>
                 <x-input-error for="result.no_control"></x-input-error>
             </div>
             <div class="mb-4">

@@ -20,7 +20,7 @@ class Create extends Component
             'apellido_m' => 'required|min:4|max:15|regex:/^[\pL\s]+$/u',
             'id_area2' => 'required|numeric|min:1',
             'tipo' => 'required|in:docente,alumno',
-            'numero_control' => $this->tipo === 'alumno' ? 'required|max:9' : 'nullable|max:9',
+            'numero_control' => $this->tipo === 'alumno' ? 'required|min:7|max:9' : 'nullable|min:7|max:9',
         ];
     }
 

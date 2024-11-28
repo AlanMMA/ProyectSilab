@@ -5,7 +5,7 @@
     <div class="relative shadow-md">
         <div class="py-4 px-6 flex flex-col w-full justify-end items-center gap-4 sm:flex-row">
             @if ($Gerente == 7)
-                <p class="text-lg font-bold text-black dark:text-white">Materiales del encargado:</p>
+                <p class="text-lg font-bold text-black dark:text-white">Alumnos de servicio del encargado:</p>
                 <select name="" wire:model.live="SelectEncargado"
                     class="w-min border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
                     <option value="0">Elija un encargado</option>
@@ -212,6 +212,10 @@
                     {{ $encargados2->nombre }} {{ $encargados2->apellido_p }} {{ $encargados2->apellido_m }} <br>
                     actualmente no cuenta con alumnos de servicio social.
                 </p>
+            @else
+            <p class="bg-white px-6 py-4 text-center">
+                Actualmente no hay datos registrados en la tabla.
+            </p>
             @endif
         </div>
         @endif
