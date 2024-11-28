@@ -2,23 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CategoriaModel;
 use App\Models\EncargadoModel;
-use App\Models\localizacion;
-use App\Models\MarcaModel;
-use App\Models\MaterialModel;
+use App\Models\PrestamoModel;
+use App\Models\SolicitanteModel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
-class MaterialReportController extends Controller
+class PrestamoReportController extends Controller
 {
     public $UserId;
-    /*public function generatePDF()
-    {
-    $datos = AreaModel::all();
-    $pdf = Pdf::loadView('reportes.areas-pdf', compact('datos'));
-    return $pdf->download('reporte_areas.pdf');
-    }*/
 
     public function generatePDF(Request $request)
     {
@@ -39,7 +31,7 @@ class MaterialReportController extends Controller
         $cant = $request->query('cant', 10); // Número de registros (no afecta exportación completa)
 
         // Construir la consulta inicial
-        $query = MaterialModel::query();
+        $query = PrestamoModel::query();
         $encargadoNombre = null;
         $incluirEncargado = false;
 
@@ -67,46 +59,30 @@ class MaterialReportController extends Controller
         // Aplicar filtros adicionales (búsqueda)
         if ($search) {
             $query->where(function ($query) use ($search) {
-                $query->where('nombre', 'like', '%' . $search . '%')
-                    ->orWhere('modelo', 'like', '%' . $search . '%')
-                    ->orWhere('stock', 'like', '%' . $search . '%')
-                    ->orWhere('descripcion', 'like', '%' . $search . '%')
-                    ->orWhereHas('marca', function ($q) use ($search) {
-                        $q->where('nombre', 'like', '%' . $search . '%');
-                    })
-                    ->orWhereHas('categoria', function ($q) use ($search) {
-                        $q->where('nombre', 'like', '%' . $search . '%');
-                    })
-                    ->orWhereHas('localizacion', function ($q) use ($search) {
-                        $q->where('nombre', 'like', '%' . $search . '%');
-                    })
-                    ->orWhereHas('encargado', function ($q) use ($search) {
+                $query->where('fecha', 'like', '%' . $search . '%')
+                    ->orWhereHas('solicitante', function ($q) use ($search) {
                         $q->where('nombre', 'like', '%' . $search . '%')
                             ->orWhere('apellido_p', 'like', '%' . $search . '%')
-                            ->orWhere('apellido_m', 'like', '%' . $search . '%');
+                            ->orWhere('apellido_m', 'like', '%' . $search . '%')
+                            ->orWhere('tipo', 'like', '%' . $search . '%');
                     });
             });
         }
 
-        // Aplicar ordenamiento por nombre de marca, encargado o categoría si se especifica
-        if ($sort == 'id_marca') {
+        // Aplicar ordenamiento por nombre de fecha, solicitante o tipo si se especifica
+        if ($sort == 'fecha_prestamo') {
+            $query->orderBy('prestamo.fecha', $direc);
+        } elseif ($sort == 'id_solicitante') {
             $query->orderBy(
-                MarcaModel::select('nombre')->whereColumn('marca.id', 'material.id_marca'),
+                SolicitanteModel::select('nombre')->whereColumn('solicitante.id', 'prestamo.id_solicitante'),
                 $direc
             );
+        } elseif ($sort == 'tipo') {
+            $query->join('solicitante', 'prestamo.id_solicitante', '=', 'solicitante.id')
+                ->orderBy('solicitante.tipo', $direc);
         } elseif ($sort == 'id_encargado') {
             $query->orderBy(
-                EncargadoModel::select('nombre')->whereColumn('encargado.id', 'material.id_encargado'),
-                $direc
-            );
-        } elseif ($sort == 'id_categoria') {
-            $query->orderBy(
-                CategoriaModel::select('nombre')->whereColumn('categoria.id', 'material.id_categoria'),
-                $direc
-            );
-        } elseif ($sort == 'id_localizacion') {
-            $query->orderBy(
-                localizacion::select('nombre')->whereColumn('localizacion.id', 'material.id_localizacion'),
+                EncargadoModel::select('nombre')->whereColumn('encargado.id', 'prestamo.id_encargado'),
                 $direc
             );
         } else {
@@ -119,38 +95,14 @@ class MaterialReportController extends Controller
 
         if ($datos->isEmpty()) {
             // Mensaje de error al no encontrar datos
-            session()->flash('error', 'No hay materiales disponibles para exportar.');
+            session()->flash('error', 'No hay préstamos disponibles para exportar.');
             return redirect()->back();
         } else {
             // Generar el PDF con los datos filtrados
-            $pdf = Pdf::loadView('reportes.materiales-pdf', compact('datos', 'encargadoNombre', 'incluirEncargado', 'search', 'sort', 'direc'));
+            $pdf = Pdf::loadView('reportes.prestamos-pdf', compact('datos', 'encargadoNombre', 'incluirEncargado', 'search', 'sort', 'direc'));
 
             // Descargar el PDF
-            return $pdf->download('reporte_materiales.pdf');
+            return $pdf->download('reporte_prestamos.pdf');
         }
     }
-
-    /*public function generateXML()
-    {
-    $datos = MaterialModel::all();
-
-    $xml = new \SimpleXMLElement('<materiales/>');
-    foreach ($datos as $dato) {
-    $material = $xml->addChild('material');
-    $material->addChild('id', $dato->id);
-    $material->addChild('nombre', $dato->nombre);
-    }
-
-    return response($xml->asXML(), 200)
-    ->header('Content-Type', 'application/xml')
-    ->header('Content-Disposition', 'attachment; filename="reporte_areas.xml"');
-    }*/
-
-    /*public function generateExcel()
-{
-
-// Pasar los datos filtrados al exportador de Excel
-return Excel::download(new AreasExport, 'reporte_areas.xlsx');
-}*/
-
 }
