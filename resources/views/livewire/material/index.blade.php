@@ -61,7 +61,8 @@
                 'direc' => $direc ?? 'asc',
                 'cant' => $cant ?? 10,
                 'encargado' => $SelectEncargado ?? '']) }}"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                    @click="open = false">
                     Exportar a PDF
                 </a>
                 {{--<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">
@@ -182,10 +183,11 @@
                                 @endif
                             </div>
                         </th>
-                        <th scope="col" class="cursor-pointer px-6 py-3 text-center" wire:click="order('localizacion')">
+                        <th scope="col" class="cursor-pointer px-6 py-3 text-center"
+                            wire:click="order('id_localizacion')">
                             <div class="flex items-center justify-center">
                                 Localizacion
-                                @if ($sort == 'localizacion')
+                                @if ($sort == 'id_localizacion')
                                 @if ($direc == 'asc')
                                 <span class="material-symbols-outlined">vertical_align_bottom</span>
                                 @else
@@ -258,11 +260,12 @@
                         <td class="px-6 py-2 text-center font-medium  whitespace-nowrap dark:text-white">
                             {{ $dato->stock }}
                         </td>
-                        <td class="px-6 py-2 text-center font-medium whitespace-normal dark:text-white break-words max-w-[200px]">
+                        <td
+                            class="px-6 py-2 text-center font-medium whitespace-normal dark:text-white break-words max-w-[200px]">
                             {{ $dato->descripcion }}
-                        </td>                        
+                        </td>
                         <td class="px-6 py-2 text-center font-medium  whitespace-nowrap dark:text-white">
-                            {{ $dato->localizacion->nombre ?? 'N/A'  }}
+                            {{ $dato->localizacion->nombre ?? 'N/A' }}
                         </td>
                         @if ($SelectEncargado == -1)
                         <td class="px-6 py-2 text-center font-medium  whitespace-nowrap dark:text-white">
@@ -293,23 +296,23 @@
         @else
         <div class="px-6 py-4">
             @if ($search)
-                <p class="bg-white px-6 py-4">
-                    No hay resultados que coincidan con su busqueda.
-                </p>
+            <p class="bg-white px-6 py-4">
+                No hay resultados que coincidan con su busqueda.
+            </p>
             @elseif ($SelectEncargado && $encargados2)
-                <p class="bg-white px-6 py-4 text-center">
-                    El encargado <br>
-                    {{ $encargados2->nombre }} {{ $encargados2->apellido_p }} {{ $encargados2->apellido_m }} <br>
-                    actualmente no cuenta con alumnos de servicio social.
-                </p>
+            <p class="bg-white px-6 py-4 text-center">
+                El encargado <br>
+                {{ $encargados2->nombre }} {{ $encargados2->apellido_p }} {{ $encargados2->apellido_m }} <br>
+                actualmente no cuenta con materiales.
+            </p>
             @elseif (!$search && !$SelectEncargado && $Gerente == 7)
-                <p class="bg-white px-6 py-4 text-center">
-                    Primero seleccione a un encargado para ver su información.
-                </p>
+            <p class="bg-white px-6 py-4 text-center">
+                Primero seleccione a un encargado para ver su información.
+            </p>
             @else
-                <p class="bg-white px-6 py-4 text-center">
-                    Actualmente no hay datos en esta tabla.
-                </p>
+            <p class="bg-white px-6 py-4 text-center">
+                Actualmente no hay datos en esta tabla.
+            </p>
             @endif
         </div>
         @endif
@@ -356,7 +359,7 @@
                     }
                 });
             });
-        </script>
+    </script>
     @endpush --}}
 
     @push('js')
@@ -399,5 +402,5 @@
             });
         });
     </script>
-@endpush
+    @endpush
 </div>

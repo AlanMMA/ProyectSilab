@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CategoriaModel;
 use App\Models\EncargadoModel;
+use App\Models\localizacion;
 use App\Models\MarcaModel;
 use App\Models\MaterialModel;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -69,8 +70,7 @@ class MaterialReportController extends Controller
                 $query->where('nombre', 'like', '%' . $search . '%')
                     ->orWhere('modelo', 'like', '%' . $search . '%')
                     ->orWhere('stock', 'like', '%' . $search . '%')
-                    ->orWhere('descripcion', 'like', '%' . $search . '%')
-                    ->orWhere('localizacion', 'like', '%' . $search . '%');
+                    ->orWhere('descripcion', 'like', '%' . $search . '%');
             });
         }
 
@@ -88,6 +88,11 @@ class MaterialReportController extends Controller
         } elseif ($sort == 'id_categoria') {
             $query->orderBy(
                 CategoriaModel::select('nombre')->whereColumn('categoria.id', 'material.id_categoria'),
+                $direc
+            );
+        } elseif ($sort == 'id_localizacion') {
+            $query->orderBy(
+                localizacion::select('nombre')->whereColumn('localizacion.id', 'material.id_localizacion'),
                 $direc
             );
         } else {
