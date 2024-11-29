@@ -42,7 +42,7 @@
             <select name="" wire:model.live="SelectEncargado"
                 class="w-min border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
                 <option value="0">Elija un encargado</option>
-                <option value="">Mostrar todos los materiales</option>
+                <option value="-1">Mostrar todos los préstamos</option>
                 @foreach ($encargados as $encargado)
                 <option value="{{ $encargado->id }}">{{ $encargado->id }} {{ $encargado->nombre }}
                     {{ $encargado->apellido_p }}
@@ -141,10 +141,10 @@
                             </div>
                         </th>
                         <th scope="col" class="cursor-pointer px-6 py-3 text-center"
-                            wire:click="order('id_solicitante')">
+                            wire:click="order('solicitante_nombre')">
                             <div class="flex items-center justify-center">
                                 Solicitante
-                                @if ($sort == 'id_solicitante')
+                                @if ($sort == 'solicitante_nombre')
                                 @if ($direc == 'asc')
                                 <span class="material-symbols-outlined">vertical_align_bottom</span>
                                 @else
@@ -169,11 +169,11 @@
                                 @endif
                             </div>
                         </th>
-                        <th scope="col" class="cursor-pointer px-6 py-3 text-center hidden"
-                            wire:click="order('id_encargado')">
+                        @if ($SelectEncargado == -1)
+                        <th scope="col" class="cursor-pointer px-6 py-3 text-center" wire:click="order('encargado_nombre')">
                             <div class="flex items-center justify-center">
                                 Encargado
-                                @if ($sort == 'id_encargado')
+                                @if ($sort == 'encargado_nombre')
                                 @if ($direc == 'asc')
                                 <span class="material-symbols-outlined">vertical_align_bottom</span>
                                 @else
@@ -184,6 +184,7 @@
                                 @endif
                             </div>
                         </th>
+                        @endif
                         <th scope="col" class="px-6 py-3 text-center">
                             <div class="flex items-center justify-center">
                                 Ver detalle
@@ -208,10 +209,12 @@
                         <td class="px-6 py-2 text-center font-medium  whitespace-nowrap dark:text-white">
                             {{ $dato->solicitante_tipo }}
                         </td>
-                        <td class="px-6 py-2 text-center font-medium  whitespace-nowrap dark:text-white hidden">
+                        @if ($SelectEncargado == -1)
+                        <td class="px-6 py-2 text-center font-medium  whitespace-nowrap dark:text-white">
                             {{ $dato->encargado_nombre }} {{ $dato->encargado_apellido_p }}
                             {{ $dato->encargado_apellido_m }}
                         </td>
+                        @endif
                         <td class="px-6 py-2 flex justify-center items-center gap-2">
                             <button wire:click="verDetalle({{ $dato->id }})"
                                 class="px-6 py-2 text-center font-medium  whitespace-nowrap dark:text-white">

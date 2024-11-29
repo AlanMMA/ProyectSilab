@@ -21,7 +21,7 @@ class Index extends Component
     public $prestamoId;
     public $encargados, $encargados2, $SelectEncargado = 0;
     public $searchEnabled = false;
-    public $rolActual;
+    public $rolActual, $UserId;
     public $fechaInicial, $fechaFinal, $verificarExistencia;
     use WithPagination;
 
@@ -41,6 +41,9 @@ class Index extends Component
 
     public function mount()
     {
+        $this->sort = 'id';
+        $this->direc = 'asc';
+        $this->UserId = auth()->user()->id_encargado;
         $this->encargados = EncargadoModel::all();
     }
 
@@ -84,22 +87,95 @@ class Index extends Component
         $this->encargados2 = EncargadoModel::find($value);
     }
 
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
+    /*public function render()
+    {
+    // Obtener el id del encargado autenticado
+    $idEncargado = auth()->user()->id_encargado;
+
+    // Verificar si el usuario es un gerente y el valor de SelectEncargado es 0
+    if (auth()->user()->id_rol == 7 && $this->SelectEncargado == 0) {
+    // Retornar una colección vacía si el select está en 0
+    $datos = new LengthAwarePaginator([], 0, $this->cant);
+    } else {
+    // Determinar el id del encargado basado en la selección o el usuario autenticado
+    $encargadoId = auth()->user()->id_rol == 7 && $this->SelectEncargado > 0
+    ? $this->SelectEncargado
+    : $idEncargado;
+
+    // Consultar los datos en la tabla de préstamos
+    $datos = PrestamoModel::join('solicitante', 'prestamo.id_solicitante', '=', 'solicitante.id')
+    ->join('encargado', 'prestamo.id_encargado', '=', 'encargado.id')
+    ->select(
+    'prestamo.id',
+    'prestamo.fecha AS fecha_prestamo', // Incluye la fecha del préstamo
+    'solicitante.nombre AS solicitante_nombre',
+    'solicitante.apellido_p AS solicitante_apellido_p',
+    'solicitante.apellido_m AS solicitante_apellido_m',
+    'solicitante.tipo AS solicitante_tipo',
+    'encargado.nombre AS encargado_nombre',
+    'encargado.apellido_p AS encargado_apellido_p',
+    'encargado.apellido_m AS encargado_apellido_m'
+    )
+    ->where('prestamo.id_encargado', $encargadoId) // Filtra según el encargado
+    ->where(function ($query) {
+    $query->where('solicitante.nombre', 'like', '%' . $this->search . '%')
+    ->orWhere('solicitante.apellido_p', 'like', '%' . $this->search . '%')
+    ->orWhere('solicitante.apellido_m', 'like', '%' . $this->search . '%')
+    ->orWhere('solicitante.tipo', 'like', '%' . $this->search . '%')
+    ->orWhere('prestamo.fecha', 'like', '%' . $this->search . '%');
+    })
+    ->orderBy($this->sort, $this->direc)
+    ->paginate($this->cant)
+    ->withQueryString();
+    }
+
+    return view('livewire.prestamo.index', compact('datos'));
+    }*/
+
     public function render()
     {
-        // Obtener el id del encargado autenticado
-        $idEncargado = auth()->user()->id_encargado;
+        // Si el usuario es jefe y SelectEncargado es -1, mostrar todos los materiales.
+        if (auth()->user()->id_rol == 7 && $this->SelectEncargado == -1) {
 
-        // Verificar si el usuario es un gerente y el valor de SelectEncargado es 0
-        if (auth()->user()->id_rol == 7 && $this->SelectEncargado == 0) {
-            // Retornar una colección vacía si el select está en 0
+            $datos = PrestamoModel::join('solicitante', 'prestamo.id_solicitante', '=', 'solicitante.id')
+                ->join('encargado', 'prestamo.id_encargado', '=', 'encargado.id')
+                ->select(
+                    'prestamo.id',
+                    'prestamo.fecha AS fecha_prestamo', // Incluye la fecha del préstamo
+                    'solicitante.nombre AS solicitante_nombre',
+                    'solicitante.apellido_p AS solicitante_apellido_p',
+                    'solicitante.apellido_m AS solicitante_apellido_m',
+                    'solicitante.tipo AS solicitante_tipo',
+                    'encargado.nombre AS encargado_nombre',
+                    'encargado.apellido_p AS encargado_apellido_p',
+                    'encargado.apellido_m AS encargado_apellido_m'
+                )
+                ->where(function ($query) {
+                    $query->where('solicitante.nombre', 'like', '%' . $this->search . '%')
+                        ->orWhere('solicitante.apellido_p', 'like', '%' . $this->search . '%')
+                        ->orWhere('solicitante.apellido_m', 'like', '%' . $this->search . '%')
+                        ->orWhere('solicitante.tipo', 'like', '%' . $this->search . '%')
+                        ->orWhere('prestamo.fecha', 'like', '%' . $this->search . '%');
+                })
+                ->orderBy($this->sort, $this->direc)
+                ->paginate($this->cant)
+                ->withQueryString();
+
+        } elseif (auth()->user()->id_rol == 7 && $this->SelectEncargado == 0) {
+            // Si es jefe y no seleccionó ningún encargado, devolver datos vacíos.
             $datos = new LengthAwarePaginator([], 0, $this->cant);
         } else {
-            // Determinar el id del encargado basado en la selección o el usuario autenticado
+            // Filtrar materiales por encargado según el usuario logueado o el seleccionado.
             $encargadoId = auth()->user()->id_rol == 7 && $this->SelectEncargado > 0
-                ? $this->SelectEncargado
-                : $idEncargado;
+            ? $this->SelectEncargado
+            : $this->UserId;
 
-            // Consultar los datos en la tabla de préstamos
+            // Consulta para cargar los datos.
             $datos = PrestamoModel::join('solicitante', 'prestamo.id_solicitante', '=', 'solicitante.id')
                 ->join('encargado', 'prestamo.id_encargado', '=', 'encargado.id')
                 ->select(
@@ -125,10 +201,8 @@ class Index extends Component
                 ->paginate($this->cant)
                 ->withQueryString();
         }
-
         return view('livewire.prestamo.index', compact('datos'));
     }
-
 
     public function order($sort)
     {
@@ -187,7 +261,7 @@ class Index extends Component
             $this->dispatch('registroNoEncontrado');
             return;
         }
-    
+
         // Intentar parsear las fechas usando Carbon
         try {
             $fechaInicial = Carbon::parse($fechas[0])->format('Y-m-d');
@@ -197,17 +271,17 @@ class Index extends Component
             $this->dispatch('registroNoEncontrado');
             return;
         }
-    
+
         Log::info('Fechas procesadas: ', [
-            'fechaInicial' => $fechaInicial, 
-            'fechaFinal' => $fechaFinal
+            'fechaInicial' => $fechaInicial,
+            'fechaFinal' => $fechaFinal,
         ]);
-    
+
         // Verificar si existen registros entre las fechas
         $prestamosIds = DB::table('prestamo')
             ->whereBetween('fecha', [$fechaInicial, $fechaFinal])
             ->pluck('id');
-    
+
         if ($prestamosIds->isEmpty()) {
             Log::info('No se encontraron registros para el rango de fechas: ' . $fechaInicial . ' - ' . $fechaFinal);
             $this->dispatch('registroNoEncontrado');

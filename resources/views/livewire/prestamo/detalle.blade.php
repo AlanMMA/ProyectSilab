@@ -99,7 +99,7 @@
                                     </td>
                                     <td
                                         class="px-6 py-2 text-center font-medium whitespace-nowrap 
-        {{ $detalle->EstadoPrestamo == 'pendiente' ? 'text-orange-600 dark:text-orange-500' : ($detalle->EstadoPrestamo == 'atrasado' ? 'text-red-600 dark:text-red-500' : 'text-black') }}">
+        {{ $detalle->EstadoPrestamo == 'pendiente' ? 'text-orange-600 dark:text-orange-500' : ($detalle->EstadoPrestamo == 'atrasado' ? 'text-red-600 dark:text-red-500' : 'text-black dark:text-white') }}">
                                         {{ $detalle->EstadoPrestamo }}
                                     </td>
                                 </tr>

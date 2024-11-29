@@ -113,8 +113,7 @@
                 <td>{{ $dato->solicitante->tipo }}</td>
                 <td>{{ $dato->solicitante->numero_control ?? 'No asignado' }}</td>
                 @if($incluirEncargado)
-                <td>{{ $dato->encargado ? $dato->encargado->nombre . ' ' . $dato->encargado->apellido_p : 'Sin
-                    encargado' }}</td>
+                <td>{{ $dato->encargadoP->nombre ?? 'Sin encargado' }}</td>
                 @endif
             </tr>
             @endforeach

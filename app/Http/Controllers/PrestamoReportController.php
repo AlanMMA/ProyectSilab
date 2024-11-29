@@ -69,7 +69,7 @@ class PrestamoReportController extends Controller
             });
         }
 
-        // Aplicar ordenamiento por nombre de fecha, solicitante o tipo si se especifica
+        // Aplicar ordenamiento por fecha, solicitante o tipo si se especifica
         if ($sort == 'fecha_prestamo') {
             $query->orderBy('prestamo.fecha', $direc);
         } elseif ($sort == 'id_solicitante') {
@@ -78,11 +78,18 @@ class PrestamoReportController extends Controller
                 $direc
             );
         } elseif ($sort == 'tipo') {
-            $query->join('solicitante', 'prestamo.id_solicitante', '=', 'solicitante.id')
-                ->orderBy('solicitante.tipo', $direc);
-        } elseif ($sort == 'id_encargado') {
+            $query->orderBy(
+                SolicitanteModel::select('tipo')->whereColumn('solicitante.id', 'prestamo.id_solicitante'),
+                $direc
+            );
+        } elseif ($sort == 'encargado_nombre') {
             $query->orderBy(
                 EncargadoModel::select('nombre')->whereColumn('encargado.id', 'prestamo.id_encargado'),
+                $direc
+            );
+        } elseif ($sort == 'solicitante_nombre') {
+            $query->orderBy(
+                SolicitanteModel::select('nombre')->whereColumn('solicitante.id', 'prestamo.id_solicitante'),
                 $direc
             );
         } else {
