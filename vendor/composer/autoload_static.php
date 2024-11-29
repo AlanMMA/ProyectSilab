@@ -687,6 +687,7 @@ class ComposerStaticInit37f4f0bf380843dd14dbeb18653ebe37
         'App\\Http\\Controllers\\MarcaModelController' => __DIR__ . '/../..' . '/app/Http/Controllers/MarcaModelController.php',
         'App\\Http\\Controllers\\MaterialModelController' => __DIR__ . '/../..' . '/app/Http/Controllers/MaterialModelController.php',
         'App\\Http\\Controllers\\MaterialReportController' => __DIR__ . '/../..' . '/app/Http/Controllers/MaterialReportController.php',
+        'App\\Http\\Controllers\\PrestamoReportController' => __DIR__ . '/../..' . '/app/Http/Controllers/PrestamoReportController.php',
         'App\\Http\\Controllers\\PrestamosController' => __DIR__ . '/../..' . '/app/Http/Controllers/PrestamosController.php',
         'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
         'App\\Http\\Middleware\\Authenticate' => __DIR__ . '/../..' . '/app/Http/Middleware/Authenticate.php',

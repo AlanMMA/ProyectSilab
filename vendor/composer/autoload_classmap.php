@@ -21,6 +21,7 @@ return array(
     'App\\Http\\Controllers\\MarcaModelController' => $baseDir . '/app/Http/Controllers/MarcaModelController.php',
     'App\\Http\\Controllers\\MaterialModelController' => $baseDir . '/app/Http/Controllers/MaterialModelController.php',
     'App\\Http\\Controllers\\MaterialReportController' => $baseDir . '/app/Http/Controllers/MaterialReportController.php',
+    'App\\Http\\Controllers\\PrestamoReportController' => $baseDir . '/app/Http/Controllers/PrestamoReportController.php',
     'App\\Http\\Controllers\\PrestamosController' => $baseDir . '/app/Http/Controllers/PrestamosController.php',
     'App\\Http\\Kernel' => $baseDir . '/app/Http/Kernel.php',
     'App\\Http\\Middleware\\Authenticate' => $baseDir . '/app/Http/Middleware/Authenticate.php',
