@@ -16,7 +16,7 @@ class Index extends Component
     public $sort = 'id';
     public $direc = 'asc';
     public $cant = '10';
-    public $UserId, $AlumnoId;
+    public $UserId, $AlumnoId, $alumnoSeleccionado;
     protected $listeners = ['render' => 'render', 'destroyPost'];
     public $mostrarModal = false;
     use WithPagination;
@@ -39,7 +39,6 @@ class Index extends Component
         $this->encargados2 = EncargadoModel::find($value);
     }
 
-
     // public function render()
     // {
     //     $this->UserId = auth()->user()->id_encargado;
@@ -58,8 +57,6 @@ class Index extends Component
 
     //     return view('livewire.usuario.index', compact('datos'));
     // }
-
-
 
     public function render()
     {
@@ -115,6 +112,7 @@ class Index extends Component
     public function mostrarDetalle($id)
     {
         $this->AlumnoId = $id;
+        $this->alumnoSeleccionado = Alumnos_ServicioModel::find($id); // Carga los datos del alumno seleccionado
         $this->mostrarModal = true;
         $this->dispatch('open-modal');
     }
