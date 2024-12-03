@@ -1,9 +1,8 @@
 <x-guest-layout>
-
     <x-authentication-card>
         <x-slot name="logo">
-                
             
+            <p class="text-blue-tec text-7xl dark:neon-light flex justify-center">SILAB</p>
             <x-authentication-card-logo />
         </x-slot>
 
