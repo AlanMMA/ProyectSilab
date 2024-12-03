@@ -29,7 +29,7 @@
             </div>
             <div class="mb-4">
                 <x-label value="Modelo:"></x-label>
-                <x-input wire:model="modelo" wire:keyup="update('modelo')" type="text" class="w-full"></x-input>    
+                <x-input wire:model="modelo" wire:keyup="update('modelo')" type="text" class="w-full"></x-input>
                 @error('modelo')
                 <span class="text-red-500 text-sm">{{$message}}</span>
                 @enderror
@@ -63,8 +63,9 @@
                 @enderror
             </div>
             <div class="mb-4">
-                <x-label value="Elegir categoria:"></x-label>
-                <select name="id_localizacion" id="id_localizacion-{{ $dato['id'] ?? 'new' }}" wire:model.live="id_localizacion"
+                <x-label value="Elegir localización:"></x-label>
+                <select name="id_localizacion" id="id_localizacion-{{ $dato['id'] ?? 'new' }}"
+                    wire:model.live="id_localizacion"
                     class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
                     <option value="0">Elija la localizacion del producto</option>
                     @foreach ($localizaciones as $localizacion)

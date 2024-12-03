@@ -71,7 +71,7 @@
                 @enderror
             </div>
             <div class="mb-4">
-                <x-label value="Asignar una categoria:"></x-label>
+                <x-label value="Asignar localización:"></x-label>
                 <select name="id_localizacion" id="id_localizacion-{{ $dato['id'] ?? 'new' }}"
                     wire:model.live="dato.id_localizacion"
                     class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">

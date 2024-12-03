@@ -52,7 +52,7 @@
 
         <!-- Name -->
         <div class="col-span-6 sm:col-span-4">
-            <x-label for="name" value="{{ __('Name') }}" />
+            <x-label for="name" value="{{ __('Usuario') }}" />
             <x-input id="name" type="text" class="mt-1 block w-full" wire:model="state.name" required
                 autocomplete="name" />
             <x-input-error for="state.name" class="mt-2" />
@@ -89,20 +89,20 @@
         @if (auth()->user()->id_encargado)
 
         <div class="col-span-6 sm:col-span-4">
-            <x-label for="supervisor_name" value="{{ __('Name of the supervisor') }}" />
+            <x-label for="supervisor_name" value="{{ __('Nombre') }}" />
             <x-input id="supervisor_name" type="text" class="mt-1 block w-full" wire:model="supervisor_name" required />
             <x-input-error for="supervisor_name" class="mt-2" />
         </div>
 
         <div class="col-span-6 sm:col-span-4">
-            <x-label for="supervisor_patsur" value="{{ __('Paternal surname') }}" />
+            <x-label for="supervisor_patsur" value="{{ __('Apellido paterno') }}" />
             <x-input id="supervisor_patsur" type="text" class="mt-1 block w-full" wire:model="supervisor_patsur"
                 required />
             <x-input-error for="supervisor_patsur" class="mt-2" />
         </div>
 
         <div class="col-span-6 sm:col-span-4">
-            <x-label for="supervisor_matsur" value="{{ __('Maternal surname') }}" />
+            <x-label for="supervisor_matsur" value="{{ __('Apellido materno') }}" />
             <x-input id="supervisor_matsur" type="text" class="mt-1 block w-full" wire:model="supervisor_matsur"
                 required />
             <x-input-error for="supervisor_matsur" class="mt-2" />

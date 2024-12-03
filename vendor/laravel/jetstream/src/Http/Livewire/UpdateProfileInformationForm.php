@@ -53,10 +53,29 @@ class UpdateProfileInformationForm extends Component
             'email' => $user->email,
         ], $user->withoutRelations()->toArray());
 
-        // Cargar valores iniciales del supervisor
-        $this->supervisor_name = $user->encargado->nombre ?? '';
-        $this->supervisor_patsur = $user->encargado->apellido_p ?? '';
-        $this->supervisor_matsur = $user->encargado->apellido_m ?? '';
+        // Verificar si el usuario es un encargado o un alumno de SS
+        if ($user->id_rol == 7) {
+            // Usuario es un encargado
+            $this->supervisor_name = $user->encargado->nombre ?? '';
+            $this->supervisor_patsur = $user->encargado->apellido_p ?? '';
+            $this->supervisor_matsur = $user->encargado->apellido_m ?? '';
+        } elseif ($user->id_rol == 1) {
+            // Usuario es un encargado
+            $this->supervisor_name = $user->encargado->nombre ?? '';
+            $this->supervisor_patsur = $user->encargado->apellido_p ?? '';
+            $this->supervisor_matsur = $user->encargado->apellido_m ?? '';
+        } elseif ($user->id_rol == 2) {
+            // Usuario es un alumno de servicio social
+            $this->supervisor_name = $user->alumnos->nombre ?? '';
+            $this->supervisor_patsur = $user->alumnos->apellido_pS ?? '';
+            $this->supervisor_matsur = $user->alumnos->apellido_mS ?? '';
+        } else {
+            // Usuario no tiene relación con encargado ni SS
+            $this->supervisor_name = 'Sin relación';
+            $this->supervisor_patsur = '';
+            $this->supervisor_matsur = '';
+
+        }
     }
 
     // Evento para confirmación
@@ -78,12 +97,31 @@ class UpdateProfileInformationForm extends Component
 
         $updater->update(Auth::user(), $data);
 
-        // Guardar los datos del supervisor
-        Auth::user()->encargado()->update([
-            'nombre' => $this->supervisor_name,
-            'apellido_p' => $this->supervisor_patsur,
-            'apellido_m' => $this->supervisor_matsur,
-        ]);
+        $user = Auth::user();
+
+        // Guardar los datos dependiendo del rol del usuario
+        if ($user->id_rol == 7) {
+            // Es un encargado
+            $user->encargado()->update([
+                'nombre' => $this->supervisor_name,
+                'apellido_p' => $this->supervisor_patsur,
+                'apellido_m' => $this->supervisor_matsur,
+            ]);
+        } elseif ($user->id_rol == 1) {
+            // Es un encargado
+            $user->encargado()->update([
+                'nombre' => $this->supervisor_name,
+                'apellido_p' => $this->supervisor_patsur,
+                'apellido_m' => $this->supervisor_matsur,
+            ]);
+        } elseif ($user->id_rol == 2) {
+            // Es un alumno de SS
+            $user->alumnos()->update([
+                'nombre' => $this->supervisor_name,
+                'apellido_pS' => $this->supervisor_patsur,
+                'apellido_mS' => $this->supervisor_matsur,
+            ]);
+        }
 
         if (isset($this->photo)) {
             return redirect()->route('profile.show');
@@ -110,7 +148,7 @@ class UpdateProfileInformationForm extends Component
     {
         // Reglas básicas para los otros campos
         $rules = [
-            'state.name' => 'required|string|min:3|max:50|regex:/^[a-zA-Z\s]+$/',
+            'state.name' => 'required|string|min:8|max:50',
             'supervisor_name' => 'required|min:3|max:25|regex:/^[\pL\s]+$/u',
             'supervisor_patsur' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
             'supervisor_matsur' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
