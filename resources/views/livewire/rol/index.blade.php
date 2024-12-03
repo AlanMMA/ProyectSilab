@@ -112,31 +112,45 @@
 
     @push('js')
     <script>
+        // Confirmar eliminación del rol
         Livewire.on('destroy', event => {
-                Swal.fire({
-                    title: "¿Estás seguro de eliminar el registro?",
-                    text: "Registro: " + event.nombre,
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "Aceptar"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-
-                        Livewire.dispatch('destroyPost', {
-                            id: event.id
-                        });
-                        Swal.fire({
-                            title: "Operación exitosa",
-                            text: "Ha eliminado el registro: " + event.nombre,
-                            icon: "success"
-                        });
-                    }
-                });
+            Swal.fire({
+                title: "¿Estás seguro de eliminar este rol?",
+                text: "Rol: " + event.nombre,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Aceptar"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Livewire.dispatch('destroyPost', {
+                        id: event.id
+                    });
+                }
             });
+        });
+    
+        // Mensaje de éxito
+        Livewire.on('deletionSuccess', message => {
+            Swal.fire({
+                title: "Éxito",
+                text: message,
+                icon: "success"
+            });
+        });
+    
+        // Mensaje de error
+        Livewire.on('deletionError', message => {
+            Swal.fire({
+                title: "Error",
+                text: message,
+                icon: "error"
+            });
+        });
     </script>
     @endpush
+    
 
 
 </div>

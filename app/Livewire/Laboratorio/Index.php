@@ -3,6 +3,7 @@
 namespace App\Livewire\Laboratorio;
 
 use App\Models\LaboratorioModel;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -50,15 +51,42 @@ class Index extends Component
             $this->sort = $sort;
             $this->direc = 'asc';
         }
-
     }
 
     public function destroyPost($id)
     {
-        $cat = LaboratorioModel::find($id);
+        // Buscar el laboratorio
+        $laboratorio = LaboratorioModel::find($id);
 
-        if ($cat) {
-            $cat->delete();
+        if (!$laboratorio) {
+            $this->dispatch('deletionError', 'El laboratorio no existe.');
+            return;
+        }
+
+        // Verificar si el laboratorio está relacionado con encargados
+        $encargadosRelacionados = DB::table('encargado')
+            ->where('id_laboratorio', $id)
+            ->pluck('id');
+
+        if ($encargadosRelacionados->isNotEmpty()) {
+            $idsMostrados = $encargadosRelacionados->take(10)->implode(', ');
+            $mensajeAdicional = $encargadosRelacionados->count() > 10
+                ? ' y más...'
+                : '';
+
+            $this->dispatch(
+                'deletionError',
+                'No se puede eliminar el laboratorio, está relacionado con los siguientes encargados: ' . $idsMostrados . $mensajeAdicional
+            );
+            return;
+        }
+
+        // Si no hay relaciones, proceder a eliminar el laboratorio
+        try {
+            $laboratorio->delete();
+            $this->dispatch('deletionSuccess', 'Laboratorio eliminado correctamente.');
+        } catch (\Exception $e) {
+            $this->dispatch('deletionError', 'Hubo un error al eliminar el laboratorio: ' . $e->getMessage());
         }
     }
 }

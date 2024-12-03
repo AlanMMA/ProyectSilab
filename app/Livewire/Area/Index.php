@@ -3,6 +3,7 @@
 namespace App\Livewire\Area;
 
 use App\Models\AreaModel;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -49,11 +50,40 @@ class Index extends Component
 
     public function destroyPost($id)
     {
-        $cat = AreaModel::find($id);
-        
-        if ($cat) {
-            $cat->delete();
+        // Buscar el área
+        $area = AreaModel::find($id);
+    
+        if (!$area) {
+            $this->dispatch('deletionError', 'El área no existe.');
+            return;
+        }
+    
+        // Verificar si el área está relacionada con solicitantes
+        $solicitantesRelacionados = DB::table('solicitante')
+            ->where('id_area', $id)
+            ->pluck('id');
+    
+            if ($solicitantesRelacionados->isNotEmpty()) {
+                $idsMostrados = $solicitantesRelacionados->take(10)->implode(', ');
+                $mensajeAdicional = $solicitantesRelacionados->count() > 10 
+                    ? ' y más...' 
+                    : '';
+
+                $this->dispatch(
+                    'deletionError',
+                    'No se puede eliminar el area, está relacionado con los siguientes solicitantes: ' . $idsMostrados . $mensajeAdicional
+                );
+                return;
+            }
+    
+        // Si no hay relaciones, proceder a eliminar el área
+        try {
+            $area->delete();
+            $this->dispatch('deletionSuccess', 'Área eliminada correctamente.');
+        } catch (\Exception $e) {
+            $this->dispatch('deletionError', 'Hubo un error al eliminar el área: ' . $e->getMessage());
         }
     }
+    
 
 }

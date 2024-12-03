@@ -118,32 +118,46 @@
     </div>
 
     @push('js')
-        <script>
-            Livewire.on('destroy', event => {
-                Swal.fire({
-                    title: "¿Estás seguro de eliminar el registro?",
-                    text: "Registro: " + event.nombre,
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "Aceptar"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-
-                        Livewire.dispatch('destroyPost', {
-                            id: event.id
-                        });
-                        Swal.fire({
-                            title: "Operación exitosa",
-                            text: "Ha eliminado el registro: " + event.nombre,
-                            icon: "success"
-                        });
-                    }
-                });
+    <script>
+        Livewire.on('destroy', event => {
+            Swal.fire({
+                title: "¿Estás seguro de eliminar la categoría?",
+                text: "Categoría: " + event.nombre,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Aceptar"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Disparar el evento de Livewire para eliminar la categoría
+                    Livewire.dispatch('destroyPost', {
+                        id: event.id
+                    });
+                }
             });
-        </script>
+        });
+    
+        // Manejar el mensaje de éxito
+        Livewire.on('deletionSuccess', message => {
+            Swal.fire({
+                title: "Éxito",
+                text: message,
+                icon: "success"
+            });
+        });
+    
+        // Manejar el mensaje de error
+        Livewire.on('deletionError', message => {
+            Swal.fire({
+                title: "Error",
+                text: message,
+                icon: "error"
+            });
+        });
+    </script>
     @endpush
+    
 
 
 </div>

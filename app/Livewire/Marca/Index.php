@@ -3,6 +3,7 @@
 namespace App\Livewire\Marca;
 
 use App\Models\MarcaModel;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -52,10 +53,41 @@ class Index extends Component
 
     public function destroyPost($id)
     {
-        $cat = MarcaModel::find($id);
+        // Buscar la marca
+        $marca = MarcaModel::find($id);
+    
+        if (!$marca) {
+            $this->dispatch('deletionError', 'La marca no existe.');
+            return;
+        }
+    
+        // Verificar si la marca está relacionada con materiales
+        $materialesRelacionados = DB::table('material')
+            ->where('id_marca', $id)
+            ->pluck('id');
+    
+            if ($materialesRelacionados->isNotEmpty()) {
+                $idsMostrados = $materialesRelacionados->take(10)->implode(', ');
+                $mensajeAdicional = $materialesRelacionados->count() > 10 
+                    ? ' y más...' 
+                    : '';
 
-        if ($cat) {
-            $cat->delete();
+                $this->dispatch(
+                    'deletionError',
+                    'No se puede eliminar la marca, está relacionado con los siguientes materiales: ' . $idsMostrados . $mensajeAdicional
+                );
+                return;
+            }
+    
+    
+    
+        // Si no hay relaciones, proceder a eliminar la marca
+        try {
+            $marca->delete();
+            $this->dispatch('deletionSuccess', 'Marca eliminada correctamente.');
+        } catch (\Exception $e) {
+            $this->dispatch('deletionError', 'Hubo un error al eliminar la marca: ' . $e->getMessage());
         }
     }
+    
 }

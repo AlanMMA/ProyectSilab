@@ -172,7 +172,7 @@
         </div>
     </div>
 
-    @push('js')
+    {{-- @push('js')
         <script>
             Livewire.on('destroy', event => {
                 Swal.fire({
@@ -197,5 +197,43 @@
                 });
             });
         </script>
+    @endpush --}}
+
+    @push('js')
+    <script>
+        Livewire.on('destroy', event => {
+            Swal.fire({
+                title: "¿Estás seguro de realizar esta acción?",
+                text: "Registro: " + event.id,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Aceptar"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Disparar el evento para ejecutar el método destroy en Livewire
+                    Livewire.dispatch('destroyPost', { id: event.id });
+                    console.log('se ejecutó bien');
+                }
+            });
+        });
+    
+        Livewire.on('deletionError', message => {
+            Swal.fire({
+                title: "Error",
+                text: message,
+                icon: "error"
+            });
+        });
+    
+        Livewire.on('deletionSuccess', message => {
+            Swal.fire({
+                title: "Operación exitosa",
+                text: message,
+                icon: "success"
+            });
+        });
+    </script>
     @endpush
 </div>

@@ -4,6 +4,7 @@ namespace App\Livewire\Rol;
 
 use App\Models\AreaModel;
 use App\Models\RolModel;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -50,10 +51,39 @@ class Index extends Component
 
     public function destroyPost($id)
     {
-        $cat = RolModel::find($id);
-        
-        if ($cat) {
-            $cat->delete();
+        // Buscar el rol
+        $rol = RolModel::find($id);
+    
+        if (!$rol) {
+            $this->dispatch('deletionError', 'El rol no existe.');
+            return;
+        }
+    
+        // Verificar si el rol está relacionado con usuarios
+        $usuariosRelacionados = DB::table('users')
+            ->where('id_rol', $id)
+            ->pluck('id');
+    
+            if ($usuariosRelacionados->isNotEmpty()) {
+                $idsMostrados = $usuariosRelacionados->take(10)->implode(', ');
+                $mensajeAdicional = $usuariosRelacionados->count() > 10 
+                    ? ' y más...' 
+                    : '';
+
+                $this->dispatch(
+                    'deletionError',
+                    'No se puede eliminar el rol: está relacionado con los siguientes usuarios: ' . $idsMostrados . $mensajeAdicional
+                );
+                return;
+            }
+    
+        // Si no hay relaciones, proceder a eliminar el rol
+        try {
+            $rol->delete();
+            $this->dispatch('deletionSuccess', 'Rol eliminado correctamente.');
+        } catch (\Exception $e) {
+            $this->dispatch('deletionError', 'Hubo un error al eliminar el rol: ' . $e->getMessage());
         }
     }
+    
 }

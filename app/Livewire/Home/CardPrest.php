@@ -15,8 +15,15 @@ class CardPrest extends Component
 
     public function mount()
     {
+        $this->days = session()->get('days', 7); 
         $this->actualizarPrestamos();
     }
+    
+    public function updatedDays($value)
+    {
+        session()->put('days', $value); 
+    }
+    
     
     public function actualizarPrestamos()
     {
@@ -39,6 +46,7 @@ class CardPrest extends Component
     public function actualizarDias($diasSeleccionados)
     {
         $this->days = $diasSeleccionados;
+        session(['days' => $diasSeleccionados]);
         $this->actualizarPrestamos();
     }
 

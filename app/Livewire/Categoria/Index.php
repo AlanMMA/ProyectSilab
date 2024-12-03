@@ -3,6 +3,7 @@
 namespace App\Livewire\Categoria;
 
 use App\Models\CategoriaModel;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
@@ -58,10 +59,39 @@ class Index extends Component
 
     public function destroyPost($id)
     {
-        $cat = CategoriaModel::find($id);
-        
-        if ($cat) {
-            $cat->delete();
+        // Buscar la categoría
+        $categoria = CategoriaModel::find($id);
+    
+        if (!$categoria) {
+            $this->dispatch('deletionError', 'La categoría no existe.');
+            return;
+        }
+    
+        // Verificar si la categoría está relacionada con materiales
+        $materialesRelacionados = DB::table('material')
+            ->where('id_categoria', $id)
+            ->pluck('id');
+    
+            if ($materialesRelacionados->isNotEmpty()) {
+                $idsMostrados = $materialesRelacionados->take(10)->implode(', ');
+                $mensajeAdicional = $materialesRelacionados->count() > 10 
+                    ? ' y más...' 
+                    : '';
+
+                $this->dispatch(
+                    'deletionError',
+                    'No se puede eliminar la categoria, está relacionado con los siguientes materiales: ' . $idsMostrados . $mensajeAdicional
+                );
+                return;
+            }
+    
+        // Si no hay relaciones, proceder a eliminar la categoría
+        try {
+            $categoria->delete();
+            $this->dispatch('deletionSuccess', 'Categoría eliminada correctamente.');
+        } catch (\Exception $e) {
+            $this->dispatch('deletionError', 'Hubo un error al eliminar la categoría: ' . $e->getMessage());
         }
     }
+    
 }

@@ -3,7 +3,9 @@
 namespace App\Livewire\Solicitante;
 
 use App\Models\AreaModel;
+use App\Models\EncargadoModel;
 use App\Models\SolicitanteModel;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -15,7 +17,7 @@ class Index extends Component
         $numero_control;
     public $direc = 'asc';
     public $cant = '10';
-    protected $listeners = ['render' => 'render', 'destroyPost'];
+    protected $listeners = ['render' => 'render', 'destroyPost', 'deletionError'];
     use WithPagination;
 
 
@@ -69,10 +71,40 @@ class Index extends Component
 
     public function destroyPost($id)
     {
-        $cat = SolicitanteModel::find($id);
+        // Buscar el solicitante
+        $solicitante = SolicitanteModel::find($id);
+        $encarg = auth()->user()->id_encargado;
 
-        if ($cat) {
-            $cat->delete();
+        if (!$solicitante) {
+            $this->dispatch('deletionError', 'El solicitante no existe.');
+            return;
+        }
+
+        // Verificar si el solicitante está relacionado con préstamos
+        $prestamosRelacionados = DB::table('prestamo')
+            ->where('id_solicitante', $id)
+            ->pluck('id');
+
+        if ($prestamosRelacionados->isNotEmpty()) {
+            $idsMostrados = $prestamosRelacionados->take(10)->implode(', ');
+            $mensajeAdicional = $prestamosRelacionados->count() > 10
+                ? ' y más...'
+                : '';
+
+            $this->dispatch(
+                'deletionError',
+                'No se puede eliminar al solicitante, cuenta con los siguientes prestamos pendientes: ' . $idsMostrados . $mensajeAdicional
+            );
+            return;
+        }
+
+
+        // Si no hay relaciones, proceder a eliminar el solicitante
+        try {
+            $solicitante->delete();
+            $this->dispatch('deletionSuccess', 'Solicitante eliminado correctamente.');
+        } catch (\Exception $e) {
+            $this->dispatch('deletionError', 'Hubo un error al eliminar el solicitante: ' . $e->getMessage());
         }
     }
 }
