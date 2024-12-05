@@ -24,7 +24,7 @@ class Edit extends Component
             'dato.apellido_p' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
             'dato.apellido_m' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
             'dato.id_laboratorio' => 'required|numeric',
-            'dato.id_estado' => 'required|numeric|min:1'
+            //'dato.id_estado' => 'required|numeric|min:1'
         ];
     }
 
@@ -67,12 +67,14 @@ class Edit extends Component
         $this->open = true;
         $this->resetErrorBag(['dato.nombre', 'dato.apellido_p', 'dato.apellido_m', 'dato.id_laboratorio', 'result.id_estado']);
     }
-    
+
     // Nueva función para restablecer los datos al abrir el modal
     public function resetDatos()
     {
         $encargado = EncargadoModel::find($this->dato['id']);
+        $usuario = User::where('id_encargado', $this->dato['id'])->first();
         $this->dato = $encargado->toArray();
+        $this->result = $usuario->toArray();
     }
 
     public function confirmSave()

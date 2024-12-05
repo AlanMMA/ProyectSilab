@@ -44,7 +44,9 @@ class Edit extends Component
     public function resetDatos()
     {
         $usuario = User::find($this->dato['id']);
+        $alumno = Alumnos_ServicioModel::find($usuario->id_ss);
         $this->dato = $usuario->toArray();
+        $this->result = $alumno->toArray();
     }
 
     public function mount()

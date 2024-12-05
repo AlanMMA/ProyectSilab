@@ -42,7 +42,7 @@
                     class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
                     <option value="0">{{ 'Eliga un area' }}</option>
                     @foreach ($areas as $id => $nombre)
-                    <option value="{{ $id }}"> {{ $nombre }}</option>
+                    <option value="{{ $id }}">{{ $nombre }}</option>
                     @endforeach
                 </select>
                 @error('dato.id_area')
@@ -53,14 +53,14 @@
                 <x-label value="Tipo de solicitante:"></x-label>
                 <select wire:model.live="dato.tipo"
                     class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
-                    <option value="docente">Docente</option>
-                    <option value="alumno">Alumno</option>
+                    <option value="Docente">Docente</option>
+                    <option value="Alumno">Alumno</option>
                 </select>
                 @error('dato.tipo')
                 <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
             </div>
-            @if ($dato['tipo'] === 'alumno')
+            @if ($dato['tipo'] === 'Alumno')
             <div class="mb-4">
                 <x-label value="Número de control:"></x-label>
                 <x-input wire:model="dato.numero_control" type="text" class="w-full"></x-input>
