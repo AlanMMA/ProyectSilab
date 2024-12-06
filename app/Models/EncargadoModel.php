@@ -24,6 +24,12 @@ class EncargadoModel extends Model
         return $this->BelongsTo(LaboratorioModel::class, 'id_laboratorio');
     }
 
+    //RELACIÓN ENCARGADO - USUARIO
+    public function usuario()
+    {
+        return $this->hasOne(User::class, 'id_encargado', 'id');
+    }
+
     public $timestamps = false;
 
     use HasFactory;

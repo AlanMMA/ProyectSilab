@@ -28,7 +28,10 @@ class Index extends Component
         $this->sort = 'id';
         $this->direc = 'asc';
         $this->UserId = auth()->user()->id_encargado;
-        $this->encargados = EncargadoModel::all();
+        //$this->encargados = EncargadoModel::all();
+        $this->encargados = EncargadoModel::whereHas('usuario', function ($query) {
+            $query->where('id_rol', '!=', 7); // Filtrar para que no incluya usuarios con rol 7
+        })->get();
     }
 
     public function updatedSelectEncargado($value)

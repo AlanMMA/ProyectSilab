@@ -2,14 +2,12 @@
 
 namespace App\Livewire\Encargado;
 
-use App\Models\Alumnos_ServicioModel;
 use App\Models\EncargadoModel;
 use App\Models\LaboratorioModel;
-use App\Models\User;
-use Livewire\Component;
-use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
@@ -34,12 +32,16 @@ class Index extends Component
 
     public function render()
     {
-
-        $datos = EncargadoModel::where('nombre', 'like', '%' . $this->search . '%')
-            ->orWhere('apellido_p', 'like', '%' . $this->search . '%')
-            ->orWhere('apellido_m', 'like', '%' . $this->search . '%')
-            ->orWhereHas('laboratorio', function ($query) {
-                $query->where('nombre', 'like', '%' . $this->search . '%');
+        $datos = EncargadoModel::whereHas('usuario', function ($query) {
+            $query->where('id_rol', 1); // Filtra usuarios con rol igual a 1
+        })
+            ->where(function ($query) {
+                $query->where('nombre', 'like', '%' . $this->search . '%')
+                    ->orWhere('apellido_p', 'like', '%' . $this->search . '%')
+                    ->orWhere('apellido_m', 'like', '%' . $this->search . '%')
+                    ->orWhereHas('laboratorio', function ($query) {
+                        $query->where('nombre', 'like', '%' . $this->search . '%');
+                    });
             })
             ->when($this->sort == 'id_laboratorio', function ($query) {
                 $query->orderBy(
@@ -52,9 +54,29 @@ class Index extends Component
             })
             ->paginate($this->cant)
             ->withQueryString();
-        return view('livewire.encargado.index', compact('datos'));
-    }
 
+        return view('livewire.encargado.index', compact('datos'));
+
+        /*$datos = EncargadoModel::where('nombre', 'like', '%' . $this->search . '%')
+        ->orWhere('apellido_p', 'like', '%' . $this->search . '%')
+        ->orWhere('apellido_m', 'like', '%' . $this->search . '%')
+        ->orWhereHas('laboratorio', function ($query) {
+            $query->where('nombre', 'like', '%' . $this->search . '%');
+        })
+        ->when($this->sort == 'id_laboratorio', function ($query) {
+            $query->orderBy(
+                LaboratorioModel::select('nombre')
+                    ->whereColumn('laboratorio.id', 'encargado.id_laboratorio'),
+                $this->direc
+            );
+        }, function ($query) {
+            $query->orderBy($this->sort, $this->direc);
+        })
+        ->paginate($this->cant)
+        ->withQueryString();
+    return view('livewire.encargado.index', compact('datos'));*/
+
+    }
 
     public function order($sort)
     {
@@ -133,11 +155,11 @@ class Index extends Component
             DB::rollBack();
             Log::critical('Error al procesar la solicitud.', [
                 'id_encargado' => $id,
-                'exception' => $e->getMessage()
+                'exception' => $e->getMessage(),
             ]);
 
             return response()->json([
-                'error' => 'Error al procesar la solicitud: ' . $e->getMessage()
+                'error' => 'Error al procesar la solicitud: ' . $e->getMessage(),
             ], 500);
         }
     }
