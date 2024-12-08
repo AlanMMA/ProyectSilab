@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="w-full flex justify-between">
-            <h2 class="font-semibold text-xl text-gray-900 dark:text-white leading-tight">
+        <div class="w-full flex justify-center">
+            <h2 class="font-semibold text-xl text-gray-900 dark:text-white leading-tight text-center">
                 {{__('Recibir prestamo')}}
             </h2>
             
