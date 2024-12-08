@@ -26,7 +26,7 @@ class Create extends Component
     protected $rules = [
         'name' => 'required|string|min:8|max:50',
         'email' => 'required|email|min:16|max:255|unique:users,email',
-        'password' => 'required|string|min:8|max:255',
+        'password' => 'required|string|min:9|max:255',
         'password_confirmation' => 'required|same:password',
         'id_rol' => 'required|numeric|gt:0',
         'id_encargado' => 'required|numeric|gt:0',
@@ -40,7 +40,7 @@ class Create extends Component
         'name.required' => 'El campo "name" es obligatorio.',
         'password.required' => 'El campo "password" es obligatorio.',
         'name.min' => 'El campo "name" debe tener al menos 8 caracteres.',
-        'password.min' => 'El campo "password" debe tener al menos 8 caracteres.',
+        'password.min' => 'El campo "password" debe tener al menos 9 caracteres.',
     ];
 
     protected $listeners = ['saveConfirmed2' => 'save2'];
@@ -67,8 +67,8 @@ class Create extends Component
             $this->addError($field, "El campo \"$field\" debe contener al menos un número.");
         }
 
-        if (strlen($value) < 9) {
-            $this->addError($field, "El campo \"$field\" debe tener al menos 8 caracteres.");
+        if (strlen($value) < 10) {
+            $this->addError($field, "El campo \"$field\" debe tener al menos 9 caracteres.");
         }
 
 
