@@ -10,7 +10,6 @@
         body {
             margin-top: 85px;
             margin-bottom: 60px;
-            margin-right: 30px;
         }
 
         table {
@@ -71,10 +70,6 @@
             margin: 0;
             padding: 0;
         }
-        
-        .container{
-            overflow-x: auto; 
-        }
     </style>
 </head>
 
@@ -93,7 +88,6 @@
     </h3>
     @endif
 
-    <div class="container">
     <table>
         <thead class="bg-blue-tec text-white">
             <tr>
@@ -130,7 +124,7 @@
             @endforeach
         </tbody>
     </table>
-</div>
+
 </body>
 
 </html>

@@ -19,8 +19,8 @@ class Create extends Component
             'apellido_p' => 'required|min:4|max:15|regex:/^[\pL\s]+$/u',
             'apellido_m' => 'required|min:4|max:15|regex:/^[\pL\s]+$/u',
             'id_area2' => 'required|numeric|min:1',
-            'tipo' => 'required|in:docente,alumno',
-            'numero_control' => $this->tipo === 'alumno' ? 'required|min:7|max:9' : 'nullable|min:7|max:9',
+            'tipo' => 'required|in:Docente,Alumno',
+            'numero_control' => $this->tipo === 'Alumno' ? 'required|min:7|max:9' : 'nullable|min:7|max:9',
         ];
     }
 
@@ -28,8 +28,8 @@ class Create extends Component
         'nombre.regex' => 'El nombre solo puede contener letras y espacios.',
         'apellido_p.regex' => 'El apellido paterno solo puede contener letras y espacios.',
         'apellido_m.regex' => 'El apellido materno solo puede contener letras y espacios.',
-        'tipo.in' => 'El tipo debe ser "docente" o "alumno".',
-        'numero_control.required' => 'El número de control es requerido cuando el tipo es "alumno".',
+        'tipo.in' => 'El tipo debe ser "Docente" o "Alumno".',
+        'numero_control.required' => 'El número de control es requerido cuando el tipo es "Alumno".',
     ];
 
     public function update($propertyname)

@@ -9,6 +9,10 @@ use Livewire\Component;
 
 class UpdatePasswordForm extends Component
 {
+    public $showPassword = false;
+    public $showPassword2 = false;
+    public $showPassword3 = false;
+
     /**
      * The component's state.
      *
@@ -25,19 +29,32 @@ class UpdatePasswordForm extends Component
     public function validatePassword()
     {
         $this->resetErrorBag();
-
+        
         // Validaciones
         $this->validate([
             'state.current_password' => ['required', 'string'],
-            'state.password' => ['required', 'string', 'min:9', 'confirmed'],
-        ]);
+            'state.password' => [
+                'required',
+                'string',
+                'min:9', // Longitud mínima de 9 caracteres
+                'max:255', // Longitud máxima de 255 caracteres
+                'confirmed', // Confirma que coincide con el campo "password_confirmation"
+                'regex:/^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{9,}$/', // Al menos una letra mayúscula y un número
+            ],
+        ], [
+            'state.password.regex' => 'La contraseña debe contener al menos una letra mayúscula y un número.',
+            'state.password.min' => 'La contraseña debe tener al menos 9 caracteres.',
+            'state.password.max' => 'La contraseña no puede tener más de 255 caracteres.',
+            'state.password.confirmed' => 'Las contraseñas no coinciden.',
+        ]
+        );
 
         // Validar que la contraseña actual sea correcta
         if (!Auth::guard('web')->validate([
             'email' => Auth::user()->email,
             'password' => $this->state['current_password'],
         ])) {
-            $this->addError('state.current_password', __('The current password is incorrect.'));
+            $this->addError('state.current_password', __('La contraseña ingresada es incorrecta.'));
             return;
         }
 
@@ -72,10 +89,14 @@ class UpdatePasswordForm extends Component
                 'password_confirmation' => '',
             ];
 
+            $this->showPassword = false;
+            $this->showPassword2 = false;
+            $this->showPassword3 = false;
+
             // Dispatch the "saved" event to show success
             $this->dispatch('saved');
         } catch (ValidationException $e) {
-            $this->addError('state.current_password', __('The current password is incorrect.'));
+            $this->addError('state.current_password', __('La contraseña ingresada es incorrecta.'));
         }
     }
 
@@ -87,6 +108,21 @@ class UpdatePasswordForm extends Component
     public function getUserProperty()
     {
         return Auth::user();
+    }
+
+    public function togglePasswordVisibility()
+    {
+        $this->showPassword = !$this->showPassword;
+    }
+
+    public function togglePasswordVisibility2()
+    {
+        $this->showPassword2 = !$this->showPassword2;
+    }
+
+    public function togglePasswordVisibility3()
+    {
+        $this->showPassword3 = !$this->showPassword3;
     }
 
     /**

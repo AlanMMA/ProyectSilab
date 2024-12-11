@@ -48,6 +48,9 @@ class Index extends Component
         $this->UserId = auth()->user()->id_encargado;
         $this->encargados = EncargadoModel::all();
         $this->labs = LaboratorioModel::all();
+        /*$this->encargados = EncargadoModel::whereHas('usuario', function ($query) {
+    $query->where('id_rol', '!=', 7); // Filtrar para que no incluya usuarios con rol 7
+    })->get();*/
     }
 
     // public function render()
@@ -144,7 +147,7 @@ class Index extends Component
     {
         // Si el usuario es jefe y SelectEncargado es -1, mostrar todos los préstamos.
         if (auth()->user()->id_rol == 7 && $this->SelectEncargado == -1) {
-    
+
             $datos = PrestamoModel::join('solicitante', 'prestamo.id_solicitante', '=', 'solicitante.id')
                 ->join('encargado', 'prestamo.id_encargado', '=', 'encargado.id')
                 ->select(
@@ -171,10 +174,10 @@ class Index extends Component
         } elseif (auth()->user()->id_rol == 7 && $this->SelectEncargado == 0) {
             // Si es jefe y no seleccionó ningún laboratorio, devolver datos vacíos.
             $datos = new LengthAwarePaginator([], 0, $this->cant);
-        }  elseif(auth()->user()->id_rol != 7){
+        } elseif (auth()->user()->id_rol != 7) {
             $laboratorioId = EncargadoModel::where('id', auth()->user()->id_encargado)
-            ->pluck('id_laboratorio')
-            ->first();
+                ->pluck('id_laboratorio')
+                ->first();
             $datos = PrestamoModel::join('solicitante', 'prestamo.id_solicitante', '=', 'solicitante.id')
                 ->join('encargado', 'prestamo.id_encargado', '=', 'encargado.id')
                 ->select(
@@ -199,13 +202,10 @@ class Index extends Component
                 ->orderBy($this->sort, $this->direc)
                 ->paginate($this->cant)
                 ->withQueryString();
-        }
-        
-        
-        else {
+        } else {
             // Filtrar préstamos por laboratorio.
             $laboratorioId = $this->SelectEncargado > 0 ? $this->SelectEncargado : $this->UserId;
-    
+
             // Consulta para cargar los datos filtrados por laboratorio.
             $datos = PrestamoModel::join('solicitante', 'prestamo.id_solicitante', '=', 'solicitante.id')
                 ->join('encargado', 'prestamo.id_encargado', '=', 'encargado.id')
@@ -234,7 +234,6 @@ class Index extends Component
         }
         return view('livewire.prestamo.index', compact('datos'));
     }
-    
 
     public function order($sort)
     {
@@ -270,23 +269,22 @@ class Index extends Component
             }
 
             $prestamosProblematicos = DetallePrestamoModel::whereIn('id_prestamo', $prestamosIds)
-            ->where('EstadoPrestamo', '!=', 'devuelto')
-            ->pluck('id_prestamo')
-            ->unique();
+                ->where('EstadoPrestamo', '!=', 'devuelto')
+                ->pluck('id_prestamo')
+                ->unique();
 
             if ($prestamosProblematicos->isNotEmpty()) {
                 $idsMostrados = $prestamosProblematicos->take(10)->implode(', ');
                 $mensajeAdicional = $prestamosProblematicos->count() > 10
-                    ? ' y más...'
-                    : '';
-    
+                ? ' y más...'
+                : '';
+
                 $this->dispatch(
                     'deletionError',
                     'No se puede eliminar los prestamos, pueden estar pendientes o atrazados: ' . $idsMostrados . $mensajeAdicional
                 );
                 return;
             }
-    
 
             DB::table('detalle_prestamo')
                 ->whereIn('id_prestamo', $prestamosIds)
@@ -345,27 +343,27 @@ class Index extends Component
     public function proceedDestroy($id)
     {
         $pp = DetallePrestamoModel::where('id_prestamo', $id)->pluck('EstadoPrestamo');
-    
+
         // Verificar si existen préstamos pendientes o atrasados
         if ($pp->contains('pendiente') || $pp->contains('atrasado')) {
             $this->dispatch('deletionError', 'Existen préstamos pendientes o atrasados.');
             return; // Detener ejecución si hay un error
         }
-    
+
         try {
             DB::beginTransaction();
-    
+
             $dt = DB::table('prestamo')->where('id', $id)->pluck('id');
-    
+
             if ($dt->isEmpty()) {
                 $this->dispatch('deletionError', 'No se encontraron registros para eliminar.');
                 DB::rollBack();
                 return; // Detener ejecución si no hay registros
             }
-    
+
             DB::table('detalle_prestamo')->whereIn('id_prestamo', $dt)->delete();
             DB::table('prestamo')->whereIn('id', $dt)->delete();
-    
+
             DB::commit();
             $this->dispatch('deletionSuccess', 'Registros eliminados correctamente.');
         } catch (\Exception $e) {
@@ -373,5 +371,5 @@ class Index extends Component
             $this->dispatch('deletionError', 'Hubo un error al eliminar registros: ' . $e->getMessage());
         }
     }
-    
+
 }

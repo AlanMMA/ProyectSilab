@@ -66,7 +66,7 @@
                     <button type="button" wire:click="togglePasswordVisibility"
                         class="ml-auto px-3 flex items-center focus:outline-none">
                         @if ($showPassword)
-                        <span class="material-symbols-outlined ">
+                        <span class="material-symbols-outlined">
                             visibility
                         </span>
                         @else

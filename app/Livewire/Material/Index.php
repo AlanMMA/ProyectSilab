@@ -32,6 +32,9 @@ class Index extends Component
         $this->encargados = EncargadoModel::all();
         $this->labos = LaboratorioModel::all();
         $this->lab = MaterialModel::pluck('id_laboratorio')->toArray(); // Obtener IDs de laboratorio
+        /*$this->encargados = EncargadoModel::whereHas('usuario', function ($query) {
+        $query->where('id_rol', '!=', 7); // Filtrar para que no incluya usuarios con rol 7
+        })->get();*/
     }
 
     public function updatedSelectEncargado($value)
@@ -122,10 +125,8 @@ class Index extends Component
             //     MaterialModel::find($this->SelectEncargado)->id_laboratorio
             //     : $this->lab;
             $laboratorioId = auth()->user()->id_rol == 7 && $this->SelectEncargado > 0
-                ? MaterialModel::where('id_laboratorio', $this->SelectEncargado)->value('id_laboratorio')
-                : $this->lab;
-
-
+            ? MaterialModel::where('id_laboratorio', $this->SelectEncargado)->value('id_laboratorio')
+            : $this->lab;
 
             $datos = MaterialModel::where('id_laboratorio', $laboratorioId)
                 ->where(function ($query) {

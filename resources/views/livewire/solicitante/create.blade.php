@@ -37,7 +37,7 @@
                     class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
                     <option value="0">{{'Eliga un area'}}</option>
                     @foreach ($areas as $id => $nombre)
-                    <option value="{{ $id }}">{{ $id }} {{ $nombre }}</option>
+                    <option value="{{ $id }}">{{ $nombre }}</option>
                     @endforeach
                 </select>
                 @error('id_area2')
@@ -56,7 +56,7 @@
                 <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
             </div>
-            @if ($tipo === 'alumno')
+            @if ($tipo === 'Alumno')
             <div class="mb-4">
                 <x-label value="Número de control:"></x-label>
                 <x-input wire:model="numero_control" type="text" class="w-full"></x-input>
@@ -100,8 +100,8 @@
                 <tr><td><strong>Tipo de solicitante: </strong>${tipo}</td></tr>
         `;
 
-        // Agrega el número de control solo si el tipo es "alumno"
-        if (tipo === 'alumno') {
+        // Agrega el número de control solo si el tipo es "Alumno"
+        if (tipo === 'Alumno') {
             htmlContent += `<tr><td><strong>No. Control: </strong>${numero_control}</td></tr>`;
         }
 

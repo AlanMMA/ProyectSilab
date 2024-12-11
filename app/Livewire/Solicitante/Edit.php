@@ -21,8 +21,8 @@ class Edit extends Component
             'dato.apellido_p' => 'required|min:4|max:15|regex:/^[\pL\s]+$/u',
             'dato.apellido_m' => 'required|min:4|max:15|regex:/^[\pL\s]+$/u',
             'dato.id_area' => 'required|numeric|min:1',
-            'dato.tipo' => 'required|in:docente,alumno',
-            'dato.numero_control' => $this->dato['tipo'] === 'alumno' ? 'required|max:9' : 'nullable|max:9',
+            'dato.tipo' => 'required|in:Docente,Alumno',
+            'dato.numero_control' => $this->dato['tipo'] === 'Alumno' ? 'required|max:9' : 'nullable|max:9',
         ];
     }
 
@@ -32,8 +32,8 @@ class Edit extends Component
         'nombre.regex' => 'El nombre solo puede contener letras y espacios.',
         'apellido_p.regex' => 'El apellido paterno solo puede contener letras y espacios.',
         'apellido_m.regex' => 'El apellido materno solo puede contener letras y espacios.',
-        'tipo.in' => 'El tipo debe ser "docente" o "alumno".',
-        'numero_control.required' => 'El número de control es requerido cuando el tipo es "alumno".',
+        'tipo.in' => 'El tipo debe ser "Docente" o "Alumno".',
+        'numero_control.required' => 'El número de control es requerido cuando el tipo es "Alumno".',
     ];
 
     public function update($propertyname)
@@ -155,7 +155,7 @@ class Edit extends Component
     {
 
         $solicitante = SolicitanteModel::find($this->dato['id']);
-        if ($this->dato['tipo'] === 'docente') {
+        if ($this->dato['tipo'] === 'Docente') {
             $this->dato['numero_control'] = null;
         }
         $solicitante->fill($this->dato);
