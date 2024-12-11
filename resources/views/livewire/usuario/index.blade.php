@@ -189,7 +189,7 @@
                         <div class="flex p-4 justify-between items-center">
                             <div class="flex flex-col">
                                 <h2 class="text-black dark:text-white">Datos del alumno.</h2>
-                                <h2 class="text-black dark:text-white">{{ $dato->alumnos->no_control }}</h2>
+                                <h2 class="text-black dark:text-white">{{ $alumnoSeleccionado->no_control ?? 'Cargando...' }}</h2>
                             </div>
                             <button wire:click="cerrarModal" @click="open = false"
                                 class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">

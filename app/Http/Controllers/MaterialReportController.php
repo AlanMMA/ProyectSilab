@@ -125,8 +125,12 @@ class MaterialReportController extends Controller
             // Generar el PDF con los datos filtrados
             $pdf = Pdf::loadView('reportes.materiales-pdf', compact('datos', 'encargadoNombre', 'incluirEncargado', 'search', 'sort', 'direc'));
 
+            // Generar el timestamp para el nombre del archivo
+            $timestamp = now()->setTimezone('America/Mexico_City')->format('Y-m-d_H-i-s'); // Formato: Año-Mes-Día_Hora-Minuto-Segundo
+            $fileName = "reporte_materiales_{$timestamp}.pdf";
+
             // Descargar el PDF
-            return $pdf->download('reporte_materiales.pdf');
+            return $pdf->download($fileName);
         }
     }
 
