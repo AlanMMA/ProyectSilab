@@ -188,12 +188,16 @@ class CreateForm extends Component
         $this->prest = auth()->user()->id_encargado;
         $this->solicitantes = SolicitanteModel::all();
         // $this->materiales = MaterialModel::where('id_encargado', $this->prest)->get()->toArray();
-        $datt = EncargadoModel::where('id', auth()->user()->id_encargado)
-            ->pluck('id_laboratorio')
-            ->first();
-        $this->materiales = MaterialModel::where('id_laboratorio', $datt)->get()->toArray();
+        $this->GenerarMat();
         $this->fechaPrestamo = now()->setTimezone('America/Mexico_City')->format('Y/m/d');
         $this->selectedMaterials = [];
+    }
+
+    public function GenerarMat() {
+        $datt = EncargadoModel::where('id', auth()->user()->id_encargado)
+        ->pluck('id_laboratorio')
+        ->first();
+    $this->materiales = MaterialModel::where('id_laboratorio', $datt)->get()->toArray();
     }
 
     public function resetearFormulario()
@@ -209,6 +213,7 @@ class CreateForm extends Component
         $this->solicitantes = [];
         $this->solicitanteSeleccionado2 = true;
         $this->fechaDev = null;
+        $this->resetSelectedMaterial();
     }
 
     public function addMaterial()
@@ -227,6 +232,7 @@ class CreateForm extends Component
             return;
         } else if (in_array($this->selectMat, array_column($this->selectedMaterials, 'id'))) {
             $this->dispatch('mostrarErrorFecha', 'Este material ya fue agregado.');
+            $this->resetSelectedMaterial();
             return;
         }
 
@@ -248,20 +254,11 @@ class CreateForm extends Component
                     'fechaDev' => $this->fechaDev
                 ]);
                 $this->selectMat = null;
-                $this->searchMaterial = null;
+                $this->resetSelectedMaterial();
                 $this->Cantidad = 1;
                 $this->dispatch('mostrarBoton', true);
             }
+            
         }
-    }
-
-    public function fechaDevUpdated($data)
-    {
-        $this->fechaDev = $data['fechaDev'];
-    }
-
-    public function render()
-    {
-        return view('livewire.prestamo.create-form');
     }
 }

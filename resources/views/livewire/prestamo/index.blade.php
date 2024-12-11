@@ -12,7 +12,7 @@
         <div id="dropdownMenu"
             class="mr-6 hidden absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-50">
             <div class="flex justify-center pt-2">
-                <label for="titulo" class="block text-base font-medium text-gray-700 dark:text-gray-200">Eliga un
+                <label class="block text-base font-medium text-gray-700 dark:text-gray-200">Eliga un
                     rango
                     de fechas:</label>
             </div>
