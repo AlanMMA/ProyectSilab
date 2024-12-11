@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\EncargadoModel;
+use App\Models\LaboratorioModel;
 use App\Models\PrestamoModel;
 use App\Models\SolicitanteModel;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -17,6 +18,9 @@ class PrestamoReportController extends Controller
         // Obtener el usuario logueado
         $user = auth()->user();
         $user2 = auth()->user()->id_encargado;
+        $lab = EncargadoModel::where('id', $user2)
+            ->pluck('id_laboratorio')
+            ->first();
 
         if (!$user) {
             // Si no hay usuario logueado, devolver un error
@@ -41,18 +45,18 @@ class PrestamoReportController extends Controller
                 $incluirEncargado = true; // Mostrar la columna con el encargado
             } elseif ($SelectEncargado > 0) {
                 // Jefe seleccionó un encargado específico
-                $query->where('id_encargado', $SelectEncargado);
+                $query->where('id_laboratorio', $SelectEncargado);
                 //Obtiene el nombre del encargado seleccionado
-                $encargado = EncargadoModel::find($SelectEncargado);
+                $encargado = LaboratorioModel::find($SelectEncargado);
                 $encargadoNombre = $encargado ? $encargado->nombre . ' ' . $encargado->apellido_p : null;
             } else {
                 // Jefe no seleccionó un encargado válido
-                return redirect()->back()->with('error', 'Por favor, seleccione un encargado para exportar los datos.');
+                return redirect()->back()->with('error', 'Por favor, seleccione un laboratorio para exportar los datos.');
             }
         } else {
             // No es jefe, filtrar por el encargado asignado al usuario
-            $query->where('id_encargado', $user2);
-            $encargado = EncargadoModel::find($user2);
+            $query->where('id_laboratorio', $lab);
+            $encargado = LaboratorioModel::find($lab);
             $encargadoNombre = $encargado ? $encargado->nombre . ' ' . $encargado->apellido_p : null;
         }
 
@@ -90,6 +94,11 @@ class PrestamoReportController extends Controller
         } elseif ($sort == 'solicitante_nombre') {
             $query->orderBy(
                 SolicitanteModel::select('nombre')->whereColumn('solicitante.id', 'prestamo.id_solicitante'),
+                $direc
+            );
+        } elseif ($sort == 'laboratorio_nombre') {
+            $query->orderBy(
+                LaboratorioModel::select('nombre')->whereColumn('laboratorio.id', 'prestamo.id_laboratorio'),
                 $direc
             );
         } else {

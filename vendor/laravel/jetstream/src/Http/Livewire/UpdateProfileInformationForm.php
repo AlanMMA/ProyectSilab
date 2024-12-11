@@ -148,7 +148,7 @@ class UpdateProfileInformationForm extends Component
     {
         // Reglas básicas para los otros campos
         $rules = [
-            'state.name' => 'required|string|min:8|max:50',
+            'state.name' => 'required|string|min:9|max:50',
             'supervisor_name' => 'required|min:3|max:25|regex:/^[\pL\s]+$/u',
             'supervisor_patsur' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
             'supervisor_matsur' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',

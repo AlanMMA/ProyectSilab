@@ -83,7 +83,7 @@
     <h1 class="title" style="text-align: center;">Reporte de Préstamos</h1>
 
     @if($encargadoNombre)
-    <h3 class="subtitle" style="text-align: center; margin-top: 10px; font-weight: normal;">Préstamos del encargado:
+    <h3 class="subtitle" style="text-align: center; margin-top: 10px; font-weight: normal;">Préstamos del laboratorio:
         <span style="font-weight: bold;">{{ $encargadoNombre }} </span>
     </h3>
     @endif
@@ -99,6 +99,7 @@
                 <th>No. Control</th>
                 @if($incluirEncargado)
                 <th>Encargado</th>
+                <th>Laboratorio</th>
                 @endif
             </tr>
         </thead>
@@ -114,6 +115,7 @@
                 <td>{{ $dato->solicitante->numero_control ?? 'No asignado' }}</td>
                 @if($incluirEncargado)
                 <td>{{ $dato->encargadoP->nombre ?? 'Sin encargado' }}</td>
+                <td>{{ $dato->laboratorio->nombre ?? 'Sin laboratorio' }}</td>
                 @endif
             </tr>
             @endforeach

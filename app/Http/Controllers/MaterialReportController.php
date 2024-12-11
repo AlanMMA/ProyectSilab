@@ -60,7 +60,7 @@ class MaterialReportController extends Controller
                 $encargadoNombre = $encargado ? $encargado->nombre . ' ' . $encargado->apellido_p : null;
             } else {
                 // Jefe no seleccionó un encargado válido
-                return redirect()->back()->with('error', 'Por favor, seleccione un encargado para exportar los datos.');
+                return redirect()->back()->with('error', 'Por favor, seleccione un laboratorio para exportar los datos.');
             }
         } else {
             // No es jefe, filtrar por el encargado asignado al usuario
@@ -85,11 +85,11 @@ class MaterialReportController extends Controller
                     ->orWhereHas('localizacion', function ($q) use ($search) {
                         $q->where('nombre', 'like', '%' . $search . '%');
                     })
-                    ->orWhereHas('encargado', function ($q) use ($search) {
+                    /*->orWhereHas('encargado', function ($q) use ($search) {
                         $q->where('nombre', 'like', '%' . $search . '%')
                             ->orWhere('apellido_p', 'like', '%' . $search . '%')
                             ->orWhere('apellido_m', 'like', '%' . $search . '%');
-                    });
+                    })*/;
             });
         }
 

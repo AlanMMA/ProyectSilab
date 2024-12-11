@@ -24,7 +24,7 @@ class Create extends Component
     public $password_confirmation = '';
 
     protected $rules = [
-        'name' => 'required|string|min:8|max:50',
+        'name' => 'required|string|min:9|max:50',
         'email' => 'required|email|min:16|max:255|unique:users,email',
         'password' => 'required|string|min:9|max:255',
         'password_confirmation' => 'required|same:password',
@@ -39,7 +39,7 @@ class Create extends Component
     protected $messages = [
         'name.required' => 'El campo "name" es obligatorio.',
         'password.required' => 'El campo "password" es obligatorio.',
-        'name.min' => 'El campo "name" debe tener al menos 8 caracteres.',
+        'name.min' => 'El campo "name" debe tener al menos 9 caracteres.',
         'password.min' => 'El campo "password" debe tener al menos 9 caracteres.',
     ];
 

@@ -192,7 +192,7 @@ class CreateForm extends Component
             ->pluck('id_laboratorio')
             ->first();
         $this->materiales = MaterialModel::where('id_laboratorio', $datt)->get()->toArray();
-        $this->fechaPrestamo = now()->format('Y/m/d');
+        $this->fechaPrestamo = now()->setTimezone('America/Mexico_City')->format('Y/m/d');
         $this->selectedMaterials = [];
     }
 

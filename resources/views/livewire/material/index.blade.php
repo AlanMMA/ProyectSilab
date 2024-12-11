@@ -5,10 +5,10 @@
             $Gerente = auth()->user()->id_rol;
             @endphp
             @if ($Gerente == 7)
-            <p class="text-lg font-bold text-black dark:text-white">Materiales del encargado:</p>
+            <p class="text-lg font-bold text-black dark:text-white">Materiales del laboratorio:</p>
             <select name="" wire:model.live="SelectEncargado"
                 class="w-min border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
-                <option value="0">Elija un encargado</option>
+                <option value="0">Elija un laboratorio</option>
                 <option value="-1">Mostrar todos los materiales</option>
                 @foreach ($labos as $labo)
                 <option value="{{ $labo->id }}">{{ $labo->id }} {{ $labo->nombre }}</option>
@@ -197,7 +197,8 @@
                             </div>
                         </th>
                         @if ($SelectEncargado == -1)
-                        <th scope="col" class="cursor-pointer px-6 py-3 text-center" wire:click="order('id_laboratorio')">
+                        <th scope="col" class="cursor-pointer px-6 py-3 text-center"
+                            wire:click="order('id_laboratorio')">
                             <div class="flex items-center justify-center">
                                 Laboratorio
                                 @if ($sort == 'id_laboratorio')
@@ -294,27 +295,22 @@
         @else
         <div class="px-6 py-4">
             @if ($search)
-            <p class="bg-white px-6 py-4">
-                No hay resultados que coincidan con su busqueda.
+            <p class="bg-white px-6 py-4 text-center">
+                No hay resultados que coincidan con su búsqueda.
             </p>
             @elseif ($SelectEncargado && $encargados2)
-            {{-- <p class="bg-white px-6 py-4 text-center">
-                El encargado <br>
-                {{ $encargados2->nombre }} {{ $encargados2->apellido_p }} {{ $encargados2->apellido_m }} <br>
-                actualmente no cuenta con materiales.
+            <p class="bg-white px-6 py-4 text-center">
+                El laboratorio no cuenta con materiales.
             </p>
             @elseif (!$search && !$SelectEncargado && $Gerente == 7)
             <p class="bg-white px-6 py-4 text-center">
-                Primero seleccione a un encargado para ver su información.
+                Primero seleccione un laboratorio para ver su información.
             </p>
-            @else --}}
+            @else
             <p class="bg-white px-6 py-4 text-center">
                 Actualmente no hay datos en esta tabla.
             </p>
             @endif
-            <p class="bg-white px-6 py-4 text-center">
-                No hay materiales en este laboratorio
-            </p>
         </div>
         @endif
         <div class="px-6 py-3">

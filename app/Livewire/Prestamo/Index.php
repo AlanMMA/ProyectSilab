@@ -150,6 +150,7 @@ class Index extends Component
 
             $datos = PrestamoModel::join('solicitante', 'prestamo.id_solicitante', '=', 'solicitante.id')
                 ->join('encargado', 'prestamo.id_encargado', '=', 'encargado.id')
+                ->join('laboratorio', 'prestamo.id_laboratorio', '=', 'laboratorio.id')
                 ->select(
                     'prestamo.id',
                     'prestamo.fecha AS fecha_prestamo',
@@ -159,7 +160,8 @@ class Index extends Component
                     'solicitante.tipo AS solicitante_tipo',
                     'encargado.nombre AS encargado_nombre',
                     'encargado.apellido_p AS encargado_apellido_p',
-                    'encargado.apellido_m AS encargado_apellido_m'
+                    'encargado.apellido_m AS encargado_apellido_m',
+                    'laboratorio.nombre AS laboratorio_nombre'
                 )
                 ->where(function ($query) {
                     $query->where('solicitante.nombre', 'like', '%' . $this->search . '%')

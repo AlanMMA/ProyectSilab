@@ -84,7 +84,7 @@
                 <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
             </div>
-            <div class="mb-4">
+            <div class="mb-4" style="display: none">
                 <x-label value="Laboratorio actual:"></x-label>
                 <x-input wire:model="dato.id_laboratorio" wire:keyup="update('dato.id_laboratorio')" type="text"
                 class="w-full" disabled>

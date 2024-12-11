@@ -74,7 +74,7 @@ class Edit extends Component
         $newStock = $this->dato['stock'] !== $this->oldDato['stock'];
         $newDescripcion = $this->dato['descripcion'] !== $this->oldDato['descripcion'];
         $newLocalizcion = $this->dato['id_localizacion'] !== $this->oldDato['id_localizacion'];
-        $newEncargado = $this->dato['id_encargado'] !== $this->oldDato['id_encargado'];
+        $newEncargado = $this->dato['id_laboratorio'] !== $this->oldDato['id_laboratorio'];
 
         // Si hay algún cambio, muestra mensaje de confirmación
         if ($newNombre || $newMarca || $newModelo || $newCategoria || $newStock || $newDescripcion || $newLocalizcion || $newEncargado) {
