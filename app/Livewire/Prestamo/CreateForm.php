@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Prestamo;
 
+use App\Models\EncargadoModel;
 use App\Models\MaterialModel;
 use App\Models\SolicitanteModel;
 use Carbon\Carbon;
@@ -64,14 +65,16 @@ class CreateForm extends Component
 
     public function updatedSearchMaterial()
     {
-        $encarg = auth()->user()->id_encargado;
+        $datt = EncargadoModel::where('id', auth()->user()->id_encargado)
+            ->pluck('id_laboratorio')
+            ->first();
         if (empty($this->searchMaterial)) {
             $this->resetSelectedMaterial();
-            $this->materiales = MaterialModel::where('id_encargado', $encarg)->get()->toArray();
+            $this->materiales = MaterialModel::where('id_laboratorio', $datt)->get()->toArray();
             return;
         }
     
-        $this->materiales = MaterialModel::where('id_encargado', $encarg)
+        $this->materiales = MaterialModel::where('id_laboratorio', $datt)
             ->where(function ($query) {
                 $query->where('nombre', 'like', '%' . $this->searchMaterial . '%')
                       ->orWhere('descripcion', 'like', '%' . $this->searchMaterial . '%')
@@ -185,7 +188,10 @@ class CreateForm extends Component
         $this->prest = auth()->user()->id_encargado;
         $this->solicitantes = SolicitanteModel::all();
         // $this->materiales = MaterialModel::where('id_encargado', $this->prest)->get()->toArray();
-        $this->materiales = MaterialModel::where('id_encargado', $this->prest)->get()->toArray();
+        $datt = EncargadoModel::where('id', auth()->user()->id_encargado)
+            ->pluck('id_laboratorio')
+            ->first();
+        $this->materiales = MaterialModel::where('id_laboratorio', $datt)->get()->toArray();
         $this->fechaPrestamo = now()->format('Y/m/d');
         $this->selectedMaterials = [];
     }

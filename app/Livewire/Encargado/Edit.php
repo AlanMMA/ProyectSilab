@@ -24,7 +24,6 @@ class Edit extends Component
             'dato.apellido_p' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
             'dato.apellido_m' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
             'dato.id_laboratorio' => 'required|numeric',
-            'dato.id_estado' => 'required|numeric|min:1'
         ];
     }
 

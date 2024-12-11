@@ -20,7 +20,7 @@ class MaterialModel extends Model
         'stock',
         'descripcion',
         'id_localizacion',
-        'id_encargado',
+        'id_laboratorio',
     ];
 
     public function marca(): BelongsTo
@@ -33,9 +33,14 @@ class MaterialModel extends Model
         return $this->BelongsTo(CategoriaModel::class, 'id_categoria');
     }
 
-    public function encargado(): BelongsTo
+    // public function encargado(): BelongsTo
+    // {
+    //     return $this->BelongsTo(EncargadoModel::class, 'id_encargado');
+    // }
+
+    public function laboratorio(): BelongsTo 
     {
-        return $this->BelongsTo(EncargadoModel::class, 'id_encargado');
+        return $this->belongsTo(LaboratorioModel::class, 'id_laboratorio');
     }
 
     public function localizacion(): BelongsTo{

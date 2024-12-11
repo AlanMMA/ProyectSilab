@@ -4,6 +4,7 @@ namespace App\Livewire\Material;
 
 use App\Models\CategoriaModel;
 use App\Models\EncargadoModel;
+use App\Models\LaboratorioModel;
 use App\Models\localizacion;
 use App\Models\MarcaModel;
 use App\Models\MaterialModel;
@@ -15,7 +16,7 @@ use Livewire\WithPagination;
 class Index extends Component
 {
 
-    public $search, $UserId, $encargados, $encargados2;
+    public $search, $UserId, $encargados, $encargados2, $lab, $labos;
     public $sort = 'id';
     public $direc = 'asc';
     public $cant = '10';
@@ -29,6 +30,8 @@ class Index extends Component
         $this->direc = 'asc';
         $this->UserId = auth()->user()->id_encargado;
         $this->encargados = EncargadoModel::all();
+        $this->labos = LaboratorioModel::all();
+        $this->lab = MaterialModel::pluck('id_laboratorio')->toArray(); // Obtener IDs de laboratorio
     }
 
     public function updatedSelectEncargado($value)
@@ -43,96 +46,10 @@ class Index extends Component
 
     public function render()
     {
-        // Si el usuario es jefe y SelectEncargado es -1, mostrar todos los materiales.
         if (auth()->user()->id_rol == 7 && $this->SelectEncargado == -1) {
-
-            /*$datos = MaterialModel::where(function ($query) {
-            $query->where('nombre', 'like', '%' . $this->search . '%')
-            ->orWhere('modelo', 'like', '%' . $this->search . '%')
-            ->orWhere('stock', 'like', '%' . $this->search . '%')
-            ->orWhere('descripcion', 'like', '%' . $this->search . '%')
-            ->orWhere('localizacion', 'like', '%' . $this->search . '%')
-            ->orWhereHas('marca', function ($query) {
-            $query->where('nombre', 'like', '%' . $this->search . '%');
-            })
-            ->orWhereHas('categoria', function ($query) {
-            $query->where('nombre', 'like', '%' . $this->search . '%');
-            })
-            ->orWhereHas('encargado', function ($query) {
-            $query->where('nombre', 'like', '%' . $this->search . '%')
-            ->orWhere('apellido_p', 'like', '%' . $this->search . '%')
-            ->orWhere('apellido_m', 'like', '%' . $this->search . '%');
-            });
-            })
-            ->orderBy($this->sort, $this->direc)
-            ->paginate($this->cant)
-            ->withQueryString();*/
-
-            $datos = MaterialModel::where('nombre', 'like', '%' . $this->search . '%')
-                ->orWhere('modelo', 'like', '%' . $this->search . '%')
-                ->orWhere('stock', 'like', '%' . $this->search . '%')
-                ->orWhere('descripcion', 'like', '%' . $this->search . '%')
-                ->orWhereHas('marca', function ($query) {
-                    $query->where('nombre', 'like', '%' . $this->search . '%');
-                })
-                ->orWhereHas('categoria', function ($query) {
-                    $query->where('nombre', 'like', '%' . $this->search . '%');
-                })
-                ->orWhereHas('localizacion', function ($query) {
-                    $query->where('nombre', 'like', '%' . $this->search . '%');
-                })
-                ->orWhereHas('encargado', function ($query) {
-                    $query->where('nombre', 'like', '%' . $this->search . '%');
-                })
-                ->when($this->sort == 'id_marca', function ($query) {
-                    $query->orderBy(
-                        MarcaModel::select('nombre')
-                            ->whereColumn('marca.id', 'material.id_marca'),
-                        $this->direc
-                    );
-                })
-            // Ordenar por nombre del encargado utilizando `id_encargado`
-                ->when($this->sort == 'id_encargado', function ($query) {
-                    $query->orderBy(
-                        EncargadoModel::select('nombre')
-                            ->whereColumn('encargado.id', 'material.id_encargado'),
-                        $this->direc
-                    );
-                })
-            // Ordenar por categoría utilizando `id_categoria`
-                ->when($this->sort == 'id_categoria', function ($query) {
-                    $query->orderBy(
-                        CategoriaModel::select('nombre')
-                            ->whereColumn('categoria.id', 'material.id_categoria'),
-                        $this->direc
-                    );
-                })
-            // Ordenar por nombre de localizacion utilizando `id_localizacion`
-                ->when($this->sort == 'id_localizacion', function ($query) {
-                    $query->orderBy(
-                        localizacion::select('nombre')
-                            ->whereColumn('localizacion.id', 'material.id_localizacion'),
-                        $this->direc
-                    );
-                })
-            // Para cualquier otro campo de ordenación
-                ->when($this->sort != 'id_marca' && $this->sort != 'id_encargado' && $this->sort != 'id_categoria' && $this->sort != 'id_localizacion', function ($query) {
-                    $query->orderBy($this->sort, $this->direc);
-                })
-                ->paginate($this->cant)
-                ->withQueryString();
-
-        } elseif (auth()->user()->id_rol == 7 && $this->SelectEncargado == 0) {
-            // Si es jefe y no seleccionó ningún encargado, devolver datos vacíos.
-            $datos = new LengthAwarePaginator([], 0, $this->cant);
-        } else {
-            // Filtrar materiales por encargado según el usuario logueado o el seleccionado.
-            $encargadoId = auth()->user()->id_rol == 7 && $this->SelectEncargado > 0
-            ? $this->SelectEncargado
-            : $this->UserId;
-
-            // Consulta para cargar los datos.
-            $datos = MaterialModel::where('id_encargado', $encargadoId)
+            // Si el usuario es jefe y SelectEncargado es -1, mostrar todos los materiales del laboratorio.
+            $datos = MaterialModel::with('laboratorio') // Cargar la relación del laboratorio
+                ->whereIn('id_laboratorio', $this->lab)
                 ->where(function ($query) {
                     $query->where('nombre', 'like', '%' . $this->search . '%')
                         ->orWhere('modelo', 'like', '%' . $this->search . '%')
@@ -146,11 +63,33 @@ class Index extends Component
                         })
                         ->orWhereHas('localizacion', function ($query) {
                             $query->where('nombre', 'like', '%' . $this->search . '%');
+                        });
+                })
+                ->orderBy($this->sort, $this->direc)
+                ->paginate($this->cant)
+                ->withQueryString();
+        } elseif (auth()->user()->id_rol == 7 && $this->SelectEncargado == 0) {
+            // Si es jefe y no seleccionó ningún encargado, devolver datos vacíos.
+            $datos = new LengthAwarePaginator([], 0, $this->cant);
+        } elseif (auth()->user()->id_rol != 7) {
+            $laboratorioId = EncargadoModel::where('id', auth()->user()->id_encargado)
+                ->pluck('id_laboratorio')
+                ->first();
+
+            $datos = MaterialModel::where('id_laboratorio', $laboratorioId)
+                ->where(function ($query) {
+                    $query->where('nombre', 'like', '%' . $this->search . '%')
+                        ->orWhere('modelo', 'like', '%' . $this->search . '%')
+                        ->orWhere('stock', 'like', '%' . $this->search . '%')
+                        ->orWhere('descripcion', 'like', '%' . $this->search . '%')
+                        ->orWhereHas('marca', function ($query) {
+                            $query->where('nombre', 'like', '%' . $this->search . '%');
                         })
-                        ->orWhereHas('encargado', function ($query) {
-                            $query->where('nombre', 'like', '%' . $this->search . '%')
-                                ->orWhere('apellido_p', 'like', '%' . $this->search . '%')
-                                ->orWhere('apellido_m', 'like', '%' . $this->search . '%');
+                        ->orWhereHas('categoria', function ($query) {
+                            $query->where('nombre', 'like', '%' . $this->search . '%');
+                        })
+                        ->orWhereHas('localizacion', function ($query) {
+                            $query->where('nombre', 'like', '%' . $this->search . '%');
                         });
                 })
                 ->when($this->sort == 'id_marca', function ($query) {
@@ -174,21 +113,62 @@ class Index extends Component
                         $this->direc
                     );
                 })
-                ->when($this->sort == 'id_encargado', function ($query) {
+                ->orderBy($this->sort, $this->direc)
+                ->paginate($this->cant)
+                ->withQueryString();
+        } else {
+            // Filtrar materiales por laboratorio según el usuario logueado o el seleccionado.
+            // $laboratorioId = auth()->user()->id_rol == 7 && $this->SelectEncargado > 0
+            //     MaterialModel::find($this->SelectEncargado)->id_laboratorio
+            //     : $this->lab;
+            $laboratorioId = auth()->user()->id_rol == 7 && $this->SelectEncargado > 0
+                ? MaterialModel::where('id_laboratorio', $this->SelectEncargado)->value('id_laboratorio')
+                : $this->lab;
+
+
+
+            $datos = MaterialModel::where('id_laboratorio', $laboratorioId)
+                ->where(function ($query) {
+                    $query->where('nombre', 'like', '%' . $this->search . '%')
+                        ->orWhere('modelo', 'like', '%' . $this->search . '%')
+                        ->orWhere('stock', 'like', '%' . $this->search . '%')
+                        ->orWhere('descripcion', 'like', '%' . $this->search . '%')
+                        ->orWhereHas('marca', function ($query) {
+                            $query->where('nombre', 'like', '%' . $this->search . '%');
+                        })
+                        ->orWhereHas('categoria', function ($query) {
+                            $query->where('nombre', 'like', '%' . $this->search . '%');
+                        })
+                        ->orWhereHas('localizacion', function ($query) {
+                            $query->where('nombre', 'like', '%' . $this->search . '%');
+                        });
+                })
+                ->when($this->sort == 'id_marca', function ($query) {
                     $query->orderBy(
-                        EncargadoModel::select('nombre')
-                            ->whereColumn('encargado.id', 'material.id_encargado'),
+                        MarcaModel::select('nombre')
+                            ->whereColumn('marca.id', 'material.id_marca'),
                         $this->direc
                     );
-                }, function ($query) {
-                    $query->orderBy($this->sort, $this->direc);
                 })
-                ->when(in_array($this->sort, ['nombre', 'modelo', 'stock', 'descripcion']), function ($query) {
-                    $query->orderBy($this->sort, $this->direc);
+                ->when($this->sort == 'id_categoria', function ($query) {
+                    $query->orderBy(
+                        CategoriaModel::select('nombre')
+                            ->whereColumn('categoria.id', 'material.id_categoria'),
+                        $this->direc
+                    );
                 })
+                ->when($this->sort == 'id_localizacion', function ($query) {
+                    $query->orderBy(
+                        localizacion::select('nombre')
+                            ->whereColumn('localizacion.id', 'material.id_localizacion'),
+                        $this->direc
+                    );
+                })
+                ->orderBy($this->sort, $this->direc)
                 ->paginate($this->cant)
                 ->withQueryString();
         }
+
         return view('livewire.material.index', compact('datos'));
     }
 

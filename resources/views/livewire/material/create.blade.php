@@ -77,12 +77,12 @@
                 @enderror
             </div>
             <div class="mb-4">
-                <x-label value="Encargado:"></x-label>
+                <x-label value="Laboratorio:"></x-label>
                 @auth
                 <x-input type="text" class="w-full"
-                    value="{{ $nombreE }} {{ $apellido_p }} {{ $apellido_m }} = {{ auth()->user()->name }}" disabled>
+                    value="{{$nombreLaboratorio}}" disabled>
                 </x-input>
-                <input type="hidden" wire:model="id_encargado" value="{{ $id_encargado }}">
+                <input type="hidden" wire:model="id_laboratorio" value="{{ $id_laboratorio }}">
                 @endauth
             </div>
         </x-slot>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CategoriaModel;
 use App\Models\EncargadoModel;
+use App\Models\LaboratorioModel;
 use App\Models\localizacion;
 use App\Models\MarcaModel;
 use App\Models\MaterialModel;
@@ -23,8 +24,12 @@ class MaterialReportController extends Controller
     public function generatePDF(Request $request)
     {
         // Obtener el usuario logueado
+
         $user = auth()->user();
         $user2 = auth()->user()->id_encargado;
+        $lab = EncargadoModel::where('id', $user2)
+        ->pluck('id_laboratorio')
+        ->first();
 
         if (!$user) {
             // Si no hay usuario logueado, devolver un error
@@ -49,9 +54,9 @@ class MaterialReportController extends Controller
                 $incluirEncargado = true; // Mostrar la columna con el encargado
             } elseif ($SelectEncargado > 0) {
                 // Jefe seleccionó un encargado específico
-                $query->where('id_encargado', $SelectEncargado);
+                $query->where('id_laboratorio', $SelectEncargado);
                 //Obtiene el nombre del encargado seleccionado
-                $encargado = EncargadoModel::find($SelectEncargado);
+                $encargado = LaboratorioModel::find($SelectEncargado);
                 $encargadoNombre = $encargado ? $encargado->nombre . ' ' . $encargado->apellido_p : null;
             } else {
                 // Jefe no seleccionó un encargado válido
@@ -59,8 +64,8 @@ class MaterialReportController extends Controller
             }
         } else {
             // No es jefe, filtrar por el encargado asignado al usuario
-            $query->where('id_encargado', $user2);
-            $encargado = EncargadoModel::find($user2);
+            $query->where('id_laboratorio', $lab);
+            $encargado = LaboratorioModel::find($lab);
             $encargadoNombre = $encargado ? $encargado->nombre . ' ' . $encargado->apellido_p : null;
         }
 
@@ -94,9 +99,9 @@ class MaterialReportController extends Controller
                 MarcaModel::select('nombre')->whereColumn('marca.id', 'material.id_marca'),
                 $direc
             );
-        } elseif ($sort == 'id_encargado') {
+        } elseif ($sort == 'id_laboratorio') {
             $query->orderBy(
-                EncargadoModel::select('nombre')->whereColumn('encargado.id', 'material.id_encargado'),
+                LaboratorioModel::select('nombre')->whereColumn('laboratorio.id', 'material.id_laboratorio'),
                 $direc
             );
         } elseif ($sort == 'id_categoria') {

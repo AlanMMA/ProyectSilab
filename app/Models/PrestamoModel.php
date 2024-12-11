@@ -16,6 +16,7 @@ class PrestamoModel extends Model
         'fecha',
         'id_encargado',
         'id_solicitante',
+        'id_laboratorio'
     ];
 
     public $timestamps = false;
@@ -34,6 +35,11 @@ class PrestamoModel extends Model
     public function solicitante(): BelongsTo
     {
         return $this->belongsTo(SolicitanteModel::class, 'id_solicitante');
+    }
+
+    public function laboratorio(): BelongsTo
+    {
+        return $this->belongsTo(LaboratorioModel::class, 'id_laboratorio');
     }
 
     public function detalles(): HasMany

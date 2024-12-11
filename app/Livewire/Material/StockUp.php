@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Material;
 
+use App\Models\EncargadoModel;
 use App\Models\MaterialModel;
 use Livewire\Component;
 
@@ -18,11 +19,16 @@ class StockUp extends Component
     {
         if (empty($this->materialSearch)) {
             $this->resetSelectedMaterial();
-            $this->materiales = MaterialModel::where('id_encargado', auth()->user()->id_encargado)->get();
+            $datt = EncargadoModel::where('id', auth()->user()->id_encargado)
+            ->pluck('id_laboratorio')
+            ->first();
+            $this->materiales = MaterialModel::where('id_laboratorio', $datt)->get();
         } else {
-            $encargadoId = auth()->user()->id_encargado;
+            $datt = EncargadoModel::where('id', auth()->user()->id_encargado)
+            ->pluck('id_laboratorio')
+            ->first();
     
-            $this->materiales = MaterialModel::where('id_encargado', $encargadoId)
+            $this->materiales = MaterialModel::where('id_laboratorio', $datt)
                 ->where(function($query) {
                     $query->where('nombre', 'like', '%' . $this->materialSearch . '%')
                         ->orWhere('modelo', 'like', '%' . $this->materialSearch . '%');

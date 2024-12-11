@@ -10,10 +10,8 @@
                 class="w-min border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
                 <option value="0">Elija un encargado</option>
                 <option value="-1">Mostrar todos los materiales</option>
-                @foreach ($encargados as $encargado)
-                <option value="{{ $encargado->id }}">{{ $encargado->id }} {{ $encargado->nombre }}
-                    {{ $encargado->apellido_p }}
-                    {{ $encargado->apellido_m }}</option>
+                @foreach ($labos as $labo)
+                <option value="{{ $labo->id }}">{{ $labo->id }} {{ $labo->nombre }}</option>
                 @endforeach
             </select>
             @endif
@@ -199,10 +197,10 @@
                             </div>
                         </th>
                         @if ($SelectEncargado == -1)
-                        <th scope="col" class="cursor-pointer px-6 py-3 text-center" wire:click="order('id_encargado')">
+                        <th scope="col" class="cursor-pointer px-6 py-3 text-center" wire:click="order('id_laboratorio')">
                             <div class="flex items-center justify-center">
-                                Encargado
-                                @if ($sort == 'id_encargado')
+                                Laboratorio
+                                @if ($sort == 'id_laboratorio')
                                 @if ($direc == 'asc')
                                 <span class="material-symbols-outlined">vertical_align_bottom</span>
                                 @else
@@ -269,7 +267,7 @@
                         </td>
                         @if ($SelectEncargado == -1)
                         <td class="px-6 py-2 text-center font-medium  whitespace-nowrap dark:text-white">
-                            {{ $dato->encargado->nombre ?? 'Sin encargado' }}
+                            {{ $dato->laboratorio->nombre }}
                         </td>
                         @endif
                         {{-- <td class="px-6 py-2 text-center font-medium  whitespace-nowrap dark:text-white">
@@ -300,7 +298,7 @@
                 No hay resultados que coincidan con su busqueda.
             </p>
             @elseif ($SelectEncargado && $encargados2)
-            <p class="bg-white px-6 py-4 text-center">
+            {{-- <p class="bg-white px-6 py-4 text-center">
                 El encargado <br>
                 {{ $encargados2->nombre }} {{ $encargados2->apellido_p }} {{ $encargados2->apellido_m }} <br>
                 actualmente no cuenta con materiales.
@@ -309,11 +307,14 @@
             <p class="bg-white px-6 py-4 text-center">
                 Primero seleccione a un encargado para ver su información.
             </p>
-            @else
+            @else --}}
             <p class="bg-white px-6 py-4 text-center">
                 Actualmente no hay datos en esta tabla.
             </p>
             @endif
+            <p class="bg-white px-6 py-4 text-center">
+                No hay materiales en este laboratorio
+            </p>
         </div>
         @endif
         <div class="px-6 py-3">

@@ -43,12 +43,10 @@
                 <p class="text-lg font-bold text-black dark:text-white">Prestamos del encargado:</p>
                 <select name="" wire:model.live="SelectEncargado"
                     class="w-min border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
-                    <option value="0">Elija un encargado</option>
+                    <option value="0">Elija un laboratorio</option>
                     <option value="-1">Mostrar todos los préstamos</option>
-                    @foreach ($encargados as $encargado)
-                        <option value="{{ $encargado->id }}">{{ $encargado->id }} {{ $encargado->nombre }}
-                            {{ $encargado->apellido_p }}
-                            {{ $encargado->apellido_m }}</option>
+                    @foreach ($labs as $lab)
+                        <option value="{{ $lab->id }}">{{ $lab->id }} {{ $lab->nombre }}</option>
                     @endforeach
                 </select>
             </div>
@@ -280,9 +278,10 @@
                     </p>
                 @elseif ($SelectEncargado && $encargados2)
                     <p class="bg-white px-6 py-4 text-center">
-                        El encargado <br>
+                        {{-- El encargado <br>
                         {{ $encargados2->nombre }} {{ $encargados2->apellido_p }} {{ $encargados2->apellido_m }} <br>
-                        actualmente no cuenta con préstamos realizados.
+                        actualmente no cuenta con préstamos realizados. --}}
+                        El laboratorio no cuenta con prestamos.
                     </p>
                 @elseif (!$search && !$SelectEncargado && $Gerente == 7)
                     <p class="bg-white px-6 py-4 text-center">

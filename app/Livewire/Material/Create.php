@@ -15,7 +15,7 @@ class Create extends Component
 {
 
     public $open;
-    public $nombre, $id_marca, $modelo, $id_categoria, $stock = 1, $descripcion, $id_localizacion, $id_encargado;
+    public $nombre, $id_marca, $modelo, $id_categoria, $stock = 1, $descripcion, $id_localizacion, $id_encargado, $id_laboratorio;
 
     protected function rules()
     {
@@ -27,7 +27,8 @@ class Create extends Component
             'stock' => 'required|min:1|numeric',
             'descripcion' => 'required|min:3|max:200',
             'id_localizacion' => 'required|numeric',
-            'id_encargado' => 'required|numeric',
+            'id_laboratorio' => 'required|numeric'
+            // 'id_encargado' => 'required|numeric',
         ];
     }
 
@@ -56,6 +57,11 @@ class Create extends Component
     public function save()
     {
         $this->validate();
+
+        $userLab = EncargadoModel::where('id', auth()->user()->id_encargado)
+            ->pluck('id_laboratorio')
+            ->first();
+    
         MaterialModel::create([
             'nombre' => $this->nombre,
             'id_marca' => $this->id_marca,
@@ -64,27 +70,41 @@ class Create extends Component
             'stock' => $this->stock,
             'descripcion' => $this->descripcion,
             'id_localizacion' => $this->id_localizacion,
-            'id_encargado' => $this->id_encargado,
+            'id_laboratorio' => $userLab, // Asignar el laboratorio
         ]);
-
+    
         $this->reset(['open', 'nombre', 'modelo', 'stock', 'descripcion', 'id_localizacion', 'id_marca', 'id_categoria']);
         $this->dispatch('render');
-        $this->dispatch('alert', 'El material se ha guardado con exito.');
+        $this->dispatch('alert', 'El material se ha guardado con éxito.');
     }
 
     public function render()
     {
         $user = User::with('encargado')->find(Auth::id());
         $datt = auth()->user()->id_encargado;
-        $this->id_encargado = $user->id_encargado;
-        $nombreE = $user->encargado ? $user->encargado->nombre : 'No asignado';
-        $apellido_p = $user->encargado ? $user->encargado->apellido_p : '';
-        $apellido_m = $user->encargado ? $user->encargado->apellido_m : '';
+        $this->id_laboratorio = EncargadoModel::where('id', $datt)
+        ->pluck('id_laboratorio')
+        ->first();
+        $lab = EncargadoModel::where('id', $datt)
+        ->with('laboratorio') 
+        ->first();
+    $nombreLaboratorio = $lab ? $lab->laboratorio->nombre : 'Laboratorio no asignado';
+        // $this->id_encargado = $user->id_encargado;
+        // $nombreE = $user->encargado ? $user->encargado->nombre : 'No asignado';
+        // $apellido_p = $user->encargado ? $user->encargado->apellido_p : '';
+        // $apellido_m = $user->encargado ? $user->encargado->apellido_m : '';
         $marcas = MarcaModel::pluck('nombre', 'id');
         $categorias = CategoriaModel::pluck('nombre', 'id');
-        $encargados = EncargadoModel::pluck('nombre', 'id');
+
         $localizaciones = localizacion::where('id_encargado', $datt)->get();
-        return view('livewire.material.create', compact('marcas', 'categorias', 'nombreE', 'apellido_p', 'apellido_m', 'localizaciones'));
+        // return view('livewire.material.create', compact('marcas', 'categorias', 'nombreE', 'apellido_p', 'apellido_m', 'localizaciones'));
+        return view('livewire.material.create', [
+            'marcas' => $marcas,
+            'categorias' => $categorias,
+            'nombreLaboratorio' => $nombreLaboratorio,
+            'localizaciones' => $localizaciones,
+            'id_laboratorio' => $this->id_laboratorio,
+        ]);
     }
 
 }

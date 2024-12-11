@@ -10,6 +10,7 @@
         body {
             margin-top: 85px;
             margin-bottom: 60px;
+            margin-right: 30px;
         }
 
         table {
@@ -70,6 +71,10 @@
             margin: 0;
             padding: 0;
         }
+        
+        .container{
+            overflow-x: auto; 
+        }
     </style>
 </head>
 
@@ -83,12 +88,12 @@
     <h1 class="title" style="text-align: center;">Reporte de Materiales</h1>
 
     @if($encargadoNombre)
-    <h3 class="subtitle" style="text-align: center; margin-top: 10px; font-weight: normal;">Materiales del encargado:
+    <h3 class="subtitle" style="text-align: center; margin-top: 10px; font-weight: normal;">Materiales del laboratorio:
         <span style="font-weight: bold;">{{ $encargadoNombre }} </span>
     </h3>
     @endif
 
-    <!-- Contenido de la tabla -->
+    <div class="container">
     <table>
         <thead class="bg-blue-tec text-white">
             <tr>
@@ -101,7 +106,7 @@
                 <th>Descripción</th>
                 <th>Localización</th>
                 @if($incluirEncargado)
-                <th>Encargado</th>
+                <th>Laboratorio</th>
                 @endif
             </tr>
         </thead>
@@ -118,14 +123,14 @@
                 <td>{{ $dato->localizacion ? $dato->localizacion->nombre : 'Sin
                     encargado'}}</td>
                 @if($incluirEncargado)
-                <td>{{ $dato->encargado ? $dato->encargado->nombre . ' ' . $dato->encargado->apellido_p : 'Sin
+                <td>{{ $dato->laboratorio ? $dato->laboratorio->nombre . ' ' : 'Sin
                     encargado' }}</td>
                 @endif
             </tr>
             @endforeach
         </tbody>
     </table>
-
+</div>
 </body>
 
 </html>

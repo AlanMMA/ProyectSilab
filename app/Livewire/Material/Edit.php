@@ -25,7 +25,7 @@ class Edit extends Component
             'dato.id_categoria' => 'required|numeric|min:1',
             'dato.descripcion' => 'required|min:3|max:200',
             'dato.id_localizacion' => 'required|numeric|min:1',
-            'dato.id_encargado' => 'required|numeric|min:1',
+            'dato.id_laboratorio' => 'required|numeric|min:1',
         ];
     }
 

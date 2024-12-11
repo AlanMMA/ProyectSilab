@@ -114,8 +114,8 @@ class Index extends Component
             }
 
             // 6. Verificar si hay materiales asociados al encargado antes de eliminar de la tabla `material`
-            $materialDeleted = DB::table('material')->where('id_encargado', $id)->delete();
-            Log::info('Paso 7: Registros eliminados de la tabla material', ['id_encargado' => $id, 'eliminados' => $materialDeleted]);
+            // $materialDeleted = DB::table('material')->where('id_encargado', $id)->delete();
+            // Log::info('Paso 7: Registros eliminados de la tabla material', ['id_encargado' => $id, 'eliminados' => $materialDeleted]);
 
             $localizacionDeleted = DB::table('localizacion')->where('id_encargado', $id)->delete();
             Log::info('Paso 7: Registros eliminados de la tabla material', ['id_encargado' => $id, 'eliminados' => $localizacionDeleted]);

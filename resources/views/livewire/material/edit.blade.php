@@ -85,9 +85,10 @@
                 @enderror
             </div>
             <div class="mb-4">
-                <x-label value="Encargado actual:"></x-label>
-                <x-input value="{{ $dato['id_encargado'] }} - {{ $nombre_completo[$dato['id_encargado']] }}" type="text"
-                    class="w-full" disabled />
+                <x-label value="Laboratorio actual:"></x-label>
+                <x-input wire:model="dato.id_laboratorio" wire:keyup="update('dato.id_laboratorio')" type="text"
+                class="w-full" disabled>
+            </x-input>
             </div>
         </x-slot>
 

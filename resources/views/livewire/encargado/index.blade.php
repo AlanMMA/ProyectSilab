@@ -111,7 +111,7 @@
                             {{ $dato->apellido_p }} {{ $dato->apellido_m }}
                         </td>
                         <td class="px-6 py-2 text-center font-medium  whitespace-nowrap dark:text-white">
-                            {{ $dato->laboratorio->nombre }}
+                            {{ $dato->laboratorio->nombre ?? 'Laboratorio no asignado' }}
                         </td>
 
                         <td class="px-6 py-2 flex justify-center items-center gap-2">

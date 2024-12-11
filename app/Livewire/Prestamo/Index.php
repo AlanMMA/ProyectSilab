@@ -4,6 +4,7 @@ namespace App\Livewire\Prestamo;
 
 use App\Models\DetallePrestamoModel;
 use App\Models\EncargadoModel;
+use App\Models\LaboratorioModel;
 use App\Models\PrestamoModel;
 use Carbon\Carbon;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -20,7 +21,7 @@ class Index extends Component
     public $cant = '10';
     public $mostrarModal = false;
     public $prestamoId;
-    public $encargados, $encargados2, $SelectEncargado = 0;
+    public $encargados, $labs, $encargados2, $SelectEncargado = 0;
     public $searchEnabled = false;
     public $rolActual, $UserId;
     public $fechaInicial, $fechaFinal, $verificarExistencia;
@@ -46,6 +47,7 @@ class Index extends Component
         $this->direc = 'asc';
         $this->UserId = auth()->user()->id_encargado;
         $this->encargados = EncargadoModel::all();
+        $this->labs = LaboratorioModel::all();
     }
 
     // public function render()
@@ -140,14 +142,14 @@ class Index extends Component
 
     public function render()
     {
-        // Si el usuario es jefe y SelectEncargado es -1, mostrar todos los materiales.
+        // Si el usuario es jefe y SelectEncargado es -1, mostrar todos los préstamos.
         if (auth()->user()->id_rol == 7 && $this->SelectEncargado == -1) {
-
+    
             $datos = PrestamoModel::join('solicitante', 'prestamo.id_solicitante', '=', 'solicitante.id')
                 ->join('encargado', 'prestamo.id_encargado', '=', 'encargado.id')
                 ->select(
                     'prestamo.id',
-                    'prestamo.fecha AS fecha_prestamo', // Incluye la fecha del préstamo
+                    'prestamo.fecha AS fecha_prestamo',
                     'solicitante.nombre AS solicitante_nombre',
                     'solicitante.apellido_p AS solicitante_apellido_p',
                     'solicitante.apellido_m AS solicitante_apellido_m',
@@ -167,20 +169,17 @@ class Index extends Component
                 ->paginate($this->cant)
                 ->withQueryString();
         } elseif (auth()->user()->id_rol == 7 && $this->SelectEncargado == 0) {
-            // Si es jefe y no seleccionó ningún encargado, devolver datos vacíos.
+            // Si es jefe y no seleccionó ningún laboratorio, devolver datos vacíos.
             $datos = new LengthAwarePaginator([], 0, $this->cant);
-        } else {
-            // Filtrar materiales por encargado según el usuario logueado o el seleccionado.
-            $encargadoId = auth()->user()->id_rol == 7 && $this->SelectEncargado > 0
-                ? $this->SelectEncargado
-                : $this->UserId;
-
-            // Consulta para cargar los datos.
+        }  elseif(auth()->user()->id_rol != 7){
+            $laboratorioId = EncargadoModel::where('id', auth()->user()->id_encargado)
+            ->pluck('id_laboratorio')
+            ->first();
             $datos = PrestamoModel::join('solicitante', 'prestamo.id_solicitante', '=', 'solicitante.id')
                 ->join('encargado', 'prestamo.id_encargado', '=', 'encargado.id')
                 ->select(
                     'prestamo.id',
-                    'prestamo.fecha AS fecha_prestamo', // Incluye la fecha del préstamo
+                    'prestamo.fecha AS fecha_prestamo',
                     'solicitante.nombre AS solicitante_nombre',
                     'solicitante.apellido_p AS solicitante_apellido_p',
                     'solicitante.apellido_m AS solicitante_apellido_m',
@@ -189,7 +188,39 @@ class Index extends Component
                     'encargado.apellido_p AS encargado_apellido_p',
                     'encargado.apellido_m AS encargado_apellido_m'
                 )
-                ->where('prestamo.id_encargado', $encargadoId) // Filtra según el encargado
+                ->where('prestamo.id_laboratorio', $laboratorioId) // Filtra por id_laboratorio
+                ->where(function ($query) {
+                    $query->where('solicitante.nombre', 'like', '%' . $this->search . '%')
+                        ->orWhere('solicitante.apellido_p', 'like', '%' . $this->search . '%')
+                        ->orWhere('solicitante.apellido_m', 'like', '%' . $this->search . '%')
+                        ->orWhere('solicitante.tipo', 'like', '%' . $this->search . '%')
+                        ->orWhere('prestamo.fecha', 'like', '%' . $this->search . '%');
+                })
+                ->orderBy($this->sort, $this->direc)
+                ->paginate($this->cant)
+                ->withQueryString();
+        }
+        
+        
+        else {
+            // Filtrar préstamos por laboratorio.
+            $laboratorioId = $this->SelectEncargado > 0 ? $this->SelectEncargado : $this->UserId;
+    
+            // Consulta para cargar los datos filtrados por laboratorio.
+            $datos = PrestamoModel::join('solicitante', 'prestamo.id_solicitante', '=', 'solicitante.id')
+                ->join('encargado', 'prestamo.id_encargado', '=', 'encargado.id')
+                ->select(
+                    'prestamo.id',
+                    'prestamo.fecha AS fecha_prestamo',
+                    'solicitante.nombre AS solicitante_nombre',
+                    'solicitante.apellido_p AS solicitante_apellido_p',
+                    'solicitante.apellido_m AS solicitante_apellido_m',
+                    'solicitante.tipo AS solicitante_tipo',
+                    'encargado.nombre AS encargado_nombre',
+                    'encargado.apellido_p AS encargado_apellido_p',
+                    'encargado.apellido_m AS encargado_apellido_m'
+                )
+                ->where('prestamo.id_laboratorio', $laboratorioId) // Filtra por id_laboratorio
                 ->where(function ($query) {
                     $query->where('solicitante.nombre', 'like', '%' . $this->search . '%')
                         ->orWhere('solicitante.apellido_p', 'like', '%' . $this->search . '%')
@@ -203,6 +234,7 @@ class Index extends Component
         }
         return view('livewire.prestamo.index', compact('datos'));
     }
+    
 
     public function order($sort)
     {

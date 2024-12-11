@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Home;
 
+use App\Models\EncargadoModel;
 use App\Models\MaterialModel;
 use App\Models\PrestamoModel;
 use Carbon\Carbon;
@@ -21,8 +22,12 @@ class CardStock extends Component
 
     public function ActualizarStock()
     {
+        $userLab = EncargadoModel::where('id', auth()->user()->id_encargado)
+        ->pluck('id_laboratorio')
+        ->first();
+        
         $this->materiales = MaterialModel::where('stock', '<', $this->stockk)
-            ->where('id_encargado', Auth()->user()->id_encargado)
+            ->where('id_laboratorio', $userLab)
             ->limit(4)
             ->get();
     }

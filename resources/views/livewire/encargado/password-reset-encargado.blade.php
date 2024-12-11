@@ -8,7 +8,7 @@
 
     <x-dialog-modal wire:model.live="open">
         <x-slot name="title">
-            Cambio de contraseña del usuario {{$result->name}}.
+            Cambio de contraseña del usuario {{$result->name ?? 'sin dato'}}.
         </x-slot>
         <x-slot name="content">
             <div class="mb-4">
