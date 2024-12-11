@@ -3,6 +3,7 @@
 namespace App\Livewire\Prestamo;
 
 use App\Models\DetallePrestamoModel;
+use App\Models\EncargadoModel;
 use App\Models\MaterialModel;
 use App\Models\PrestamoModel;
 use Illuminate\Support\Facades\DB;
@@ -154,10 +155,15 @@ class CreateTable extends Component
             if (count($this->selectedMaterials) > 0) {
                 $primerMaterial = $this->selectedMaterials[0];
 
+                $dat = EncargadoModel::where('id', auth()->user()->id_encargado)
+                ->pluck('id_laboratorio')
+                ->first();
+
                 $prestamo = PrestamoModel::create([
                     'fecha' => $primerMaterial['fechaPrestamo'],
                     'id_encargado' => auth()->user()->id_encargado,
-                    'id_solicitante' => $this->solicitanteId
+                    'id_solicitante' => $this->solicitanteId,
+                    'id_laboratorio' => $dat
                 ]);
 
                 $prestamoId = $prestamo->id;
