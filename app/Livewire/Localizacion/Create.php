@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Localizacion;
 
+use App\Models\EncargadoModel;
 use App\Models\localizacion;
 use Livewire\Component;
 
@@ -34,10 +35,12 @@ class Create extends Component
     {
 
         $this->validate();
-        $usuario = auth()->user()->id_encargado;
+        $lab = EncargadoModel::where('id', auth()->user()->id_encargado)
+        ->pluck('id_laboratorio')
+        ->first();
         localizacion::create([
             'nombre' => $this->nombre,
-            'id_encargado' => $usuario
+            'id_laboratorio' => $lab
         ]);
 
         $this->reset(['open', 'nombre']);

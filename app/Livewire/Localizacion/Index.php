@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Localizacion;
 
+use App\Models\EncargadoModel;
+use App\Models\LaboratorioModel;
 use App\Models\localizacion;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -71,7 +73,6 @@ class Index extends Component
                 return;
             }
     
-    
         // Si no hay relaciones, proceder a eliminar la localización
         try {
             $localizacion->delete();
@@ -85,9 +86,11 @@ class Index extends Component
 
     public function render()
     {           
-        $usuario = auth()->user()->id_encargado;
+        $lab = EncargadoModel::where('id', auth()->user()->id_encargado)
+        ->pluck('id_laboratorio')
+        ->first();
         $datos = localizacion::where('nombre', 'like', '%' . $this->search . '%')
-            ->where('id_encargado', $usuario)
+            ->where('id_laboratorio', $lab)
             ->orderBy($this->sort, $this->direc)
             ->paginate($this->cant)
             ->withQueryString();

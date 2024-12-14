@@ -246,12 +246,14 @@
                                         50.5T812-204L920-96l-56 56Z" />
                                 </svg>
                             </button>
+                            @if ($Gerente != 7)       
                             <a class="bg-red-600 hover:bg-red-500 pt-2 pb-1 px-2 rounded-md cursor-pointer"
-                                wire:click="$dispatch('destroy', { id: {{ $dato->id }}, nombre: '{{ $dato->id }}' })">
-                                <span class="material-symbols-outlined text-white">
-                                    delete
-                                </span>
-                            </a>
+                            wire:click="$dispatch('destroy', { id: {{ $dato->id }}, nombre: '{{ $dato->id }}' })">
+                            <span class="material-symbols-outlined text-white">
+                                delete
+                            </span>
+                        </a>
+                        @endif
                         </td>
                     </tr>
                     @endforeach

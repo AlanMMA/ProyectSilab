@@ -96,7 +96,7 @@ class Create extends Component
         $marcas = MarcaModel::pluck('nombre', 'id');
         $categorias = CategoriaModel::pluck('nombre', 'id');
 
-        $localizaciones = localizacion::where('id_encargado', $datt)->get();
+        $localizaciones = localizacion::where('id_laboratorio', $this->id_laboratorio)->get();
         // return view('livewire.material.create', compact('marcas', 'categorias', 'nombreE', 'apellido_p', 'apellido_m', 'localizaciones'));
         return view('livewire.material.create', [
             'marcas' => $marcas,

@@ -98,13 +98,18 @@
             </table>
         </div>
         @else
-        <div class="px-6 py-4 bg-white border-r-4">
-            No hay resultados
-            <br>
-            ¿Desea agregarlo?
+        <div class="px-6 py-4">
+            @if ($search)
+            <p class="bg-white px-6 py-4 text-center">
+                No hay resultados que coincidan con su búsqueda.
+            </p>
+            @else
+            <p class="bg-white px-6 py-4 text-center">
+                Actualmente no hay datos en esta tabla.
+            </p>
+            @endif
         </div>
         @endif
-
         <div class="px-6 py-3">
             {{ $datos->onEachSide(1)->links() }}
         </div>

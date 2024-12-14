@@ -139,8 +139,8 @@ class Index extends Component
             // $materialDeleted = DB::table('material')->where('id_encargado', $id)->delete();
             // Log::info('Paso 7: Registros eliminados de la tabla material', ['id_encargado' => $id, 'eliminados' => $materialDeleted]);
 
-            $localizacionDeleted = DB::table('localizacion')->where('id_encargado', $id)->delete();
-            Log::info('Paso 7: Registros eliminados de la tabla material', ['id_encargado' => $id, 'eliminados' => $localizacionDeleted]);
+            // $localizacionDeleted = DB::table('localizacion')->where('id_encargado', $id)->delete();
+            // Log::info('Paso 7: Registros eliminados de la tabla material', ['id_encargado' => $id, 'eliminados' => $localizacionDeleted]);
             // 7. Verificar si el encargado existe antes de eliminar de la tabla `encargado`
             $encargadoDeleted = DB::table('encargado')->where('id', $id)->delete();
             Log::info('Paso 8: Encargado eliminado de la tabla encargado', ['id' => $id, 'eliminados' => $encargadoDeleted]);

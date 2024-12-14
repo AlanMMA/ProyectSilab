@@ -14,13 +14,13 @@ class localizacion extends Model
     protected $fillable = [
         'id',
         'nombre',
-        'id_encargado'
+        'id_laboratorio'
     ];
 
     
-    public function encargado(): BelongsTo
+    public function laboratorio(): BelongsTo
     {
-        return $this->belongsTo(EncargadoModel::class, 'id_encargado');
+        return $this->belongsTo(LaboratorioModel::class, 'id_laboratorio');
     }
     public $timestamps = false;
 }

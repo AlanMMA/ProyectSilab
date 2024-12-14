@@ -28,7 +28,7 @@ class Create extends Component
             'apellido_p' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
             'apellido_m' => 'required|min:3|max:20|regex:/^[\pL\s]+$/u',
             'id_laboratorio' => 'required|numeric|gt:0',
-            'name' => 'required|string|min:9|max:50',
+            'name' => 'required|string|min:9|max:50|unique:users,name',
             'email' => 'required|email|min:16|max:255|unique:users,email',
             'password' => 'required|string|min:9|max:255',
             'password_confirmation' => 'required|same:password',

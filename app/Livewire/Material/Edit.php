@@ -105,8 +105,11 @@ class Edit extends Component
         $nombres = EncargadoModel::pluck('nombre', 'id')->toArray();
         $apellidos_p = EncargadoModel::pluck('apellido_p', 'id')->toArray();
         $apellidos_m = EncargadoModel::pluck('apellido_m', 'id')->toArray();
-        $datt = auth()->user()->id_encargado;
-        $localizaciones = localizacion::where('id_encargado', $datt)->get();
+        $datt =  EncargadoModel::where('id', auth()->user()->id_encargado)
+        ->pluck('id_laboratorio')
+        ->first();
+
+        $localizaciones = localizacion::where('id_laboratorio', $datt)->get();
 
         $nombre_completo = [];
         foreach ($nombres as $id => $nombre) {

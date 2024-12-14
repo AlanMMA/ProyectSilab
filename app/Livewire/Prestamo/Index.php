@@ -261,8 +261,14 @@ class Index extends Component
         try {
             DB::beginTransaction();
 
+            $datt = auth()->user()->id_encargado;
+            $labs = EncargadoModel::where('id', $datt)
+            ->pluck('id_laboratorio')
+            ->first();
             $prestamosIds = DB::table('prestamo')
                 ->whereBetween('fecha', [$this->fechaInicial, $this->fechaFinal])
+                ->where('id_encargado', $datt)
+                ->where('id_laboratorio', $labs)
                 ->pluck('id');
             if ($prestamosIds->isEmpty()) {
                 $this->dispatch('deletionError', 'No se encontraron registros en el rango de fechas.');
