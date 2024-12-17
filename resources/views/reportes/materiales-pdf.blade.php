@@ -22,6 +22,10 @@
             border: 1px solid black;
             text-align: center;
             padding: 8px;
+            word-wrap: break-word;
+            word-break: break-word;
+            max-width: 75px;
+            overflow-wrap: break-word;
         }
 
         /* Definir la clase blue-tec manualmente */
